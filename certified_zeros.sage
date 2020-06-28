@@ -1,4 +1,4 @@
-from ore_algebra.analytic.polynomial_approximation import *
+from ore_algebra.analytic import polynomial_approximation as polapprox
 from sage.rings.rational_field import QQ
 
 #Pour lire ce code de façon compréhensible on pose:
@@ -98,6 +98,7 @@ def first_zero(f,prec):
     return a
 
 def alphaK(Pol,a,prec):
+#renvoie un réel r tel que Dpol(a+r) soit encore de même signe que Dpol(a)
     return first_zero(Pol_To_TaylorPol(diff(Pol),a),prec)
 
 ##Méthode du gradient pour trouver un optimum locale
@@ -111,7 +112,7 @@ def sup_eps(Pol,x,eps,n=0):
     if n>9:
         return False
     signe=sign(Dfun)#pour donner la direction
-    x+=signe*alphaK(DPol,x,eps/8)
+    x+=signe*alphaK(Pol,x,eps/8)
     return sup_eps(Pol,x,eps,n+1)
 
 def certified_zero(Pol,x,eps):
@@ -121,6 +122,7 @@ def certified_zero(Pol,x,eps):
 ################################################################################
 ##Définir la précision voulue pour que l'algorithme converge
 #Théorie alpha-gamma de Smale
+
 certificator=(13-3*sqrt(17))/4
 
 #Corollaire du théoème de Wang-han Pour savoir si la méthode de Newton converge
@@ -143,7 +145,10 @@ def find_certified_zeros_in_list(fun,list,eps):
     for segm in list:
         mid=(segm[0]+segm[1])/2
         if certified_zero(fun,mid,eps):
+            print(True,segm)
             l.append(mid)
+        else:
+            print(False, segm)
     return l
 
 ################################################################################
@@ -168,7 +173,6 @@ def find_certified_zeros(dop,ini,segment,eps):
     pol=polapprox.on_interval(dop,ini,[-mid,[-rad,+rad]],eps/2)
     P=arb_pol_To_pol(pol)
     l=Sturm_exclusion(P,-rad,rad,eps)
-    print(l)
     certified=find_certified_zeros_in_list(P,l,eps/2)
     for zero in certified:
         zero+=mid
@@ -180,5 +184,5 @@ def find_certified_zeros(dop,ini,segment,eps):
 def test(dop, ini, path, eps, rad=None):
     p=polapprox.on_interval(dop, ini, path, eps, rad=None)
     pol=arb_pol_To_pol(p)
-    pt=plot(pol,-5,5)
+    pt=plot(pol,-10,10)
     show(pt)
