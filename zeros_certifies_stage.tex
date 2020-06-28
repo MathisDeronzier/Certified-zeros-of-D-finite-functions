@@ -1,0 +1,227 @@
+
+\documentclass[a4paper,11pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{natbib}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\textwidth14cm
+\oddsidemargin+0.25cm
+\textheight23cm
+\topmargin-1cm
+
+\title{Zéros certifiés des fonctions D-finies}
+\author{Mathis Deronzier}
+\date{}
+
+\begin{document}
+	
+\maketitle
+\newpage
+\thispagestyle{empty}
+
+\section{Fonctions D-finies}
+
+fonctions vérifiant une équation différentielles de la forme:\\
+\[a_{r}(z)y^{(r)}(z)+a_{n-1}(z)y^{(n-1)}(z)+...+a_{0}y(z)=0, \hspace{3mm} a_{k}\in \mathbb{C}[z].\] 
+
+\subsection{Algorithmes}
+
+Les algorithmes:
+
+On va commencer par l'algorithme d'exclusion:
+\begin{algorithm}
+	\caption{bisection-exclusion method}
+	
+	\vspace{2mm}
+	
+	\textbf{Entrée:} fonction D-finie $F(x)=\sum_{n \geq\beta} f(n)x^{n}$. interval (a,b)
+	
+	\textbf{Sortie:} $(a_{1},b_{1})\cup (a_{2},b_{2})$
+	
+	\begin{algorithmic}[1]
+		
+		\STATE $g(x)=|g(\frac{a+b}{2})|-maj(F(x-\frac{a+b}{2})-F(\frac{a+b}{2}))$
+		\STATE c=premier\_zero\_positif(g)
+		\STATE Renvoyer($(a,\frac{a+b}{2}-c)\cup (\frac{a+b}{2}+c,b)$)
+	\end{algorithmic}
+
+\end{algorithm}
+
+\noindent maj: fonction de majoration fournie dans le module Ore\_algebra.analytic de Marc Mezzarobba\\
+zéropositif(g): le premier zéro sur lequel la fonction g s'annule sur ${R}$
+\begin{algorithm}
+	\caption{Newton iteration}
+	
+	\vspace{2mm}
+	
+	\textbf{Entrée:} fonction $f(x)$. rationel a
+	
+	\textbf{Sortie:} point b
+	
+	\begin{algorithmic}[1]
+		
+		\STATE return $a-\frac{f(a)}{f'(a)}=N_{f}(a)$
+	\end{algorithmic}
+	
+\end{algorithm}
+
+On a en effet l'algorithme classique de Newton défini par la suite $x_{k+1}=N_{f}(x_{k})$ avec $N_{f}(x)=x-\frac{f(x)}{f'(x)}$ 
+
+
+\subsection{théorie alpha de Smale}
+
+Dans cette section les espaces considérés sont des espaces de Banach, $U$ est un ouvert de l'espace. Et les fonctions $f:U\rightarrow \mathbb{F}$ sont analytiques sur U. Nous sommes dans le cas particulier de $\mathbb{R}$ mais cette théorie s'applique sur tout espace métrique complet. 
+On définit les trois opérateurs $\gamma(f,x)$, $\beta(f,x)$, et $\alpha(f,x)$ sur les fonctions analytiques sur $\mathbb{R}$:
+
+\[\gamma(f,x)=\limsup_{k \geq 2}\left\|Df(x)^{-1}\frac{D^{k}f(x)}{k!}\right\|^{\frac{1}{k-1}}\]
+\[\beta(f,x)=\left\|Df(x)^{-1}f(x)\right\|\]
+\[\alpha(f,x)=\gamma(f,x)\beta(f,x)\]
+
+\newtheorem{theorem}{Théorème}
+\begin{theorem}(Théorème gamma) Soit $\zeta \in U$ tel que $f(\zeta)=0$ et que $Df(\zeta)$ soit inversible. Soit $x_{0} \in U$ tel que \\
+	\[\left\|x_{0}-\zeta\right\|\gamma(f,\zeta) \leq \frac{3-\sqrt{7}}{2}=0.17712.... \]
+	Alors la suite de Newton $x_{k+1}=N_{f}(x_{k})$ converge vers $\zeta$. De plus\\
+	\[\left\|x_{k}-\zeta\right\| \leq \left(\frac{1}{2}\right)^{n}\left\|x_{0}-\zeta\right\|\]
+\end{theorem}
+
+
+\begin{theorem} (Wang-Han)
+ Pour tout $\alpha$ $\in [0,3-2\sqrt{2}]$, la quantité $(1+\alpha^{2})-8\alpha$ décroît de 0 à 1. Posons
+
+\[q=\frac{1-\alpha-\sqrt{(1+\alpha)^{2}-8\alpha}}{1-\alpha+\sqrt{(1+\alpha)^{2}-8\alpha}}\]
+
+On a
+\[0 \leq q<1 \text{ si } 0 \leq a < 3-2\sqrt{2}\]
+\[q=1        \text{ si } 0 \leq a < 3-2\sqrt{2}\]
+Pour tout $x\in U$ tel que $\alpha=\alpha(f,x) \leq 3-2\sqrt{2}$, il existe un et un seul zéro $\zeta$ de $f$ tel que\\
+\end{theorem}
+
+\newtheorem{corollaire}{Corollaire}
+\begin{corollaire}
+Pour tout $x\in U$ tel que $\alpha=\alpha(f,x) \leq 3-2\sqrt{2}$, il existe un et un seul zéro $\zeta$ de f tel que
+\[\left\|\zeta-x\right\|\leq\frac{2-\sqrt{2}}{2\gamma(f,x)}\]
+	De plus, la suite de Newton $x_{k+1}=N_{f}(x_{k}),$ $x_{0}=x$, est définie et converge vers $\zeta$.
+\end{corollaire}
+\noindent \textbf{Preuve} $(2-\sqrt(2)/2$ est le maximum de $(1+\alpha-\sqrt{(1+\alpha)^{2}-8\alpha})/4$ lorsque $\alpha \in [0,3-2\sqrt(2)]$.
+
+
+\noindent Opérateur $\gamma(f,x)$
+
+\subsection{algorithmes}
+
+\begin{algorithm}
+	\caption{Gamma opérateur}
+	
+	\vspace{2mm}
+	
+	\textbf{Entrée:} polynôme sur $\mathbb{Q}$ $f$. rationel x
+	
+	\textbf{Sortie:} rationel $\gamma$
+	
+	\begin{algorithmic}[1]
+		
+		\STATE $\gamma$=0
+		\STATE \textbf{for} i \textbf{in range} (2,$deg(P)+1$)\\
+		\hspace{3mm} $\gamma=max(\gamma,\left\|Df(x)^{-1}\frac{D^{k}P(x)}{k!}\right\|^{\frac{1}{k-1}})$\\
+		\textbf{done}
+		\STATE Renvoyer $\gamma$
+		
+	\end{algorithmic}
+	
+\end{algorithm}
+
+
+\noindent $\alpha(f,x)$
+\begin{algorithm}
+	\caption{beta opérateur}
+	
+	\vspace{2mm}
+	
+	\textbf{Entrée:} Polynôme $P(x)$. rationel x
+	
+	\textbf{Sortie:} rationel $\beta$
+	
+	\begin{algorithmic}[1]
+		
+		\STATE Renvoyer $|Df(x)^{-1}f(x)|$
+			
+		\end{algorithmic}
+		
+	\end{algorithm}
+
+
+\section{Approximation uniforme sur un segment}
+
+Dans cette sections on approchera les foncitons D-finies grâces à des polyonômes, L'objectif est d'utiliser les théorèmes vu dans la section précèdente pour assurer la convergence de la méthode de Newton autour d'un zéro. 
+
+Wierstrass a montré que l'espace des polynômes est dense dans l'ensemble des fonctions continues dans R. Toutes les méthodes ne convergent pas, un exemple connu est l'approximation de ...
+
+\subsection{Polynômes de Tchebyshev méthode de Boyd}
+
+
+Le mathématicien Russe Sergei Bernstein (1880-1968) a montré que la série de Chebishev d'une fonction analytique a une convergence quadratique par rapport à la norme infinie. C'est à dire que l'erreur après avoir tronqué la série après le Nème termes est $O(exp(-N\mu))$. On s'intéressera plus tard à une vrai majoration du reste de la série.
+C'est cette majoration avec le théorème des valeurs intermédiaires qui nous permettra de certifier les zéros de la fonction f.
+
+\newtheorem{proposition}{Proposition}
+\begin{proposition}
+Soit f une fonction continue, soit g une fonction telle que \\
+$\left\|f-g \right\|_{\infty} \leq \epsilon$. Alors, si il existe a et b tels que $\left\|g(a)\right\| \geq \epsilon$ et $\left\|g(b)\right\| \geq \epsilon$ avec $g(a)g(b) < 0$, alors f s'annule sur l'intervalle [a,b].
+
+\end{proposition}
+
+\subsection{l'algorithme d'approximation}
+
+
+\begin{algorithm}
+	\caption{Chebyshev approximation}
+	
+	\vspace{2mm}
+	
+	\textbf{Entrée:} fonction D-finie $f(x)=\sum_{n \geq\beta} f(n)x^{n}$. Entier N
+	
+	\textbf{Sortie:} polynôme d'interpolation g
+	
+	\begin{algorithmic}[1]
+		
+		\STATE création des points d'interpolation:$x_{k}=\frac{b-a}{2}cos(\pi\frac{k}{N})+\frac{b+a}{2}$  $k=0,1,..,N$
+		\STATE création des points à approximer: $f_{k}=f(x_{k})$ $k=0,1,..,N$
+		\STATE création de la matrice d'interpolation M de taille $(N+1)\times (N+1)$:\\
+		$p_{j}=2$ $j\in\{1,2\}$ et $p_{j}=1$ sinon, alors:
+		$M_{jk}=\frac{2}{p_{j}p_{k}N}cos(j\pi\frac{k}{N})$
+		\STATE $a_{j}=\sum_{k=0}^{N}M{jk}f_{k}$ j=0,1,..,N
+		\STATE $g(x)=\sum_{j=0}^{N}a_{j}T_{j}(\frac{2x-(b+a)}{b-a})$
+		\STATE Renvoyer g
+	\end{algorithmic}
+	
+\end{algorithm}
+
+\noindent $T_{j}(x)=cos(j$  $arccos(x))$
+
+\noindent On voit ici que la limite de cet algorithme, il necessite une conaissance de la fonction, et c'est justement ce que nous cherchons ici.
+
+\subsection{La méthode des éléments finis à la rescousse}
+
+Une bonne méthode de résolution d'équation différentielle est la méthode des éléments finis. Il faut réflechir à une famille de fonction qu'il pourrait-être interressant de prendre ici. La famille usuelle des fonctions en escalier ne semble pas être suffisante puisqu'elle ne satisfait la condition $C^{\infty}$.
+La famille des polynômes de Tchebyshev semble donc la solution.
+
+\subsection{Méthode de Sturm}
+
+Sur un intervalle donné, on veut maintenant voir si il y a des zéros grace à l'approximation de Tchebyshev et la proposition 1. Nous allons encore utiliser le principe d'exclusion en comptant le nombre de racine dans l'intervalle à l'aide du théorème de Sturm. 
+
+
+Soit P un polynome unitaire, $P(x)=x^{n} + \sum^{n-1}_{k=0}a_{k}x^{k}$, \textit {la suite de Sturm} est une suite finie de polynôme définie à partir de P comme suit:\\
+$P_{0}=P$, $P_{1}=P'$, et pour $k geq 1$ si $P_{k} \neq 0$,  $P_{k+1}$ vérifie:\\
+\[P_{k-1}=P_{k}Q_{k}-P_{k+1},\hspace{2mm}\text{avec }    deg(P_{k+1})<deg(P_{k})\] 
+$P_{k+1}$ est l'opposée du reste dans la division euclidienne de $P_{k-1}$ par $P_{k}$. On a alors le théorème suivant  
+\begin{theorem}(Sturm-Habicht)\\
+	 Notons $\sigma(\xi)$ le nombre de fois où la suite change de signe (un zéro ne comptant pas comme changement de signe) dans la suite\\
+	 $P(\xi),P_{1}(\xi),...,P_{m}(\xi)$.
+	 Pour deux réels $a,b$ avec $a<b$ où $a$ et $b$ ne sont pas des racines de P, le nombre de racines dans l'intervalle $[a,b]$ vaut
+	 $\sigma(a)-\sigma(b)$.
+\end{theorem}
+
+
+\end{document}
