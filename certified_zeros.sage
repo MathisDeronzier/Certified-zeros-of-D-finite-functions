@@ -117,7 +117,7 @@ def sup_eps(Pol,x,eps,n=0):
 
 def certified_zero(Pol,x,eps):
 #renvoie True si le zéro est certifié False sinon
-    return sup_eps(Pol,x,eps) #and sup_eps(-Pol,x,eps))
+    return sup_eps(Pol,x,eps) and sup_eps(-Pol,x,eps))
 
 ################################################################################
 ##Définir la précision voulue pour que l'algorithme converge

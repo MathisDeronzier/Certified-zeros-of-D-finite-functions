@@ -1,5 +1,5 @@
 
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,10.5pt]{article}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{listings}
@@ -7,10 +7,10 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
-\textwidth14cm
+\textwidth15cm
 \oddsidemargin+0.25cm
-\textheight23cm
-\topmargin-1cm
+\textheight24cm
+\topmargin-2cm
 
 \title{Zéros certifiés des fonctions D-finies}
 \author{Mathis Deronzier}
@@ -18,210 +18,316 @@
 
 \begin{document}
 	
-\maketitle
-\newpage
-\thispagestyle{empty}
-
-\section{Fonctions D-finies}
-
-fonctions vérifiant une équation différentielles de la forme:\\
-\[a_{r}(z)y^{(r)}(z)+a_{n-1}(z)y^{(n-1)}(z)+...+a_{0}y(z)=0, \hspace{3mm} a_{k}\in \mathbb{C}[z].\] 
-
-\subsection{Algorithmes}
-
-Les algorithmes:
-
-On va commencer par l'algorithme d'exclusion:
-\begin{algorithm}
-	\caption{bisection-exclusion method}
+	\maketitle
+	\newpage
+	\thispagestyle{empty}
 	
-	\vspace{2mm}
+	\section{Fonctions D-finies}
 	
-	\textbf{Entrée:} fonction D-finie $F(x)=\sum_{n \geq\beta} f(n)x^{n}$. interval (a,b)
+	fonctions vérifiants une équation différentielles de la forme:\\
+	\[a_{r}(z)y^{(r)}(z)+a_{n-1}(z)y^{(n-1)}(z)+...+a_{0}y(z)=0, \hspace{3mm} a_{k}\in \mathbb{C}[z].\] 
 	
-	\textbf{Sortie:} $(a_{1},b_{1})\cup (a_{2},b_{2})$
 	
-	\begin{algorithmic}[1]
+	
+	
+	
+	\section{Approximation uniforme sur un segment}
+	
+	Dans cette sections on approchera les foncitons D-finies grâces à des polyonômes, L'objectif est d'utiliser les théorèmes vu dans la section précèdente pour assurer la convergence de la méthode de Newton autour d'un zéro. 
+	
+	Wierstrass a montré que l'espace des polynômes est dense dans l'ensemble des fonctions continues dans R. Toutes les méthodes ne convergent pas, un exemple connu est l'approximation de ...
+	
+	\subsection{Polynômes de Tchebyshev méthode de Boyd}
+	
+	
+	Le mathématicien Russe Sergei Bernstein (1880-1968) a montré que la série de Chebishev d'une fonction analytique a une convergence quadratique par rapport à la norme infinie. C'est à dire que l'erreur après avoir tronqué la série après le Nème termes est $O(exp(-N\mu))$. On s'intéressera plus tard à une vrai majoration du reste de la série.
+	C'est cette majoration avec le théorème des valeurs intermédiaires qui nous permettra de certifier les zéros de la fonction f.
+	
+	\newtheorem{proposition}{Proposition}
+	\begin{proposition}
+		Soit f une fonction continue, soit g une fonction telle que \\
+		$\left\|f-g \right\|_{\infty} \leq \epsilon$. Alors, si il existe a et b tels que $\left\|g(a)\right\| \geq \epsilon$ et $\left\|g(b)\right\| \geq \epsilon$ avec $g(a)g(b) < 0$, alors f s'annule sur l'intervalle [a,b].
 		
-		\STATE $g(x)=|g(\frac{a+b}{2})|-maj(F(x-\frac{a+b}{2})-F(\frac{a+b}{2}))$
-		\STATE c=premier\_zero\_positif(g)
-		\STATE Renvoyer($(a,\frac{a+b}{2}-c)\cup (\frac{a+b}{2}+c,b)$)
-	\end{algorithmic}
-
-\end{algorithm}
-
-\noindent maj: fonction de majoration fournie dans le module Ore\_algebra.analytic de Marc Mezzarobba\\
-zéropositif(g): le premier zéro sur lequel la fonction g s'annule sur ${R}$
-\begin{algorithm}
-	\caption{Newton iteration}
+	\end{proposition}
 	
-	\vspace{2mm}
+	\subsection{l'algorithme d'approximation}
 	
-	\textbf{Entrée:} fonction $f(x)$. rationel a
 	
-	\textbf{Sortie:} point b
-	
-	\begin{algorithmic}[1]
+	\begin{algorithm}
+		\caption{Chebyshev approximation}
 		
-		\STATE return $a-\frac{f(a)}{f'(a)}=N_{f}(a)$
-	\end{algorithmic}
-	
-\end{algorithm}
-
-On a en effet l'algorithme classique de Newton défini par la suite $x_{k+1}=N_{f}(x_{k})$ avec $N_{f}(x)=x-\frac{f(x)}{f'(x)}$ 
-
-
-\subsection{théorie alpha de Smale}
-
-Dans cette section les espaces considérés sont des espaces de Banach, $U$ est un ouvert de l'espace. Et les fonctions $f:U\rightarrow \mathbb{F}$ sont analytiques sur U. Nous sommes dans le cas particulier de $\mathbb{R}$ mais cette théorie s'applique sur tout espace métrique complet. 
-On définit les trois opérateurs $\gamma(f,x)$, $\beta(f,x)$, et $\alpha(f,x)$ sur les fonctions analytiques sur $\mathbb{R}$:
-
-\[\gamma(f,x)=\limsup_{k \geq 2}\left\|Df(x)^{-1}\frac{D^{k}f(x)}{k!}\right\|^{\frac{1}{k-1}}\]
-\[\beta(f,x)=\left\|Df(x)^{-1}f(x)\right\|\]
-\[\alpha(f,x)=\gamma(f,x)\beta(f,x)\]
-
-\newtheorem{theorem}{Théorème}
-\begin{theorem}(Théorème gamma) Soit $\zeta \in U$ tel que $f(\zeta)=0$ et que $Df(\zeta)$ soit inversible. Soit $x_{0} \in U$ tel que \\
-	\[\left\|x_{0}-\zeta\right\|\gamma(f,\zeta) \leq \frac{3-\sqrt{7}}{2}=0.17712.... \]
-	Alors la suite de Newton $x_{k+1}=N_{f}(x_{k})$ converge vers $\zeta$. De plus\\
-	\[\left\|x_{k}-\zeta\right\| \leq \left(\frac{1}{2}\right)^{n}\left\|x_{0}-\zeta\right\|\]
-\end{theorem}
-
-
-\begin{theorem} (Wang-Han)
- Pour tout $\alpha$ $\in [0,3-2\sqrt{2}]$, la quantité $(1+\alpha^{2})-8\alpha$ décroît de 0 à 1. Posons
-
-\[q=\frac{1-\alpha-\sqrt{(1+\alpha)^{2}-8\alpha}}{1-\alpha+\sqrt{(1+\alpha)^{2}-8\alpha}}\]
-
-On a
-\[0 \leq q<1 \text{ si } 0 \leq a < 3-2\sqrt{2}\]
-\[q=1        \text{ si } 0 \leq a < 3-2\sqrt{2}\]
-Pour tout $x\in U$ tel que $\alpha=\alpha(f,x) \leq 3-2\sqrt{2}$, il existe un et un seul zéro $\zeta$ de $f$ tel que\\
-\end{theorem}
-
-\newtheorem{corollaire}{Corollaire}
-\begin{corollaire}
-Pour tout $x\in U$ tel que $\alpha=\alpha(f,x) \leq 3-2\sqrt{2}$, il existe un et un seul zéro $\zeta$ de f tel que
-\[\left\|\zeta-x\right\|\leq\frac{2-\sqrt{2}}{2\gamma(f,x)}\]
-	De plus, la suite de Newton $x_{k+1}=N_{f}(x_{k}),$ $x_{0}=x$, est définie et converge vers $\zeta$.
-\end{corollaire}
-\noindent \textbf{Preuve} $(2-\sqrt(2)/2$ est le maximum de $(1+\alpha-\sqrt{(1+\alpha)^{2}-8\alpha})/4$ lorsque $\alpha \in [0,3-2\sqrt(2)]$.
-
-
-\noindent Opérateur $\gamma(f,x)$
-
-\subsection{algorithmes}
-
-\begin{algorithm}
-	\caption{Gamma opérateur}
-	
-	\vspace{2mm}
-	
-	\textbf{Entrée:} polynôme sur $\mathbb{Q}$ $f$. rationel x
-	
-	\textbf{Sortie:} rationel $\gamma$
-	
-	\begin{algorithmic}[1]
+		\vspace{2mm}
 		
-		\STATE $\gamma$=0
-		\STATE \textbf{for} i \textbf{in range} (2,$deg(P)+1$)\\
-		\hspace{3mm} $\gamma=max(\gamma,\left\|Df(x)^{-1}\frac{D^{k}P(x)}{k!}\right\|^{\frac{1}{k-1}})$\\
-		\textbf{done}
-		\STATE Renvoyer $\gamma$
+		\textbf{Entrée:} fonction D-finie $f(x)=\sum_{n \geq\beta} f(n)x^{n}$. Entier N
 		
-	\end{algorithmic}
-	
-\end{algorithm}
-
-
-\noindent $\alpha(f,x)$
-\begin{algorithm}
-	\caption{beta opérateur}
-	
-	\vspace{2mm}
-	
-	\textbf{Entrée:} Polynôme $P(x)$. rationel x
-	
-	\textbf{Sortie:} rationel $\beta$
-	
-	\begin{algorithmic}[1]
+		\textbf{Sortie:} polynôme d'interpolation g
 		
-		\STATE Renvoyer $|Df(x)^{-1}f(x)|$
+		\begin{algorithmic}[1]
+			
+			\STATE création des points d'interpolation:$x_{k}=\frac{b-a}{2}cos(\pi\frac{k}{N})+\frac{b+a}{2}$  $k=0,1,..,N$
+			\STATE création des points à approximer: $f_{k}=f(x_{k})$ $k=0,1,..,N$
+			\STATE création de la matrice d'interpolation M de taille $(N+1)\times (N+1)$:\\
+			$p_{j}=2$ $j\in\{1,2\}$ et $p_{j}=1$ sinon, alors:
+			$M_{jk}=\frac{2}{p_{j}p_{k}N}cos(j\pi\frac{k}{N})$
+			\STATE $a_{j}=\sum_{k=0}^{N}M_{jk}f_{k}$ j=0,1,..,N
+			\STATE $g(x)=\sum_{j=0}^{N}a_{j}T_{j}(\frac{2x-(b+a)}{b-a})$
+			\STATE Renvoyer g
+		\end{algorithmic}
+		
+	\end{algorithm}
+	
+	\noindent $T_{j}(x)=cos(j$  $arccos(x))$
+	
+	\noindent On voit ici que la limite de cet algorithme, il necessite une conaissance de la fonction, et c'est justement ce que nous cherchons ici.
+	
+	\subsection{La méthode des éléments finis}
+	
+	Une bonne méthode de résolution d'équation différentielle est la méthode des éléments finis. Il faut réflechir à une famille de fonction qu'il pourrait-être interressant de prendre ici. La famille usuelle des fonctions en escalier ne semble pas être suffisante puisqu'elle ne satisfait la condition $C^{\infty}$.
+	La famille des polynômes de Tchebyshev semble donc la solution.
+	
+	\subsection{Méthode de Sturm}
+	
+	Sur un intervalle donné, on veut maintenant voir si il y a des zéros grace à l'approximation de Tchebyshev et la proposition 1. Nous allons encore utiliser le principe d'exclusion en comptant le nombre de racine dans l'intervalle à l'aide du théorème de Sturm. 
+	
+	
+	Soit P un polynome unitaire, $P(x)=x^{n} + \sum^{n-1}_{k=0}a_{k}x^{k}$, \textit {la suite de Sturm} est une suite finie de polynôme définie à partir de P comme suit:\\
+	$P_{0}=P$, $P_{1}=P'$, et pour $k > 1$ si $P_{k} \neq 0$,  $P_{k+1}$ vérifie:\\
+	\[P_{k-1}=P_{k}Q_{k}-P_{k+1},\hspace{2mm}\text{avec }    deg(P_{k+1})<deg(P_{k})\] 
+	$P_{k+1}$ est l'opposée du reste dans la division euclidienne de $P_{k-1}$ par $P_{k}$. On a alors le théorème suivant 
+	\newtheorem{theorem}{Théorème}[section] 
+	\begin{theorem}(Sturm-Habicht)\\
+		Notons $\sigma(\xi)$ le nombre de fois où la suite change de signe (un zéro ne comptant pas comme changement de signe) dans la suite\\
+		$P(\xi),P_{1}(\xi),...,P_{m}(\xi)$.
+		Pour deux réels $a,b$ avec $a<b$ où $a$ et $b$ ne sont pas des racines de P, le nombre de racines dans l'intervalle $[a,b]$ vaut
+		$\sigma(a)-\sigma(b)$.
+	\end{theorem}
+	
+	\section{Methode de Newton}
+	
+	\subsection{Les applications contractantes}
+	
+	\subsection{théorie alpha de Smale}
+	
+	Dans cette section les espaces considérés sont des espaces de Banach, $U$ est un ouvert de l'espace. Et les fonctions $f:U\rightarrow \mathbb{F}$ sont analytiques sur U. Nous sommes dans le cas particulier de $\mathbb{R}$ mais cette théorie s'applique sur tout espace métrique complet. 
+	On définit les trois opérateurs $\gamma(f,x)$, $\beta(f,x)$, et $\alpha(f,x)$ sur les fonctions analytiques sur $\mathbb{R}$:
+	
+	\[\gamma(f,x)=\limsup_{k \geq 2}\left\|Df(x)^{-1}\frac{D^{k}f(x)}{k!}\right\|^{\frac{1}{k-1}}\]
+	\[\beta(f,x)=\left\|Df(x)^{-1}f(x)\right\|\]
+	\[\alpha(f,x)=\gamma(f,x)\beta(f,x)\]
+	
+	
+	\begin{theorem}(Théorème gamma) Soit $\zeta \in U$ tel que $f(\zeta)=0$ et que $Df(\zeta)$ soit inversible. Soit $x_{0} \in U$ tel que \\
+		\[\left\|x_{0}-\zeta\right\|\gamma(f,\zeta) \leq \frac{3-\sqrt{7}}{2}=0.17712.... \]
+		Alors la suite de Newton $x_{k+1}=N_{f}(x_{k})$ converge vers $\zeta$. De plus\\
+		\[\left\|x_{k}-\zeta\right\| \leq \left(\frac{1}{2}\right)^{n}\left\|x_{0}-\zeta\right\|\]
+	\end{theorem}
+	
+	
+	\begin{theorem} (Wang-Han)
+		Pour tout $\alpha$ $\in [0,3-2\sqrt{2}]$, la quantité $(1+\alpha^{2})-8\alpha$ décroît de 0 à 1. Posons
+		
+		\[q=\frac{1-\alpha-\sqrt{(1+\alpha)^{2}-8\alpha}}{1-\alpha+\sqrt{(1+\alpha)^{2}-8\alpha}}\]
+		
+		On a
+		\[0 \leq q<1 \text{ si } 0 \leq a < 3-2\sqrt{2}\]
+		\[q=1        \text{ si } 0 \leq a < 3-2\sqrt{2}\]
+		Pour tout $x\in U$ tel que $\alpha=\alpha(f,x) \leq 3-2\sqrt{2}$, il existe un et un seul zéro $\zeta$ de $f$ tel que\\
+	\end{theorem}
+	
+	\newtheorem{corollaire}{Corollaire}
+	\begin{corollaire}
+		Pour tout $x\in U$ tel que $\alpha=\alpha(f,x) \leq 3-2\sqrt{2}$, il existe un et un seul zéro $\zeta$ de f tel que
+		\[\left\|\zeta-x\right\|\leq\frac{2-\sqrt{2}}{2\gamma(f,x)}\]
+		De plus, la suite de Newton $x_{k+1}=N_{f}(x_{k}),$ $x_{0}=x$, est définie et converge vers $\zeta$.
+	\end{corollaire}
+	\noindent \textbf{Esquisse de démonstration} $(2-\sqrt(2)/2$ est le maximum de $(1+\alpha-\sqrt{(1+\alpha)^{2}-8\alpha})/4$ lorsque $\alpha \in [0,3-2\sqrt(2)]$.
+	
+	
+	\noindent Opérateur $\gamma(f,x)$
+	
+	\subsection{algorithmes}
+	
+	\begin{algorithm}
+		\caption{Gamma opérateur}
+		
+		\vspace{2mm}
+		
+		\textbf{Entrée:} polynôme sur $\mathbb{Q}$ $f$. rationel x
+		
+		\textbf{Sortie:} rationel $\gamma$
+		
+		\begin{algorithmic}[1]
+			
+			\STATE $\gamma$=0
+			\STATE \textbf{for} i \textbf{in range} (2,$deg(P)+1$)\\
+			\hspace{3mm} $\gamma=max(\gamma,\left\|Df(x)^{-1}\frac{D^{k}P(x)}{k!}\right\|^{\frac{1}{k-1}})$\\
+			\textbf{done}
+			\STATE Renvoyer $\gamma$
 			
 		\end{algorithmic}
 		
 	\end{algorithm}
-
-
-\section{Approximation uniforme sur un segment}
-
-Dans cette sections on approchera les foncitons D-finies grâces à des polyonômes, L'objectif est d'utiliser les théorèmes vu dans la section précèdente pour assurer la convergence de la méthode de Newton autour d'un zéro. 
-
-Wierstrass a montré que l'espace des polynômes est dense dans l'ensemble des fonctions continues dans R. Toutes les méthodes ne convergent pas, un exemple connu est l'approximation de ...
-
-\subsection{Polynômes de Tchebyshev méthode de Boyd}
-
-
-Le mathématicien Russe Sergei Bernstein (1880-1968) a montré que la série de Chebishev d'une fonction analytique a une convergence quadratique par rapport à la norme infinie. C'est à dire que l'erreur après avoir tronqué la série après le Nème termes est $O(exp(-N\mu))$. On s'intéressera plus tard à une vrai majoration du reste de la série.
-C'est cette majoration avec le théorème des valeurs intermédiaires qui nous permettra de certifier les zéros de la fonction f.
-
-\newtheorem{proposition}{Proposition}
-\begin{proposition}
-Soit f une fonction continue, soit g une fonction telle que \\
-$\left\|f-g \right\|_{\infty} \leq \epsilon$. Alors, si il existe a et b tels que $\left\|g(a)\right\| \geq \epsilon$ et $\left\|g(b)\right\| \geq \epsilon$ avec $g(a)g(b) < 0$, alors f s'annule sur l'intervalle [a,b].
-
-\end{proposition}
-
-\subsection{l'algorithme d'approximation}
-
-
-\begin{algorithm}
-	\caption{Chebyshev approximation}
 	
-	\vspace{2mm}
+	\subsection{Algorithmes}
 	
-	\textbf{Entrée:} fonction D-finie $f(x)=\sum_{n \geq\beta} f(n)x^{n}$. Entier N
+	Les algorithmes:
 	
-	\textbf{Sortie:} polynôme d'interpolation g
-	
-	\begin{algorithmic}[1]
+	On va commencer par l'algorithme d'exclusion:
+	\begin{algorithm}
+		\caption{bisection-exclusion method}
 		
-		\STATE création des points d'interpolation:$x_{k}=\frac{b-a}{2}cos(\pi\frac{k}{N})+\frac{b+a}{2}$  $k=0,1,..,N$
-		\STATE création des points à approximer: $f_{k}=f(x_{k})$ $k=0,1,..,N$
-		\STATE création de la matrice d'interpolation M de taille $(N+1)\times (N+1)$:\\
-		$p_{j}=2$ $j\in\{1,2\}$ et $p_{j}=1$ sinon, alors:
-		$M_{jk}=\frac{2}{p_{j}p_{k}N}cos(j\pi\frac{k}{N})$
-		\STATE $a_{j}=\sum_{k=0}^{N}M{jk}f_{k}$ j=0,1,..,N
-		\STATE $g(x)=\sum_{j=0}^{N}a_{j}T_{j}(\frac{2x-(b+a)}{b-a})$
-		\STATE Renvoyer g
-	\end{algorithmic}
+		\vspace{2mm}
+		
+		\textbf{Entrée:} fonction D-finie $F(x)=\sum_{n \geq\beta} f(n)x^{n}$. interval (a,b)
+		
+		\textbf{Sortie:} $(a_{1},b_{1})\cup (a_{2},b_{2})$
+		
+		\begin{algorithmic}[1]
+			
+			\STATE $g(x)=|g(\frac{a+b}{2})|-maj(F(x-\frac{a+b}{2})-F(\frac{a+b}{2}))$
+			\STATE c=premier\_zero\_positif(g)
+			\STATE Renvoyer($(a,\frac{a+b}{2}-c)\cup (\frac{a+b}{2}+c,b)$)
+		\end{algorithmic}
+		
+	\end{algorithm}
 	
-\end{algorithm}
-
-\noindent $T_{j}(x)=cos(j$  $arccos(x))$
-
-\noindent On voit ici que la limite de cet algorithme, il necessite une conaissance de la fonction, et c'est justement ce que nous cherchons ici.
-
-\subsection{La méthode des éléments finis à la rescousse}
-
-Une bonne méthode de résolution d'équation différentielle est la méthode des éléments finis. Il faut réflechir à une famille de fonction qu'il pourrait-être interressant de prendre ici. La famille usuelle des fonctions en escalier ne semble pas être suffisante puisqu'elle ne satisfait la condition $C^{\infty}$.
-La famille des polynômes de Tchebyshev semble donc la solution.
-
-\subsection{Méthode de Sturm}
-
-Sur un intervalle donné, on veut maintenant voir si il y a des zéros grace à l'approximation de Tchebyshev et la proposition 1. Nous allons encore utiliser le principe d'exclusion en comptant le nombre de racine dans l'intervalle à l'aide du théorème de Sturm. 
-
-
-Soit P un polynome unitaire, $P(x)=x^{n} + \sum^{n-1}_{k=0}a_{k}x^{k}$, \textit {la suite de Sturm} est une suite finie de polynôme définie à partir de P comme suit:\\
-$P_{0}=P$, $P_{1}=P'$, et pour $k geq 1$ si $P_{k} \neq 0$,  $P_{k+1}$ vérifie:\\
-\[P_{k-1}=P_{k}Q_{k}-P_{k+1},\hspace{2mm}\text{avec }    deg(P_{k+1})<deg(P_{k})\] 
-$P_{k+1}$ est l'opposée du reste dans la division euclidienne de $P_{k-1}$ par $P_{k}$. On a alors le théorème suivant  
-\begin{theorem}(Sturm-Habicht)\\
-	 Notons $\sigma(\xi)$ le nombre de fois où la suite change de signe (un zéro ne comptant pas comme changement de signe) dans la suite\\
-	 $P(\xi),P_{1}(\xi),...,P_{m}(\xi)$.
-	 Pour deux réels $a,b$ avec $a<b$ où $a$ et $b$ ne sont pas des racines de P, le nombre de racines dans l'intervalle $[a,b]$ vaut
-	 $\sigma(a)-\sigma(b)$.
-\end{theorem}
-
-
+	\noindent maj: fonction de majoration fournie dans le module Ore\_algebra.analytic de Marc Mezzarobba\\
+	zéropositif(g): le premier zéro sur lequel la fonction g s'annule sur ${R}$
+	\begin{algorithm}
+		\caption{Newton iteration}
+		
+		\vspace{2mm}
+		
+		\textbf{Entrée:} fonction $f(x)$. rationel a
+		
+		\textbf{Sortie:} point b
+		
+		\begin{algorithmic}[1]
+			
+			\STATE return $a-\frac{f(a)}{f'(a)}=N_{f}(a)$
+		\end{algorithmic}
+		
+	\end{algorithm}
+	
+	On a en effet l'algorithme classique de Newton défini par la suite $x_{k+1}=N_{f}(x_{k})$ avec $N_{f}(x)=x-\frac{f(x)}{f'(x)}$ 
+	\noindent $\alpha(f,x)$
+	
+	
+	\section{Le théorème de Perrron-Kreuser}
+	
+	On s'interesse ici au comportement asymptotique des solutions des récurrences. Supposons que les coefficients $b_{n}(n)$ de l'équation
+	\[b_{s}(n)u_{n+s}+b_{s-1}(n)u_{n+s-1}+...+b_{s'}(n)u_{n+s'}=0  \tag{*}\]
+	(où s' peut être négatif) ont des comportements asymptotiques de la forme
+	\[\forall k, \hspace{2mm} b_{k}(n) \sim c_{k}n^{d_{k}} \hspace{2mm} \text{quand } n \rightarrow \infty\]
+	avec $c_{k} \in E$ et $d_{k} \in \mathbb{Z}$. Supposons de plus que $u_{n}$ est une solution de la forme  
+	\[\frac{u_{n+1}}{u_{n}}\sim \lambda n^{\kappa} \hspace{2mm} \text{quand}n \rightarrow \infty\]
+	
+	En réécrivant l'équation séquencielle avec ses coefficient asymptotiques $n \rightarrow \infty$
+	\[c_{s}\lambda^{s} n^{d_{s}+s\kappa}+c_{s-1}u_{n}\lambda^{s-1} n^{d_{s-1}+(s-1)\kappa}+...+c_{s'}\lambda^{s'} n^{d_{s'}+s'\kappa}u_{n}\]
+	
+	pour que cette expression s'annule, il est nécessaire que les termes asymptotiquement dominants se compense, et donc que l'exposant $d_{k}+k\kappa$ le plus grand soit atteint au moins deux fois. Alors $-\kappa$ doit être parmis les pentes des tes du \textit{polygone de newton} de l'équation.
+	
+	\newtheorem{definition}{Définition}
+	\begin{definition} Le polygône de Newton est l'envellope convexe supérieure des points $(k, d_{k}) \in \mathbb{R}$, si E=[A,B] désigne une arête du polygône de Newton, on note $\kappa(E)$ l'opposée de sa pente, et on définit l'équation caractéristique associée à E (ou à $\kappa(E))$ par
+		\[\chi_{E}(\lambda)=\sum_{(k,d_{k}) \in E} c_{k}\lambda^{k-t}\]
+		Où $(t,d_{t})=A$ l'extrémité gauche du segment E.
+	\end{definition}
+	
+	Remarquons que la somme des degrés des différentes équations caractéristiques est égale à l'ordre de l'équation de récurrence 
+	
+	\begin{theorem} (Perron-Kreuser)
+		Pour toute arête E du polygone de Newton de la récurrence (*) notons $\lambda_{E_{1}},\lambda{E_{2}},...$ les racines de $\chi(E)$ comptées avec leur multiplicité.
+		
+		(a) supposons que pour toute arête E, les modules $|\lambda_{E_{i}}|$ des racines de $\chi(E)$ sont deux à deux distincts. Alors toute solution non ultimement nulle de (*) satisfait
+		\[\frac{u_{n+1}}{u_{n}}\sim \lambda_{E_{i}}n^{\kappa(E)} \hspace{2mm} \text{quand } n \rightarrow \infty\]
+		Pour une certaine arête E et un certain i.
+		
+		(b)Si en outre (*) est réversible, elle admet une base de solution 
+		\[(u_{n}^{[E_{i}]})_{E_{i}\leq i \leq deg \chi_{E}}\]
+		telle que 
+		\[\frac{u_{n+1}^{[E_{i}]}}{u_{n}^{[E_{i}]}}\sim \lambda n^{\kappa(E)} \hspace{2mm} \text{quand } n \rightarrow \infty\]
+		
+		(c)Dans le cas où il existe E et $i \neq j$ tels que $|\lambda_{E_{i}}|=|\lambda_{E_{j}}|$ les analogues des deux assertions précédente subsistent mais avec la conclusion plus faible
+		\[\limsup_{n \rightarrow \infty } \big|\frac{u_{n}^{E_{i}}}{n!^{\kappa(E)}}\big|^{\frac{1}{n}}=|\lambda_{E_{i}}|\]
+	\end{theorem}
+	
+	Certains résultats sont plus précis dans des cas particuliers dans le Schäfke et Noble.
+	
+	\section{Majoration pour les suites P-récursives}
+	
+	Ce chapitre est quasiment une réécriture du chapitre 5 de la thèse de Marc Mezzarobba. Il majore les suites P-réccursives à l'aide du théorème de Perron-Kreuser.
+	L'avantage de cette majoration est qu'elle sera fine, c'est à dire qu'on peut quantifier la différence entre la majoration et la solution.
+	Cette majoration terme à terme permettra donc de trouver une majoration fine du coefficient alpha et donc des bassins d'attractions donnés par le théorème de (Wang-Han), ce qui permettra à notre algorithme de certifier ses zéros.
+	
+	Considérons une suite P-récursive u, définie par la récurrence
+	\[p^{[0]}(n+s)u_{n}+p^{[1]}(n)u_{n+s-1}+...+p^{[s]}(n)u_{n}=0,\hspace{2mm} p^{[k]}\in mathbb{Q} \tag{*}\] 
+	\begin{theorem}Soit $(u_{n})\in \mathbb{Q}^{\mathbb{N}}$ une suite P-récursive solution de la récurrence homogène (*), avec $p^{[s]}(n) \neq 0$ et $p^{[0]}(n) \neq 0$ pour $n \in \mathbb{N}$. Étant donnée la récurrence (*) et les conditions initiales $u_{0},...,u_{s-1}$, l'algorithme définit dans cette section calcule un réel positif A, un rationnel $\kappa$, un nombre algébrique $\alpha$  et une fonction $\phi$ tels que
+		\[\forall n\in \mathbb{N}, \hspace{6mm}|u_{n}| \leq A n!^{\kappa}\alpha^{n}\phi(n)\]
+		Avec $\phi(n)=e^{o(n)}$. Pour choix générique des conditions initiales, les paramètres $\kappa$ et $\alpha$ sont optimaux.
+	\end{theorem}
+	
+	La fonction $\phi$ est donnée par une formule explicite, elle-même décrite par un petit nombre de paramètres. Les formes qu'elle peut prendre sont détaillées par la suite.
+	
+	\subsection{Esquisse de l'algorithme}
+	
+	On commence par étudier le polygone de Newton de la récurrence et les équations caractéristiques de la récurrence, pour délimiter à l'aide du théorème de Perron-Kreuser les comportements asymptotiques possibles de $u_{n}$.
+	
+	\subsection{Pôles et singularités dominantes}
+	
+	\begin{definition} Si P $\in \mathbb{Q}[z]$ est un polynôme non réduit à un monôme, on note respectivement
+		\[\delta(P)=min\{|\zeta| \neq 0: P(\zeta)=0\} \text{ et } \mu_{\delta}=max\{\mu(\zeta,P):|\zeta|=\delta(P)\}\] 
+		On appelle \textit{pôles dominants} d'une fraction rationelle et $\delta$-racines  de son dénominateur, et \textit{singularités dominantes} d'un opérateur différentielle à coefficient polynomiaux celles de son coefficient de tête.  
+	\end{definition}
+	
+	\subsection{Croissance générique des solutions}
+	
+	\begin{definition} Soit $R \in \mathbb{Q}[n]\big< S\big>$ unn opérateur réversible non singulier, d'ordre s. Une solution $(u_{n})$ de la récurrence R.u=0 esst alors déterminée de façon unique par ses s premières valeurs. Nous dirons qu'une proposition est vrai pour une solution générique si elle est satisfaite pour $(u_{0},u_{1},...,u_{s-1}) \in \mathbb{Q}^{s}/V$ où V est un sous-espace strict de $\mathbb{Q}^{s}$
+		
+	\end{definition}
+	
+	\begin{algorithm}
+		\caption{Asympt(R)}
+		
+		\vspace{2mm}
+		
+		\textbf{Entrée:} $R=\sum_{k=0}^{s} b^{[k]}(n)S^{k} \hspace{4mm} \in \mathbb{Q}[n]\big<S\big>$
+		
+		\textbf{Sortie:} $\kappa \in \mathbb{Q}, P_{\alpha} \in \mathbb{Q}[z].$
+		
+		\begin{algorithmic}[1]
+			\vspace{4mm}
+			\STATE $\kappa:= max_{k=0}^{s-1}\frac{\text{deg } b^{[k]}-\text{deg } b{[s]}}{s-k}$
+			\vspace{4mm}
+			\STATE $P_{\alpha}:=\sum_{l=0}^{s} b_{d+l\kappa}^{[s-l]}\text{ où } d=\text{deg } b^{[s]}$
+			\vspace{4mm}
+			\STATE Renvoyer $(\kappa,P_{\alpha})$
+		\end{algorithmic}
+		
+	\end{algorithm}
+	
+	\noindent D'après le théorème de Perron-kreuser les solutions dont "la croissance est la plus rapide", c'est à dire celle dont le coeffficient $kappa$ est le plus grand est celle la plus à droite du polygone de Newton, et les racine de module maximal de son équation caractéristique.
+	
+	l'algorithme renvoie le $kappa$ maximale et le polynôme réciproque de l'équation caractéristique correspondante à celui-ci.
+	
+	\begin{proposition} Posons $R=\sum_{k=0}^{s} b^{[k]}(n)S^{k} \hspace{4mm} \in \mathbb{Q}[n]\big<S\big>$ et supposons que R n'est pas réduit à un terme $b^{[s]}S^{k}$. On a donc
+		\[\limsup_{n \rightarrow \infty }\Big|\frac{u_{n}}{n!^{k}}\Big|^{\frac{1}{n}} \hspace{4mm} \text{où } \alpha=\frac{1}{\delta(P_{\alpha})}\]
+		Pour toute solution $(u_{n})$ vérifiant R.u=0 avec égalité pour une solution générique. 
+	\end{proposition}
+	\textbf{Esquisse de démonstration}
+	Le polygone de Newton étant convexe, le coefficient $\kappa$ le plus élevé correspond à un segment relié au sommet le plus à droite du polygone.\\
+	Aussi, en écrivant prenant le polynôme caractéristique correspondant, le dérivant par $\lambda^{s}$ et en posant $\beta=\frac{1}{\lambda}$ le polynôme en $\beta$ est le même que celui renvoyé par l'algorithme \textit{asympt}. Pour ce qui est du rayon de l'inégalité, elle résulte du (c) du théorème de Perron-Kreuser.
+	Il reste à démontrer l'inégalité pour des conditions initiales génériques. Soit $V=ker$ $R \subset \mathbb{Q}^{\mathbb{N}}$, d'après le théorème (vrai?????)\\
+	Il existe une solution $u^{[0]}$ telle que $\limsup \big|u^{[0]}_{n}/n!^{k}\big|^{1/n}=\alpha$.\\
+	Étendons cette solution en une base $(u^{[0]},u^{[1]},..,u^{[s-1]})$ de V. Soit $u=\sum_{k}\lambda^{[k]}u^{[k]}$
+	Par construction de $\kappa$ et $\alpha$, on a $\limsup \big|u_{n}/n!^{\kappa}\big|^{1/n} \leq \alpha$. Quitte à extraire des sous-suites pour $u_{n}$ on peut supposer que $u^{[0]}_{n}$ n'est jamais nul,il existe donc $\beta$ tel que
+	\[\Big|\lambda^{[0]}+\frac{\lambda^{[1]}u^{[1]}_{n}+...+\lambda^{[s-1]}u^{[s-1]}_{n}}{u^{[0]}_{n}}\Big| \rightarrow_{n \rightarrow \infty} \frac{\beta}{\alpha}\] 
+	et $\beta=\alpha$ à moins que 
+	\[\frac{\lambda^{[1]}u^{[1]}_{n}+...+\lambda^{[s-1]}u^{[s-1]}_{n}}{u^{[0]}_{n}}\rightarrow_{n \rightarrow \infty}-\lambda^{[0]}\]
+	Condition fausse pour des $\lambda^{[k]}$ génériques.
+	
+	\begin{definition} On appelle arête dominante l'arête la plus à droite du polygone de Newton, équation caractéristique dominante son équation caractéristique associée, et réccurence normalisé une récurrence pour laquelle cette arête est horizontale. C'est à dire que le comportement asymptotique est purement exponentiel, et non factoriel ($\kappa=0$).
+	\end{definition}
+	
+	\subsection{Fonction génératrice normalisée}
+	
 \end{document}
