@@ -25,7 +25,7 @@
 	\section{Fonctions D-finies}
 	
 	fonctions vérifiants une équation différentielles de la forme:\\
-	\[a_{r}(z)y^{(r)}(z)+a_{n-1}(z)y^{(n-1)}(z)+...+a_{0}y(z)=0, \hspace{3mm} a_{k}\in \mathbb{C}[z].\] 
+	\[a_{r}(z)y^{(r)}(z)+a_{n-1}(z)y^{(n-1)}(z)+...+a_{0}(z)y(z)=0, \hspace{3mm} a_{k}\in \mathbb{C}[z].\] 
 	
 	
 	
@@ -33,14 +33,13 @@
 	
 	\section{Approximation uniforme sur un segment}
 	
-	Dans cette sections on approchera les foncitons D-finies grâces à des polyonômes, L'objectif est d'utiliser les théorèmes vu dans la section précèdente pour assurer la convergence de la méthode de Newton autour d'un zéro. 
-	
-	Wierstrass a montré que l'espace des polynômes est dense dans l'ensemble des fonctions continues dans R. Toutes les méthodes ne convergent pas, un exemple connu est l'approximation de ...
+	Dans cette sections on approchera les foncitons D-finies à l'aide des polyonômes.
+	Wierstrass a montré qu'il était possible d'approximer sur un segment n'importe quelle fonction continue à partir de polynômes. Cependant, toutes les méthodes d'interpollation de polynômes ne convergent pas. Un exemple est donné par Runge, la suite de polynômes qui interpollent à intervalles égaux la fonction $f(x)=\frac{1}{1+x^{2}}$ sur $[-5,5]$ diverge lorsque $N \rightarrow \infty$.
 	
 	\subsection{Polynômes de Tchebyshev méthode de Boyd}
 	
 	
-	Le mathématicien Russe Sergei Bernstein (1880-1968) a montré que la série de Chebishev d'une fonction analytique a une convergence quadratique par rapport à la norme infinie. C'est à dire que l'erreur après avoir tronqué la série après le Nème termes est $O(exp(-N\mu))$. On s'intéressera plus tard à une vrai majoration du reste de la série.
+	Le mathématicien Russe Sergei Bernstein (1880-1968) a montré que la série de Chebyshev d'une fonction analytique a une convergence quadratique par rapport à la norme infinie. C'est à dire que l'erreur après avoir tronqué la série après le Nème termes est $O(exp(-N\mu))$. On s'intéressera plus tard à une vrai majoration du reste de la série.
 	C'est cette majoration avec le théorème des valeurs intermédiaires qui nous permettra de certifier les zéros de la fonction f.
 	
 	\newtheorem{proposition}{Proposition}
@@ -106,6 +105,31 @@
 	
 	\subsection{Les applications contractantes}
 	
+	\subsection{l'algorithme de Newton}
+	
+	L'algorithme classique de Newton défini par la suite $x_{k+1}=N_{f}(x_{k})$ avec $N_{f}(x)=x-\frac{f(x)}{f'(x)}$ 
+	\noindent $\alpha(f,x)$
+	
+	\begin{algorithm}
+		\caption{Newton iteration}
+		
+		\vspace{2mm}
+		
+		\textbf{Entrée:} fonction $f(x)$. rationel a
+		
+		\textbf{Sortie:} point b
+		
+		\begin{algorithmic}[1]
+			
+			\STATE return $a-\frac{f(a)}{f'(a)}=N_{f}(a)$
+		\end{algorithmic}
+	\end{algorithm}
+	
+	Cependant comme nous avons vu précèdement, il faut s'assurer que cette application est contractante. La théorie alpha de Smale permet d'assurer la convergence de l'algorithme de Newton ainsi que de certifier les zéros, les principaux résultats de cette théorie sont rappelés dans la prochaine section.
+	
+	
+	
+	
 	\subsection{théorie alpha de Smale}
 	
 	Dans cette section les espaces considérés sont des espaces de Banach, $U$ est un ouvert de l'espace. Et les fonctions $f:U\rightarrow \mathbb{F}$ sont analytiques sur U. Nous sommes dans le cas particulier de $\mathbb{R}$ mais cette théorie s'applique sur tout espace métrique complet. 
@@ -145,28 +169,8 @@
 	
 	\noindent Opérateur $\gamma(f,x)$
 	
-	\subsection{algorithmes}
+	Ce sera ce dernier théorème qui nous permettra de vérifier si nous avons bien un zéro. Cependant le calcule de $\gamma$ et donc de $\alpha$ sont encore difficiles pour des coefficients de fonctions D-finies vérifiant une récurrence polynomiale. Le chapitre sur les séries majorantes fournie une majoration du coefficient $\alpha$
 	
-	\begin{algorithm}
-		\caption{Gamma opérateur}
-		
-		\vspace{2mm}
-		
-		\textbf{Entrée:} polynôme sur $\mathbb{Q}$ $f$. rationel x
-		
-		\textbf{Sortie:} rationel $\gamma$
-		
-		\begin{algorithmic}[1]
-			
-			\STATE $\gamma$=0
-			\STATE \textbf{for} i \textbf{in range} (2,$deg(P)+1$)\\
-			\hspace{3mm} $\gamma=max(\gamma,\left\|Df(x)^{-1}\frac{D^{k}P(x)}{k!}\right\|^{\frac{1}{k-1}})$\\
-			\textbf{done}
-			\STATE Renvoyer $\gamma$
-			
-		\end{algorithmic}
-		
-	\end{algorithm}
 	
 	\subsection{Algorithmes}
 	
@@ -193,24 +197,7 @@
 	
 	\noindent maj: fonction de majoration fournie dans le module Ore\_algebra.analytic de Marc Mezzarobba\\
 	zéropositif(g): le premier zéro sur lequel la fonction g s'annule sur ${R}$
-	\begin{algorithm}
-		\caption{Newton iteration}
-		
-		\vspace{2mm}
-		
-		\textbf{Entrée:} fonction $f(x)$. rationel a
-		
-		\textbf{Sortie:} point b
-		
-		\begin{algorithmic}[1]
-			
-			\STATE return $a-\frac{f(a)}{f'(a)}=N_{f}(a)$
-		\end{algorithmic}
-		
-	\end{algorithm}
 	
-	On a en effet l'algorithme classique de Newton défini par la suite $x_{k+1}=N_{f}(x_{k})$ avec $N_{f}(x)=x-\frac{f(x)}{f'(x)}$ 
-	\noindent $\alpha(f,x)$
 	
 	
 	\section{Le théorème de Perrron-Kreuser}
@@ -253,7 +240,7 @@
 	
 	Certains résultats sont plus précis dans des cas particuliers dans le Schäfke et Noble.
 	
-	\section{Majoration pour les suites P-récursives}
+	\section{Majoration des suites P-récursives}
 	
 	Ce chapitre est quasiment une réécriture du chapitre 5 de la thèse de Marc Mezzarobba. Il majore les suites P-réccursives à l'aide du théorème de Perron-Kreuser.
 	L'avantage de cette majoration est qu'elle sera fine, c'est à dire qu'on peut quantifier la différence entre la majoration et la solution.
@@ -281,7 +268,7 @@
 	
 	\subsection{Croissance générique des solutions}
 	
-	\begin{definition} Soit $R \in \mathbb{Q}[n]\big< S\big>$ unn opérateur réversible non singulier, d'ordre s. Une solution $(u_{n})$ de la récurrence R.u=0 esst alors déterminée de façon unique par ses s premières valeurs. Nous dirons qu'une proposition est vrai pour une solution générique si elle est satisfaite pour $(u_{0},u_{1},...,u_{s-1}) \in \mathbb{Q}^{s}/V$ où V est un sous-espace strict de $\mathbb{Q}^{s}$
+	\begin{definition} Soit $R \in \mathbb{Q}[n]\big< S\big>$ unn opérateur réversible non singulier, d'ordre s. Une solution $(u_{n})$ de la récurrence R.u=0 est alors déterminée de façon unique par ses s premières valeurs. Nous dirons qu'une proposition est vrai pour une solution générique si elle est satisfaite pour $(u_{0},u_{1},...,u_{s-1}) \in \mathbb{Q}^{s}/V$ où V est un sous-espace strict de $\mathbb{Q}^{s}$
 		
 	\end{definition}
 	
@@ -330,4 +317,102 @@
 	
 	\subsection{Fonction génératrice normalisée}
 	
+	\begin{algorithm}
+		\caption{RecToDiffeq}
+		
+		\vspace{2mm}
+		
+		\textbf{Entrée:} $R=\sum_{k=0}^{s} b^{[k]}(n)S^{k} \hspace{4mm} \in \mathbb{Q}[n]\big<S\big>$
+		
+		\textbf{Sortie:} Un opérateur $D \in \mathbb{Q}[z] \big<\theta\big>$ tel que $\forall (u_{n}) \in \mathbb{Q}^{\mathbb{N}}$ R.u=0 $\iff D.\sum u_{n}x^{n}=0$ 
+		
+		\begin{algorithmic}[1]
+			\vspace{3mm}
+			\STATE g:=pgcd$(b^{[s]},\pi)$ où $\pi=\prod_{k=1}^{s}(n+k)$
+			\vspace{3mm}
+			\STATE calculer les $c_{jk}$ tels que $g.R=\sum_{k=0}^{s}\sum_{j}c_{jk}n^{j}S^{k}$\\
+			\vspace{3mm}
+			$[\textit{on a ainsi } g.R=\sum_{k=0}^{s}\sum_{j}c_{jk}S^{k}(n-k)^{j}]$
+			\vspace{3mm}
+			\STATE développer $\sum_{k=0}^{s}\sum_{j} c_{jk}z^{s-k}(\theta-k)^{j}$ sous la forme $D=\sum_{k=0}^{r} a^{[k]}\theta^{k}$
+			\vspace{3mm}
+			\STATE renvoyer D
+		\end{algorithmic}
+		
+	\end{algorithm}
+	La multiplication par g s'assure que les premier termes $u_{0},...,u_{s-1}$
+	s'affranchissent des potentielles contraintes crées par les terme indéxés sur les coefficients négatifs. Mais ne change pas la relation pour les termes supérieurs à s.
+	
+	Considérons $R \in \mathbb{Q}[n]\big< S\big>$ un opérateur non singulier, d'ordre s. Une solution $(u_{n})$ de la récurrence R.u=0, u(z) est annulée par l'opérateur RecToDiffeq$(R)(\theta)=\sum_{k=0}^{r}a^{[k]}\theta^{k} \in \mathbb{Q}[z]\big< \theta\big>$. En divisant par $a^{[r]}$ on obtient
+	
+	\[\big(\theta^{r}+\frac{a^{[r-1]}\theta^{r-1}+...+a^{[0]}}{a^{[r]}}\big).u=0\]
+	
+	\begin{proposition}Si l'opérateur R est normalisé, alors l'origine est un point régulier de D=RecToDiffeq et l'équation caractéristique dominante de $R$ est le polynôme réciproque de $a^{[r]}$ 
+	\end{proposition}
+	
+	Dans le cas général, on commence par normaliser R.
+	Le produit symétrique n'est pas quelconque, regarder Barkatou et al.
+	\newpage
+	\begin{algorithm}
+		\caption{Normalize$(R,\kappa)$}
+		
+		\vspace{2mm}
+		
+		\textbf{Entrée:} Un opérateur de récurrence $R=\sum_{k=0}^{s} b^{[k]}(n)S^{k} \in \mathbb{Q}[n]\big<S\big>$, un rationnel $\kappa$
+		
+		\textbf{Sortie:} Un opérateur $D \in \mathbb{Q}[x] \big<\theta\big>$ 
+		
+		\begin{algorithmic}[1]
+			\vspace{4mm}
+			\STATE $p/q:=\kappa$, avec $p \in \mathbb{Z}$, $q \in \mathbb{N}^{*}$, pgcd$(p,q)=1$
+			\vspace{4mm}
+			\STATE calculer les coefficients $\hat{b}^{[k]}(n)$ du produit symétrique $\hat{R}=\sum_{k=0}^{qs}\hat{b}^{[k]}(n)S^{k}$\\
+			\vspace{2mm}
+			de $R$ par $(n+k)^{p}S^{q}-1$
+			\vspace{4mm}
+			\STATE renvoyer RecToDiffeq($\hat{R}$)
+		\end{algorithmic}
+		
+	\end{algorithm}
+	
+	
+	\begin{proposition}Soit $R \in \mathbb{Q}[n]\big< S\big>$ un opérateur non singulier, réversible de coefficient constant par rapport à S non nul. Soient $p/q, P_{\alpha}$ le comportement asymptotique génériquee renvoyé par $Asympt$. On suppose que $\delta(P_{\alpha})<\infty$ alors $Normalize(R,p/q)$ calcule un opérateur différentiel D qui annule la série 
+		\[u(x)=\sum_{n=0}^{\infty} \psi_{n}u_{n}x^{n}\]
+		pour toute suite $\psi$ et $u$ solutions de
+		\[(n+q)^{p}\psi_{n+q}=\psi_{n}\]
+		et $R.u=0$, l'opérateur D est régulier à l'origine et le module de sa singularité dominante est égale à $\delta(P_{\alpha})$.
+	\end{proposition}
+	
+	\subsection{Séries majorantes}
+	
+	\begin{definition} Une série formelle v $\in \mathbb{R}_{+}[[\mathbb{Z}]]$ est appelée série majorante de $ u \in \mathbb{R}[[\mathbb{Z}]$ si v domine u coefficient par coefficient, $\forall n |u_{n}|\leq v_{n}$. On note $u \unlhd v$.
+	\end{definition}
+	
+	\begin{proposition} Soient $u,u^{[1]},u^{[2]}\in \mathbb{R}[[x]]$, et $v,v^{[1]},v^{[2]} \in \mathbb{R}_{+}[[x]]$ tels que  $u\leq v,u^{[1]}\leq v^{[1]}$ et $u^{[2]}\leq v^{[2]}$ alors
+		
+		(a)Le rayon de convergence de $v$ est inclus dans celui de $u$;
+		
+		(b)Si $\zeta$ appartient qu disque de convergence de $v$, alors $|u(\zeta)|\leq v(|\zeta|)$;
+		
+		(c)On a les majorations
+		\[u' \unlhd v'; \hspace{6mm} u^{[1]}+u^{[2]}\unlhd v^{[1]}+v^{[2]}; \hspace{6mm}u^{[1]}u^{[2]}\unlhd v^{[1]}v^{[2]}; \]
+		
+		(e)Si $v^{[1]}(0)=0$ alors $ u^{[2]} \circ u^{[1]} \unlhd v^{[2]}\circ v^{[1]}$.
+	\end{proposition}
+	
+	\noindent\textbf{Méthode de majoration avec un example simple}\\
+	On choisit une série a(z) définie sur $D=\{z,|z|<\rho\}$ soit $u$ une autre série vérifiant $u'(z)=a(z)u(z)$ alors le rayon de convergence de $u$ est le même que celui de a.
+	\\
+	
+	\noindent\textbf{Démonstration} Pour commencer, $\exists M \in \mathbb{R}_{+}, \forall n$ $|a_{n}|\leq M \rho^{-n}$.
+	On écrit la relation sur u en terme de séries: $(n+1)u_{n+1}=\sum_{k=0}^{n}u_{n-j}a_{j}$ en considérant $v$ telle que  $(n+1)v_{n+1}=\sum_{k=0}^{n}v_{n-j}M\rho^{-j}$ on observe $v'(z)=\frac{M}{1-z\rho^{-1}}v(z)$ \\
+	On a $v=v_{0}(1-z\rho^{-1})^{-M\rho}$. Si $|u_{0}| \leq v_{0}$ la récurrence permet de conclure $ u\unlhd v$. On sait que le rayon de convergence de $v$ est $\rho$ donc celui de $u$ est supérieur à $\rho$.
+	
+	\subsection{Séries majorantes  pour les fonctions D-finies normalisées}
+	
+	Soit D une équation différentielle normalisée, 
+	
+	\[\theta^{r}+\frac{a^{[r-1]}\theta^{r-1}+...+a^{[0]}}{a^{[r]}}\]
+	Le procédé de majoration est le suivant. En isolant le coefficient constant du développement de Taylor en zéro de chaque coefficient, l'équation se réecrit
+	\[Q(\theta).u=z(a^{[r-1]}\theta^{r-1}+...+a^{[0]}a^{[r]}).u\]
 \end{document}
