@@ -14,17 +14,20 @@
 
 \title{Zéros certifiés des fonctions D-finies}
 \author{Mathis Deronzier}
+
 \date{}
 
 \begin{document}
 	
 	\maketitle
+	\renewcommand{\contentsname}{Sommaire}
 	\newpage
-	\thispagestyle{empty}
-	
+	\tableofcontents
+	\newpage
+	\section{Introduction}
 	\section{Fonctions D-finies}
 	
-	fonctions vérifiants une équation différentielles de la forme:\\
+	Fonctions vérifiants une équation différentielles de la forme
 	\[a_{r}(z)y^{(r)}(z)+a_{n-1}(z)y^{(n-1)}(z)+...+a_{0}(z)y(z)=0, \hspace{3mm} a_{k}\in \mathbb{C}[z].\] 
 	
 	
@@ -49,7 +52,7 @@
 		
 	\end{proposition}
 	
-	\subsection{l'algorithme d'approximation}
+	\subsection{L'algorithme d'approximation}
 	
 	
 	\begin{algorithm}
@@ -77,7 +80,7 @@
 	
 	\noindent $T_{j}(x)=cos(j$  $arccos(x))$
 	
-	\noindent On voit ici que la limite de cet algorithme, il necessite une conaissance de la fonction, et c'est justement ce que nous cherchons ici.
+	\noindent On voit ici la limite de cet algorithme, il necessite une conaissance de la fonction, et c'est justement ce que nous cherchons ici.
 	
 	\subsection{La méthode des éléments finis}
 	
@@ -86,29 +89,29 @@
 	
 	\subsection{Méthode de Sturm}
 	
-	Sur un intervalle donné, on veut maintenant voir si il y a des zéros grace à l'approximation de Tchebyshev et la proposition 1. Nous allons encore utiliser le principe d'exclusion en comptant le nombre de racine dans l'intervalle à l'aide du théorème de Sturm. 
+	Sur un intervalle donné, on veut maintenant voir si il y a des zéros grace à l'approximation de Tchebyshev et la proposition 1. Nous allons utiliser le principe d'exclusion en comptant le nombre de racines dans l'intervalle à l'aide du théorème de Sturm. 
 	
 	
 	Soit P un polynome unitaire, $P(x)=x^{n} + \sum^{n-1}_{k=0}a_{k}x^{k}$, \textit {la suite de Sturm} est une suite finie de polynôme définie à partir de P comme suit:\\
-	$P_{0}=P$, $P_{1}=P'$, et pour $k > 1$ si $P_{k} \neq 0$,  $P_{k+1}$ vérifie:\\
+	$P_{0}=P$, $P_{1}=P'$, et pour $k > 1$ si $P_{k} \neq 0$,  $P_{k+1}$ vérifie
 	\[P_{k-1}=P_{k}Q_{k}-P_{k+1},\hspace{2mm}\text{avec }    deg(P_{k+1})<deg(P_{k})\] 
 	$P_{k+1}$ est l'opposée du reste dans la division euclidienne de $P_{k-1}$ par $P_{k}$. On a alors le théorème suivant 
 	\newtheorem{theorem}{Théorème}[section] 
 	\begin{theorem}(Sturm-Habicht)\\
-		Notons $\sigma(\xi)$ le nombre de fois où la suite change de signe (un zéro ne comptant pas comme changement de signe) dans la suite\\
-		$P(\xi),P_{1}(\xi),...,P_{m}(\xi)$.
+		Notons $\sigma(\xi)$ le nombre de fois où la suite $P(\xi),P_{1}(\xi),...,P_{m}(\xi)$ change de signe (un zéro ne comptant pas comme changement de signe).
 		Pour deux réels $a,b$ avec $a<b$ où $a$ et $b$ ne sont pas des racines de P, le nombre de racines dans l'intervalle $[a,b]$ vaut
 		$\sigma(a)-\sigma(b)$.
 	\end{theorem}
 	
 	\section{Methode de Newton}
 	
+	La méthode de Newton définie par la suite $x_{k+1}=N_{f}(x_{k})$ avec $N_{f}(x)=x-Df(x)^{-1}f(x)$ dans notre cas, nous sommes dans $\mathbb{R}$ alors la méthode de Newton se réécrit $N_{f}(x)=x-\frac{f(x)}{f'(x)}$ 
+	\noindent $\alpha(f,x)$
 	\subsection{Les applications contractantes}
 	
-	\subsection{l'algorithme de Newton}
+	\subsection{L'algorithme de Newton}
 	
-	L'algorithme classique de Newton défini par la suite $x_{k+1}=N_{f}(x_{k})$ avec $N_{f}(x)=x-\frac{f(x)}{f'(x)}$ 
-	\noindent $\alpha(f,x)$
+	
 	
 	\begin{algorithm}
 		\caption{Newton iteration}
@@ -130,7 +133,7 @@
 	
 	
 	
-	\subsection{théorie alpha de Smale}
+	\subsection{Théorie alpha de Smale}
 	
 	Dans cette section les espaces considérés sont des espaces de Banach, $U$ est un ouvert de l'espace. Et les fonctions $f:U\rightarrow \mathbb{F}$ sont analytiques sur U. Nous sommes dans le cas particulier de $\mathbb{R}$ mais cette théorie s'applique sur tout espace métrique complet. 
 	On définit les trois opérateurs $\gamma(f,x)$, $\beta(f,x)$, et $\alpha(f,x)$ sur les fonctions analytiques sur $\mathbb{R}$:
@@ -200,7 +203,24 @@
 	
 	
 	
-	\section{Le théorème de Perrron-Kreuser}
+	
+	
+	\section{Majoration des suites P-récursives}
+	
+	Ce chapitre est quasiment une réécriture du chapitre 5 de la thèse de Marc Mezzarobba. Il majore les suites P-réccursives à l'aide du théorème de Perron-Kreuser.
+	L'avantage de cette majoration est qu'elle sera fine, c'est à dire qu'on peut quantifier la différence entre la majoration et la solution.
+	Cette majoration terme à terme permettra donc de trouver une majoration fine du coefficient alpha et donc des bassins d'attractions donnés par le théorème de (Wang-Han), ce qui permettra à notre algorithme de certifier ses zéros.
+	
+	Considérons une suite P-récursive u, définie par la récurrence
+	\[p^{[0]}(n+s)u_{n}+p^{[1]}(n)u_{n+s-1}+...+p^{[s]}(n)u_{n}=0,\hspace{2mm} p^{[k]}\in \mathbb{Q} \tag{*}\] 
+	\begin{theorem}Soit $(u_{n})\in \mathbb{Q}^{\mathbb{N}}$ une suite P-récursive solution de la récurrence homogène (*), avec $p^{[s]}(n) \neq 0$ et $p^{[0]}(n) \neq 0$ pour $n \in \mathbb{N}$. Étant donnée la récurrence (*) et les conditions initiales $u_{0},...,u_{s-1}$, l'algorithme définit dans cette section calcule un réel positif A, un rationnel $\kappa$, un nombre algébrique $\alpha$  et une fonction $\phi$ tels que
+		\[\forall n\in \mathbb{N}, \hspace{6mm}|u_{n}| \leq A n!^{\kappa}\alpha^{n}\phi(n)\]
+		Avec $\phi(n)=e^{o(n)}$. Pour choix générique des conditions initiales, les paramètres $\kappa$ et $\alpha$ sont optimaux.
+	\end{theorem}
+	
+	La fonction $\phi$ est donnée par une formule explicite, elle-même décrite par un petit nombre de paramètres. Les formes qu'elle peut prendre sont détaillées par la suite.
+	
+	\subsection{Le théorème de Perrron-Kreuser}
 	
 	On s'interesse ici au comportement asymptotique des solutions des récurrences. Supposons que les coefficients $b_{n}(n)$ de l'équation
 	\[b_{s}(n)u_{n+s}+b_{s-1}(n)u_{n+s-1}+...+b_{s'}(n)u_{n+s'}=0  \tag{*}\]
@@ -239,21 +259,6 @@
 	\end{theorem}
 	
 	Certains résultats sont plus précis dans des cas particuliers dans le Schäfke et Noble.
-	
-	\section{Majoration des suites P-récursives}
-	
-	Ce chapitre est quasiment une réécriture du chapitre 5 de la thèse de Marc Mezzarobba. Il majore les suites P-réccursives à l'aide du théorème de Perron-Kreuser.
-	L'avantage de cette majoration est qu'elle sera fine, c'est à dire qu'on peut quantifier la différence entre la majoration et la solution.
-	Cette majoration terme à terme permettra donc de trouver une majoration fine du coefficient alpha et donc des bassins d'attractions donnés par le théorème de (Wang-Han), ce qui permettra à notre algorithme de certifier ses zéros.
-	
-	Considérons une suite P-récursive u, définie par la récurrence
-	\[p^{[0]}(n+s)u_{n}+p^{[1]}(n)u_{n+s-1}+...+p^{[s]}(n)u_{n}=0,\hspace{2mm} p^{[k]}\in mathbb{Q} \tag{*}\] 
-	\begin{theorem}Soit $(u_{n})\in \mathbb{Q}^{\mathbb{N}}$ une suite P-récursive solution de la récurrence homogène (*), avec $p^{[s]}(n) \neq 0$ et $p^{[0]}(n) \neq 0$ pour $n \in \mathbb{N}$. Étant donnée la récurrence (*) et les conditions initiales $u_{0},...,u_{s-1}$, l'algorithme définit dans cette section calcule un réel positif A, un rationnel $\kappa$, un nombre algébrique $\alpha$  et une fonction $\phi$ tels que
-		\[\forall n\in \mathbb{N}, \hspace{6mm}|u_{n}| \leq A n!^{\kappa}\alpha^{n}\phi(n)\]
-		Avec $\phi(n)=e^{o(n)}$. Pour choix générique des conditions initiales, les paramètres $\kappa$ et $\alpha$ sont optimaux.
-	\end{theorem}
-	
-	La fonction $\phi$ est donnée par une formule explicite, elle-même décrite par un petit nombre de paramètres. Les formes qu'elle peut prendre sont détaillées par la suite.
 	
 	\subsection{Esquisse de l'algorithme}
 	
@@ -414,5 +419,50 @@
 	
 	\[\theta^{r}+\frac{a^{[r-1]}\theta^{r-1}+...+a^{[0]}}{a^{[r]}}\]
 	Le procédé de majoration est le suivant. En isolant le coefficient constant du développement de Taylor en zéro de chaque coefficient, l'équation se réecrit
-	\[Q(\theta).u=z(a^{[r-1]}\theta^{r-1}+...+a^{[0]}a^{[r]}).u\]
+	\[Q(\theta).u=z(a^{[r-1]}\theta^{r-1}+...+a^{[0]}).u\]
+	
+	\newpage
+	
+	
+	
+	\section{Étude de la fonction de majoration et détermination d'un majorant de alpha}
+	La fonction de majoration renvoyée par la fonction Bound NormalDiffeq$(D,P_{\alpha},u)$  est de la  forme
+	\[g(z)=\frac{A}{(1-\alpha z)^{K}} \hspace{2mm}\text{si T=0}\hspace{6mm} g(z)=\text{A exp}(\frac{K/T}{(1-\alpha z)^{T}}) \hspace{2mm} \text{sinon.} \]
+	
+	\noindent L'objectif ici est de borner le coefficient $\gamma(f,z)=\sup_{k \geq 2} \left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ en utilisant la fonction majorante développée dans la partie précèdente. Elle respecte la propriété interessante $f\unlhd g$ et donc trouver $\alpha(g,z)$ sur cette fonction reviendrai à majorer $\alpha(f,z)$. L'objectif serait de trouver N à partir du quel $\left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ est décroissante. Alors 
+	\[\gamma(g,z)=max_{k=2}^{N}\left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}\] 
+	
+	\noindent En étudiant l'expression de la fonction de majoration pour $T=0$ on obtient
+	\[g^{(k)}(z)=\frac{A\alpha^{k}\prod_{i=0}^{k-1}(K+i)}{(1-\alpha z)^{K+k}}\]
+	On peut la réécrire comme
+	\[\frac{g^{(k)}(z)}{k!}=\frac{A\alpha^{k}}{(1-\alpha z)^{K+k}} \dbinom{K+k-1}{k} \tag{1}\]
+	on peut la majorer par
+	\[\frac{g^{(k)}(z)}{k!}=\frac{A\alpha^{k}}{(1-\alpha z)^{K+k}}(K+k-1)^{K} \tag{2}\]
+	
+	
+	\noindent Étudions la fonction $h(x)=(f(x))^{\frac{1}{x-1}}$ où f est strictement positive, on peut la réecrire
+	 \[h(x)=\text{exp}(\frac{ln(f(x))}{x-1}) \]
+	 Une étude de signe donne à nous intéresser au signe de l'expression
+	 \[(x-1)f'(x)-f(x)ln(f(x)) \tag{3}\] 
+	 qui détermine le signe de la dérivée de h
+	 
+	 Il faut injecter l'expression que nous avons obtenue dans la fonction f au dessus, remarque: la majoration obtenue en expression (2) doit avoir une croissance plus rapide
+	
+	\vspace{1cm} 
+	
+	On s'intéresse maintenant au cas où $T\neq 0$ de l'expression, on veut développer $f(z)$ dans le cas où $T \neq 0$. En posant $\frac{f^{(k)}(z)}{k!}=\alpha_{k}(z)$, on obtient l'expression suivante
+	\[f(z+t)=\text{A exp }\Big(K/T \sum_{k=0}^{+\infty}\alpha_{k}(z)t^{k} \Big)\]
+	\[=\text{A} \Big[1+(K/T)\frac{\sum_{k=0}^{+\infty}\alpha_{k}(z)t^{k}}{1!}+(K/T)^{2}\frac{\big(\sum_{0}^{+\infty}\alpha_{k}(z)t^{k}\big)^{2}}{2!}+...+(K/T)^{l}\frac{\big(\sum_{0}^{+\infty}\alpha_{k}(z)t^{k}\big)^{l}}{l!}+...\Big]\]
+	En identifiant les coefficients correspondants à $t^{k}$
+	\[\frac{g^{(k)}(z)}{k!}=\text{A}\sum_{i=1}^{k}\frac{(K/T)^{i}}{i!}\Big(\sum_{r_{1}\leq r_{2}\leq ...\leq{r_{i}}}\Pi(r_{1},...,r_{i})\prod_{h=1}^{i}\alpha_{r_{h}}(z) \Big) \hspace{2mm} \text{avec }\sum r_{h}=k\]
+	Où $\Pi(r_{1},...,r_{i})$ est définie comme suit:\\
+	On regroupe les $r_{h}$ en $g$ groupes $\Gamma$ de coefficients égaux, soit $\Gamma_{h}$ leur taille telle que $\sum_{h=1}^{g}\Gamma_{h}=i$, alors
+	\[\Pi(r_{1},r_{2},...,r_{i})=\dbinom{i}{\Gamma_{g}}\times \dbinom{i-\Gamma_{g}}{\Gamma_{g-1}}\times ...\times \dbinom{\Gamma_{1}}{\Gamma_{1}}\]
+	
+	
+	
+	\section{Les méthodes d'exclusion de zéros}
+	\subsection{L'algorithme de Bissection-exclusion de J.-C.Yakoubsohn}
+	\subsection{Séparation des zéros via la méthode de Rouché}
+	
 \end{document}
