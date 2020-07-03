@@ -14,7 +14,6 @@
 
 \title{Zéros certifiés des fonctions D-finies}
 \author{Mathis Deronzier}
-
 \date{}
 
 \begin{document}
@@ -24,7 +23,12 @@
 	\newpage
 	\tableofcontents
 	\newpage
+	
 	\section{Introduction}
+	\newtheorem{theorem}{Théorème}[section] 
+	\newtheorem{proposition}{Proposition}
+	\newtheorem{corollaire}{Corollaire}
+	\newtheorem{definition}{Définition}
 	\section{Fonctions D-finies}
 	
 	Fonctions vérifiants une équation différentielles de la forme
@@ -39,13 +43,13 @@
 	Dans cette section on approchera les fonctions D-finies à l'aide des polyonômes.
 	Wierstrass a montré qu'il était possible d'approximer sur un segment n'importe quelle fonction continue à partir de polynômes. Cependant, toutes les méthodes d'interpollation de polynômes ne convergent pas. Un exemple est donné par Runge, la suite de polynômes qui interpollent à intervalles égaux la fonction $f(x)=\frac{1}{1+x^{2}}$ sur $[-5,5]$ diverge lorsque $N \rightarrow \infty$.
 	
-	\subsection{Polynômes de Tchebychev méthode de Boyd}
+	\subsection{Polynômes de Chebyshev méthode de Boyd}
 	
 	
-	Le mathématicien Russe Sergei Bernstein (1880-1968) a montré que la série de Chebychev d'une fonction analytique a une convergence quadratique par rapport à la norme infinie. C'est à dire que l'erreur après avoir tronqué la série après le Nème termes est $O(exp(-N\mu))$. On s'intéressera plus tard à une vrai majoration du reste de la série.
+	Le mathématicien Russe Sergei Bernstein (1880-1968) a montré que la série de Chebyshev d'une fonction analytique a une convergence quadratique par rapport à la norme infinie. C'est à dire que l'erreur après avoir tronqué la série après le Nème termes est $O(exp(-N\mu))$. On s'intéressera plus tard à une vrai majoration du reste de la série.
 	C'est cette majoration avec le théorème des valeurs intermédiaires qui nous permettra de certifier les zéros de notre fonction D-finie f.
 	
-	\newtheorem{proposition}{Proposition}
+	
 	\begin{proposition}
 		Soit f une fonction continue, soit g une fonction telle que \\
 		$\left\|f-g \right\|_{\infty} \leq \epsilon$. Alors, si il existe a et b tels que $\left\|g(a)\right\| \geq \epsilon$ et $\left\|g(b)\right\| \geq \epsilon$ avec $g(a)g(b) < 0$, alors f s'annule sur l'intervalle [a,b].
@@ -85,11 +89,11 @@
 	\subsection{La méthode des éléments finis}
 	
 	Une bonne méthode de résolution d'équations différentielles est la méthode des éléments finis. Il faut réflechir à une famille de fonctions qu'il pourrait-être intéressant de prendre ici. La famille usuelle des fonctions en "escalier" ne semble pas être suffisante puisqu'elle ne satisfait la condition $C^{\infty}$.
-	La famille des polynômes de Tchebyshev semble donc la solution.
+	La famille des polynômes de Chebyshev semble donc la solution.
 	
 	\subsection{Méthode de Sturm}
 	
-	Sur un intervalle donné, on veut maintenant voir si il y a des zéros grace à l'approximation de Tchebychev et la proposition 1. Nous allons utiliser le principe d'exclusion en comptant le nombre de racines dans l'intervalle à l'aide du théorème de Sturm. 
+	Sur un intervalle donné, on veut maintenant voir si il y a des zéros grace à l'approximation de Chebyshev et la proposition 1. Nous allons utiliser le principe d'exclusion en comptant le nombre de racines dans l'intervalle à l'aide du théorème de Sturm. 
 	
 	
 	Soit P un polynome unitaire, $P(x)=x^{n} + \sum^{n-1}_{k=0}a_{k}x^{k}$, \textit {la suite de Sturm} est une suite finie de polynôme défini à partir de P comme suit:\\
@@ -97,7 +101,7 @@
 	\[P_{k-1}=P_{k}Q_{k}-P_{k+1},\hspace{2mm}\text{avec }    deg(P_{k+1})<deg(P_{k})\] 
 	$P_{k+1}$ est l'opposée du reste dans la division euclidienne de $P_{k-1}$ par $P_{k}$. On a alors le théorème suivant 
 	
-	\newtheorem{theorem}{Théorème}[section] 
+
 	\begin{theorem}(Sturm-Habicht)
 		Notons $\sigma(\xi)$ le nombre de fois où la suite $P(\xi),P_{1}(\xi),...,P_{m}(\xi)$ change de signe (un zéro ne comptant pas comme changement de signe).
 		Pour deux réels $a,b$ avec $a<b$ où $a$ et $b$ ne sont pas des racines de P, le nombre de racines dans l'intervalle $[a,b]$ vaut
@@ -109,6 +113,30 @@
 	La méthode de Newton définie par la suite $x_{k+1}=N_{f}(x_{k})$ avec $N_{f}(x)=x-Df(x)^{-1}f(x)$ dans notre cas, nous sommes dans $\mathbb{R}$ alors la méthode de Newton se réécrit $N_{f}(x)=x-\frac{f(x)}{f'(x)}$ 
 	
 	\subsection{Les applications contractantes}
+	
+	Ce chapitre se compose de quelques rappels sur les applications contractantes, qui sont la clés de la convergence de la méthode de Newton. En effet, la convergence de cette méthode est assurée lorsque celle-ci est contractancte. 
+	Notons $\mathbb{E}$ un espace métrique complet et $d$ sa distance.
+	
+	
+	\begin{definition} Une application $f: \mathbb{E} \rightarrow \mathbb{E}$ est lipschitzienne s'il existe $\lambda \in \mathbb{R}_{+}$ tel que pour tout $x$ et $y in\ \mathbb{E}$ on ait $d(f(x),df(y)) \leq \lambda$. Une application est dite contractante si elle est lipshitzienne pour une constante $\lambda <1$. 
+	\end{definition}
+	On peut par ailleus définir une constante de lipschitz d'une fonction f sur un segment $[a,b]$
+	\[Lip(f)=\sup_{x \neq y,(x,y)\in [a,b]^2} \frac{d(f(x),f(y))}{d(x,y)}\]
+	
+	On va maintenant donner les théorèmes qui nous seront utiles.
+	\begin{theorem}(Théorème des applications conctractantes) Soit $f:\mathbb{E} \rightarrow \mathbb{E}$ une application contractante de constante $0<\lambda<1$.
+		
+		(a)Pour tout $x_0 \in \mathbb{E}$, la suite $x_{k+1}=f(x_k)$ converge vers un point fixe,\\
+		
+		(b)Ce point fixe est unique et on le nome $x$,\\
+		
+		(c)Pour tout $q \geq 0$, $d(x_q,x) \leq \frac{\lambda^q}{1-\lambda} d(x_0,x_1)$,\\
+		
+		(d)$\frac{d(x_0,x_1)}{1+\lambda} \leq d(x_0,x) \leq \frac{d(x_0,x_1)}{1-\lambda}$.
+	\end{theorem}
+	Ce théorème est bien utile, surtout la dernière inégalité permettant d'encadrer la distance au zéro, bien utile pour trouver un zéro à une précision $epsilon$. 
+	
+	\subsection{Comment vérifier les hypothèse de contraction} 
 	
 	\subsection{L'algorithme de Newton}
 	
@@ -128,24 +156,18 @@
 			\STATE return $a-\frac{f(a)}{f'(a)}=N_{f}(a)$
 		\end{algorithmic}
 	\end{algorithm}
-	
-	Cependant comme nous avons vu précèdement, il faut s'assurer que cette application est contractante. La théorie alpha de Smale permet d'assurer la convergence de l'algorithme de Newton ainsi que de certifier les zéros, les principaux résultats de cette théorie sont rappelés dans la prochaine section.
-	
-	
-	
-	
+
 	\subsection{Théorie alpha de Smale}
-	
+	La théorie alpha de Smale permet d'assurer la présence d'un zéro dans un voisinage, autrement dit de certifier les zéros, les principaux résultats de cette théorie sont rappelés dans la prochaine section.
 	Dans cette section les espaces considérés sont des espaces de Banach, $U$ est un ouvert de l'espace. Et les fonctions $f:U\rightarrow \mathbb{F}$ sont analytiques sur U. Nous sommes dans le cas particulier de $\mathbb{R}$ mais cette théorie s'applique sur tout espace métrique complet. 
 	
-	\newtheorem{definition}{Définition}
 	\begin{definition}
-
-	On définit les trois opérateurs $\gamma(f,x)$, $\beta(f,x)$, et $\alpha(f,x)$ sur les fonctions analytiques sur $\mathbb{R}$:
-	
-	\[\gamma(f,x)=\limsup_{k \geq 2}\left\|Df(x)^{-1}\frac{D^{k}f(x)}{k!}\right\|^{\frac{1}{k-1}}\]
-	\[\beta(f,x)=\left\|Df(x)^{-1}f(x)\right\|\]
-	\[\alpha(f,x)=\gamma(f,x)\beta(f,x)\]
+		
+		On définit les trois opérateurs $\gamma(f,x)$, $\beta(f,x)$, et $\alpha(f,x)$ sur les fonctions analytiques sur $\mathbb{R}$:
+		
+		\[\gamma(f,x)=\sup_{k \geq 2}\left\|Df(x)^{-1}\frac{D^{k}f(x)}{k!}\right\|^{\frac{1}{k-1}}\]
+		\[\beta(f,x)=\left\|Df(x)^{-1}f(x)\right\|\]
+		\[\alpha(f,x)=\gamma(f,x)\beta(f,x)\]
 	\end{definition}
 	
 	\begin{theorem}(Théorème gamma) Soit $\zeta \in U$ tel que $f(\zeta)=0$ et $Df(\zeta)$ soient inversibles. Soit $x_{0} \in U$ tel que \\
@@ -166,7 +188,7 @@
 		Pour tout $x\in U$ tel que $\alpha=\alpha(f,x) \leq 3-2\sqrt{2}$, il existe un et un seul zéro $\zeta$ de $f$ tel que\\
 	\end{theorem}
 	
-	\newtheorem{corollaire}{Corollaire}
+	
 	\begin{corollaire}
 		Pour tout $x\in U$ tel que $\alpha=\alpha(f,x) \leq 3-2\sqrt{2}$, il existe un et un seul zéro $\zeta$ de f tel que
 		\[\left\|\zeta-x\right\|\leq\frac{2-\sqrt{2}}{2\gamma(f,x)}\]
@@ -178,8 +200,6 @@
 	\noindent Opérateur $\gamma(f,x)$
 	
 	Ce sera ce dernier théorème qui nous permettra de vérifier si nous avons bien un zéro. Cependant le calcule de $\gamma$ et donc de $\alpha$ sont encore difficiles pour des coefficients de fonctions D-finies vérifiant une récurrence polynomiale. Le chapitre sur les séries majorantes fournie une majoration du coefficient $\alpha$
-	
-	
 	
 	
 	
@@ -281,8 +301,8 @@
 	l'algorithme renvoie le $kappa$ maximale et le polynôme réciproque de l'équation caractéristique correspondante à celui-ci.
 	
 	\begin{proposition} Posons $R=\sum_{k=0}^{s} b^{[k]}(n)S^{k} \hspace{4mm} \in \mathbb{Q}[n]\big<S\big>$ et supposons que R n'est pas réduit à un terme $b^{[s]}S^{k}$. On a donc
-	\[\limsup_{n \rightarrow \infty }\Big|\frac{u_{n}}{n!^{k}}\Big|^{\frac{1}{n}} \hspace{4mm} \text{où } \alpha=\frac{1}{\delta(P_{\alpha})}\]
-	Pour toute solution $(u_{n})$ vérifiant R.u=0 avec égalité pour une solution générique. 
+		\[\limsup_{n \rightarrow \infty }\Big|\frac{u_{n}}{n!^{k}}\Big|^{\frac{1}{n}} \hspace{4mm} \text{où } \alpha=\frac{1}{\delta(P_{\alpha})}\]
+		Pour toute solution $(u_{n})$ vérifiant R.u=0 avec égalité pour une solution générique. 
 	\end{proposition}
 	\textbf{Esquisse de démonstration}
 	Le polygone de Newton étant convexe, le coefficient $\kappa$ le plus élevé correspond à un segment relié au sommet le plus à droite du polygone.\\
@@ -361,10 +381,10 @@
 	
 	
 	\begin{proposition}Soit $R \in \mathbb{Q}[n]\big< S\big>$ un opérateur non singulier, réversible de coefficient constant par rapport à S non nul. Soient $p/q, P_{\alpha}$ le comportement asymptotique génériquee renvoyé par $Asympt$. On suppose que $\delta(P_{\alpha})<\infty$ alors $Normalize(R,p/q)$ calcule un opérateur différentiel D qui annule la série 
-	\[u(x)=\sum_{n=0}^{\infty} \psi_{n}u_{n}x^{n}\]
-	pour toutes suites $\psi$ et $u$ solutions de
-	\[(n+q)^{p}\psi_{n+q}=\psi_{n}\]
-	et $R.u=0$, l'opérateur D est régulier à l'origine et le module de sa singularité dominante est égale à $\delta(P_{\alpha})$.
+		\[u(x)=\sum_{n=0}^{\infty} \psi_{n}u_{n}x^{n}\]
+		pour toutes suites $\psi$ et $u$ solutions de
+		\[(n+q)^{p}\psi_{n+q}=\psi_{n}\]
+		et $R.u=0$, l'opérateur D est régulier à l'origine et le module de sa singularité dominante est égale à $\delta(P_{\alpha})$.
 	\end{proposition}
 	
 	\subsection{Séries majorantes}
@@ -414,19 +434,24 @@
 	
 	\noindent En étudiant l'expression de la fonction de majoration pour $T=0$ on obtient
 	\[g^{(k)}(z)=\frac{A\alpha^{k}\prod_{i=0}^{k-1}(K+i)}{(1-\alpha z)^{K+k}}\]
-	On peut la réécrire comme
-	\[\frac{g^{(k)}(z)}{k!}=\frac{A\alpha^{k}}{(1-\alpha z)^{K+k}} \dbinom{K+k-1}{k} \tag{1}\]
-	on peut la majorer par
-	\[\frac{g^{(k)}(z)}{k!}=\frac{A\alpha^{k}}{(1-\alpha z)^{K+k}}(K+k-1)^{K} \tag{2}\]
+	On peut écrire,
+	\[\frac{g^{(k)}(z)}{k!}=\frac{A\alpha^{k}}{(1-\alpha z)^{K+k}} \frac{\prod_{i=1}^{K-1}(k+i)}{(K-1)!} \]
+	On a finalement, pour $z \leq \alpha$
+	\[\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}= \frac{\alpha}{1-\alpha z} \left\|\frac{\prod_{i=1}^{K-1}(k+i)}{K!}\right\|^{\frac{1}{k-1}} \tag{*}\]
+	Considérons cette expression comme une fonction de x au lieu de k. On a donc un polynôme de degré $K$.
+	\[P(x)=\frac{\prod_{i=1}^{K-1}(x+i)}{K!}\]
 	
 	
 	\noindent Étudions la fonction $h(x)=(f(x))^{\frac{1}{x-1}}$ où f est strictement positive, on peut la réecrire
-	 \[h(x)=\text{exp}(\frac{ln(f(x))}{x-1}) \]
-	 Une étude de signe donne à nous intéresser au signe de l'expression
-	 \[(x-1)f'(x)-f(x)ln(f(x)) \tag{3}\] 
-	 qui détermine le signe de la dérivée de h
-	 
-	 Il faut injecter l'expression que nous avons obtenue dans la fonction f au dessus, remarque: la majoration obtenue en expression (2) doit avoir une croissance plus rapide
+	\[h(x)=\text{exp}(\frac{ln(f(x))}{x-1}) \]
+	Une étude de signe donne à nous intéresser au signe de l'expression
+	\[(x-1)f'(x)-f(x)ln(f(x)) \tag{1}\] 
+	qui détermine le signe de la dérivée de h. On regarde donc l'expression 
+	\[(x-1)P'(x)-P(x)ln(P(x))=P(x)\Big[\big(\sum_{i=1}^{K-1}\frac{x-1}{x+i}\big)-ln(P(x))\Big]\]
+	On majore $\frac{x-1}{x+i}$ par 1 et minore $P(x)$ par $x^{K-1}$ On est sûr que la série est décroissante lorsque 
+	\[K-1-ln(x^{K-1})<0 \Longleftrightarrow e^{1}< x\]
+	On sait alors que 
+	\[\gamma(f,z)=max\Big(\left\|f'(z)^{-1}\frac{f^{(2)}(z)}{2!}\right\|,\left\|f'(z)^{-1}\frac{f^{(3)}(z)}{3!}\right\|^{\frac{1}{2}}\Big) \]
 	
 	\vspace{1cm} 
 	
@@ -467,5 +492,25 @@
 	
 	
 	\subsection{Séparation des zéros via la méthode de Rouché}
+	une autre façon d'exclure des régions de l'espace, maintenant que nous avons des majorations de $\gamma$ est la méthode de Rouché. On introduira la même notation que dans le livre de Dedieu.\\
+	\begin{definition} Soient $\mathbb{E}$ et $\mathbb{f}$ des espace de Banach et 
+		Soit $f:\mathbb{E}\rightarrow \mathbb{F}$ une fonction analytique, notons $\zeta$ un point de $\mathbb{E}$ tel que $f(\zeta)=0$, alors on note
+		\[sep(f,\zeta)=\inf_{f(\zeta '=0, \hspace{1mm} \zeta \neq \zeta ')}\left\|\zeta-\zeta '\right\|\] 
+	\end{definition}
+	
+		Le théorème suivant permet de minorer ce nombre de séparation à partir du coefficient $\gamma$\\
+	\begin{theorem} Lorsque $f(\zeta)=0$ et que $Df(\zeta)$ est un isomorphisme on a 
+		\[sep(f,\zeta) \geq \frac{1}{2\gamma(f,\zeta)}\]
+	
+	\end{theorem}
+	Cependant, dans notre cas, nous n'aurons bien souvent pas la valeur exacte de $\zeta$, il faut donc un théorème plus souple. 
+	\begin{theorem} Soit $f: \mathbb{C}^n\rightarrow \mathbb{C}^n$ une fonction analytique, $x_0 \in \mathbb{C}^n$ tel que $Df(x_0)$ soit un isomorphisme. Si $\alpha(f,x_0)<3-2\sqrt{2}$, il existe un et un seul zéro $\zeta$ de f avec
+		\[\left\|x_0-\zeta \right\|<\frac{2-\sqrt{2}}{2\gamma(f,x_0)}\] 
+		
+	\end{theorem}
+	
+	On pourra alors exclure de petits intervalle
 	
 \end{document}
+
+
