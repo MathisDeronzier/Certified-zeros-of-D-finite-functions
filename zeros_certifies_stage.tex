@@ -438,8 +438,8 @@
 	\[\frac{g^{(k)}(z)}{k!}=\frac{A\alpha^{k}}{(1-\alpha z)^{K+k}} \frac{\prod_{i=1}^{K-1}(k+i)}{(K-1)!} \]
 	On a finalement, pour $z \leq \alpha$
 	\[\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}= \frac{\alpha}{1-\alpha z} \left\|\frac{\prod_{i=1}^{K-1}(k+i)}{K!}\right\|^{\frac{1}{k-1}} \tag{*}\]
-	Considérons cette expression comme une fonction de x au lieu de k. On a donc un polynôme de degré $K$.
-	\[P(x)=\frac{\prod_{i=1}^{K-1}(x+i)}{K!}\]
+	Considérons cette expression comme une fonction de $\mathbb{R}$ dans $\mathbb{R}$. On a donc un polynôme de degré $K-1$.
+	\[P(k)=\frac{\prod_{i=1}^{K-1}(k+i)}{K!}\]
 	
 	
 	\noindent Étudions la fonction $h(x)=(f(x))^{\frac{1}{x-1}}$ où f est strictement positive, on peut la réecrire
@@ -447,11 +447,11 @@
 	Une étude de signe donne à nous intéresser au signe de l'expression
 	\[(x-1)f'(x)-f(x)ln(f(x)) \tag{1}\] 
 	qui détermine le signe de la dérivée de h. On regarde donc l'expression 
-	\[(x-1)P'(x)-P(x)ln(P(x))=P(x)\Big[\big(\sum_{i=1}^{K-1}\frac{x-1}{x+i}\big)-ln(P(x))\Big]\]
-	On majore $\frac{x-1}{x+i}$ par 1 et minore $P(x)$ par $x^{K-1}$ On est sûr que la série est décroissante lorsque 
-	\[K-1-ln(x^{K-1})<0 \Longleftrightarrow e^{1}< x\]
+	\[(k-1)P'(k)-P(k)ln(P(k))=P(k)\Big[\big(\sum_{i=1}^{K-1}\frac{k-1}{k+i}\big)-ln(P(k))\Big]\]
+	On majore $\frac{k-1}{k+i}$ par 1 et minore $P(k)$ par $\frac{k^{K-1}}{K!}$ On est sûr que la série est décroissante lorsque 
+	\[K-1-ln(\frac{k^{K-1}}{K!})<0 \Longleftrightarrow e^{1}K!^{\frac{1}{K-1}}< k\]
 	On sait alors que 
-	\[\gamma(f,z)=max\Big(\left\|f'(z)^{-1}\frac{f^{(2)}(z)}{2!}\right\|,\left\|f'(z)^{-1}\frac{f^{(3)}(z)}{3!}\right\|^{\frac{1}{2}}\Big) \]
+	\[\gamma(f,z)=max_{k=2}^{\lceil e^{1}K!^{\frac{1}{K-1}} \rceil}\left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\| \]
 	
 	\vspace{1cm} 
 	
@@ -493,12 +493,12 @@
 	
 	\subsection{Séparation des zéros via la méthode de Rouché}
 	une autre façon d'exclure des régions de l'espace, maintenant que nous avons des majorations de $\gamma$ est la méthode de Rouché. On introduira la même notation que dans le livre de Dedieu.\\
-	\begin{definition} Soient $\mathbb{E}$ et $\mathbb{f}$ des espace de Banach et 
+	\begin{definition} Soient $\mathbb{E}$ et $\mathbb{F}$ des espaces de Banach et 
 		Soit $f:\mathbb{E}\rightarrow \mathbb{F}$ une fonction analytique, notons $\zeta$ un point de $\mathbb{E}$ tel que $f(\zeta)=0$, alors on note
 		\[sep(f,\zeta)=\inf_{f(\zeta '=0, \hspace{1mm} \zeta \neq \zeta ')}\left\|\zeta-\zeta '\right\|\] 
 	\end{definition}
 	
-		Le théorème suivant permet de minorer ce nombre de séparation à partir du coefficient $\gamma$\\
+		Le théorème suivant permet de minorer ce nombre de séparations à partir du coefficient $\gamma$\\
 	\begin{theorem} Lorsque $f(\zeta)=0$ et que $Df(\zeta)$ est un isomorphisme on a 
 		\[sep(f,\zeta) \geq \frac{1}{2\gamma(f,\zeta)}\]
 	
@@ -509,7 +509,7 @@
 		
 	\end{theorem}
 	
-	On pourra alors exclure de petits intervalle
+	\noindent On pourra alors exclure de petits intervalles
 	
 \end{document}
 
