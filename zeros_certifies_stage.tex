@@ -29,6 +29,8 @@
 	\newtheorem{proposition}{Proposition}
 	\newtheorem{corollaire}{Corollaire}
 	\newtheorem{definition}{Définition}
+	\subsection{Remerciments}
+	\subsection{Cadre}
 	\section{Fonctions D-finies}
 	
 	Fonctions vérifiants une équation différentielles de la forme
@@ -93,7 +95,7 @@
 	
 	\subsection{Méthode de Sturm}
 	
-	Sur un intervalle donné, on veut maintenant voir si il y a des zéros grace à l'approximation de Chebyshev et la proposition 1. Nous allons utiliser le principe d'exclusion en comptant le nombre de racines dans l'intervalle à l'aide du théorème de Sturm. 
+	Sur un intervalle donné, on veut maintenant voir si il y a des zéros grace à l'approximation de Chebyshev et la proposition 1. Nous allons utiliser le principe d'exclusion en comptant le nombre de racines dans l'intervalle à l'aide du théorème de Sturm.
 	
 	
 	Soit P un polynome unitaire, $P(x)=x^{n} + \sum^{n-1}_{k=0}a_{k}x^{k}$, \textit {la suite de Sturm} est une suite finie de polynôme défini à partir de P comme suit:\\
@@ -110,7 +112,7 @@
 	
 	\section{Méthode de Newton}
 	
-	La méthode de Newton définie par la suite $x_{k+1}=N_{f}(x_{k})$ avec $N_{f}(x)=x-Df(x)^{-1}f(x)$ dans notre cas, nous sommes dans $\mathbb{R}$ alors la méthode de Newton se réécrit $N_{f}(x)=x-\frac{f(x)}{f'(x)}$ 
+	La méthode de Newton définie par la suite $x_{k+1}=N_{f}(x_{k})$ avec $N_{f}(x)=x-Df(x)^{-1}f(x)$ dans notre cas, nous sommes dans $\mathbb{R}$ alors la méthode de Newton se réécrit $N_{f}(x)=x-\frac{f(x)}{Df(x)}$ 
 	
 	\subsection{Les applications contractantes}
 	
@@ -153,7 +155,7 @@
 		
 		\begin{algorithmic}[1]
 			
-			\STATE return $a-\frac{f(a)}{f'(a)}=N_{f}(a)$
+			\STATE return $a-\frac{f(a)}{Df(a)}=N_{f}(a)$
 		\end{algorithmic}
 	\end{algorithm}
 
@@ -206,7 +208,7 @@
 	
 	\section{Majoration des suites P-récursives}
 	
-	Ce chapitre est quasiment une réécriture du chapitre 5 de la thèse de Marc Mezzarobba. Il majore les suites P-réccursives à l'aide du théorème de Perron-Kreuser.
+	Ce chapitre est quasiment une réécriture du chapitre 5 de la thèse de Marc Mezzarobba. Il majore les suites P-récursives à l'aide du théorème de Perron-Kreuser.
 	L'avantage de cette majoration est qu'elle sera fine, c'est à dire qu'on peut quantifier la différence entre la majoration et la solution.
 	Cette majoration terme à terme permettra donc de trouver une majoration fine du coefficient alpha et donc des bassins d'attractions donnés par le théorème de (Wang-Han), ce qui permettra à notre algorithme de certifier ses zéros.
 	
@@ -316,7 +318,7 @@
 	\[\frac{\lambda^{[1]}u^{[1]}_{n}+...+\lambda^{[s-1]}u^{[s-1]}_{n}}{u^{[0]}_{n}}\rightarrow_{n \rightarrow \infty}-\lambda^{[0]}\]
 	Condition fausse pour des $\lambda^{[k]}$ génériques.
 	
-	\begin{definition} On appelle arête dominante l'arête la plus à droite du polygone de Newton, équation caractéristique dominante son équation caractéristique associée, et réccurence normalisé une récurrence pour laquelle cette arête est horizontale. C'est à dire que le comportement asymptotique est purement exponentiel, et non factoriel ($\kappa=0$).
+	\begin{definition} On appelle arête dominante l'arête la plus à droite du polygone de Newton, équation caractéristique dominante son équation caractéristique associée, et récurence normalisé une récurrence pour laquelle cette arête est horizontale. C'est à dire que le comportement asymptotique est purement exponentiel, et non factoriel ($\kappa=0$).
 	\end{definition}
 	
 	\subsection{Fonction génératrice normalisée}
@@ -430,7 +432,7 @@
 	La fonction de majoration renvoyée par la fonction Bound NormalDiffeq$(D,P_{\alpha},u)$  est de la  forme
 	\[g(z)=\frac{A}{(1-\alpha z)^{K}} \hspace{2mm}\text{si T=0}\hspace{6mm} g(z)=\text{A exp}(\frac{K/T}{(1-\alpha z)^{T}}) \hspace{2mm} \text{sinon.} \]
 	
-	\noindent L'objectif ici est de borner le coefficient $\gamma(f,z)=\sup_{k \geq 2} \left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ en utilisant la fonction majorante développée dans la partie précèdente. Elle respecte la propriété interessante $f\unlhd g$ et donc trouver $\alpha(g,z)$ sur cette fonction reviendrai à majorer $\alpha(f,z)$. L'objectif serait de trouver N à partir du quel $\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ est décroissante. Alors 
+	\noindent L'objectif ici est de borner le coefficient $\gamma(f,z)=\sup_{k \geq 2} \left\|Df(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ en utilisant la fonction majorante développée dans la partie précèdente. Elle respecte la propriété interessante $f\unlhd g$ et donc trouver $\alpha(g,z)$ sur cette fonction reviendrai à majorer $\alpha(f,z)$. L'objectif serait de trouver N à partir du quel $\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ est décroissante. Alors 
 	\[\gamma(g,z)=max_{k=2}^{N}\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}\] 
 	
 	\begin{proposition} Dans le cas $T=0$ on a \[\gamma(g,z)=max_{k=2}^{\lceil e^{1}K!^{\frac{1}{K-1}} \rceil}\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}\]
@@ -441,7 +443,7 @@
 	\[g^{(k)}(z)=\frac{A\alpha^{k}\prod_{i=0}^{k-1}(K+i)}{(1-\alpha z)^{K+k}}\]
 	On peut écrire,
 	\[\frac{g^{(k)}(z)}{k!}=\frac{A\alpha^{k}}{(1-\alpha z)^{K+k}} \frac{\prod_{i=1}^{K-1}(k+i)}{(K-1)!} \]
-	On a finalement, pour $z < \alpha$
+	On a finalement, pour $z < \alpha$ 
 	\[\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}= \frac{\alpha}{1-\alpha z} \left\|\frac{\prod_{i=1}^{K-1}(k+i)}{K!}\right\|^{\frac{1}{k-1}} \tag{*}\]
 	Considérons cette expression comme une fonction de $\mathbb{R}$ dans $\mathbb{R}$. On a donc un polynôme de degré $K-1$.
 	\[P(k)=\frac{\prod_{i=1}^{K-1}(k+i)}{K!}\]
@@ -450,19 +452,19 @@
 	\noindent Étudions la fonction $h(x)=(f(x))^{\frac{1}{x-1}}$ où f est strictement positive, on peut la réecrire
 	\[h(x)=\text{exp}(\frac{ln(f(x))}{x-1}) \]
 	Une étude de signe donne à nous intéresser au signe de l'expression
-	\[(x-1)f'(x)-f(x)ln(f(x)) \tag{1}\] 
+	\[(x-1)Df(x)-f(x)ln(f(x)) \tag{1}\] 
 	qui détermine le signe de la dérivée de h. On regarde donc l'expression 
-	\[(k-1)P'(k)-P(k)ln(P(k))=P(k)\Big[\big(\sum_{i=1}^{K-1}\frac{k-1}{k+i}\big)-ln(P(k))\Big]\]
+	\[(k-1)P'(k)-P(k)log(P(k))=P(k)\Big[\big(\sum_{i=1}^{K-1}\frac{k-1}{k+i}\big)-log(P(k))\Big]\]
 	On majore $\frac{k-1}{k+i}$ par 1 et minore $P(k)$ par $\frac{k^{K-1}}{K!}$ On est sûr que la série est décroissante lorsque 
 	\[K-1-ln\big(\frac{k^{K-1}}{K!}\big)<0 \Longleftrightarrow e^{1}K!^{\frac{1}{K-1}}< k\]
-	On sait alors que 
-	\[\gamma(f,z)=max_{k=2}^{\lceil e^{1}K!^{\frac{1}{K-1}} \rceil}\left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\| \]
+	On a finalement 
+	\[\gamma(f,z)=max_{k=2}^{\lceil e^{1}K!^{\frac{1}{K-1}} \rceil}\left\|Df(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\| \]
 	
 	\vspace{1cm} 
 	
-	On s'intéresse maintenant au cas où $T\neq 0$ de l'expression, on veut développer $f(z)$ dans le cas où $T \neq 0$. On ne s'en est pas préoccupé précèdement, mais ici, la constante A ne servira pas dans la majoration, qui sera absorbée dans division par $f'(z)$. En posant \[\alpha_{k}(z)=\frac{\big(\frac{1}{(1-\alpha z)^{T}}\big)}{k!}^{(k)}=\frac{\alpha^{k}}{(1-\alpha z)^{T+k}} \frac{\prod_{i=1}^{T-1}(k+i)}{(K-1)!},\] On a,
+	On s'intéresse maintenant au cas où $T\neq 0$ de l'expression, on veut développer $f(z)$ dans le cas où $T \neq 0$. On ne s'en est pas préoccupé précèdement, mais ici, la constante A ne servira pas dans la majoration, la constante sera absorbée dans division par $Df(z)$. En posant \[\alpha_{k}(z)=\frac{\big(\frac{1}{(1-\alpha z)^{T}}\big)}{k!}^{(k)}=\frac{\alpha^{k}}{(1-\alpha z)^{T+k}} \frac{\prod_{i=1}^{T-1}(k+i)}{(K-1)!},\] On a,
 	\[g(z+t)=\text{A exp}(\frac{K/T}{(1-\alpha (z+t))^{T}})\]
-	En intégrant ce qui a été dit précèdement et en développant en série entière à l'intérieur d'exponentiel on s'intéressera à
+	En intégrant ce qui a été dit précèdement et en développant en série entière à l'intérieur de l'exponentiel on s'intéressera à
 	\[f(z+t)=\text{exp}\Big(K/T \sum_{k=1}^{+\infty}\alpha_{k}(z)t^{k} \Big)\]
 	
 	\[= 1+(K/T)\frac{\sum_{k=1}^{+\infty}\alpha_{k}(z)t^{k}}{1!}+(K/T)^{2}\frac{\big(\sum_{k=1}^{+\infty}\alpha_{k}(z)t^{k}\big)^{2}}{2!}+...+(K/T)^{l}\frac{\big(\sum_{k=1}^{+\infty}\alpha_{k}(z)t^{k}\big)^{l}}{l!}+...\]
@@ -505,26 +507,91 @@
 	\noindent Ici, on n'a qu'une étape de l'algorithme et l'idée sera bien sûr d'appliquer récursivement cette fonction pour avoir des intervalles de plus en plus précis. L'article de Jakoubsohn donne une discussion plus complète sur la taille des intervalles en fonctions des "clusters" de zéros.\\
 	\noindent maj: fonction de majoration fournie dans le module Ore\_algebra.analytic de Marc Mezzarobba\\
 	zéropositif(g): le premier zéro sur lequel la fonction g s'annule sur ${R}$
+	\\
+	
+	\begin{definition}
+		
+	\end{definition}
 	
 	
 	\subsection{Séparation des zéros via la méthode de Rouché}
-	une autre façon d'exclure des régions de l'espace, maintenant que nous avons des majorations de $\gamma$ est la méthode de Rouché. On introduira la même notation que dans le livre de Dedieu. L'idée ici est d'exclure des intervalles lorsqu'on a trouvé un zéro certifié.\\
+	Nous allons ici nous intéresser au moyen de certifier nos zéros. On sait que les zéros des fonctions analytiques sont isolés, mais on cherche ici évaluer concrètement la distance entre deux zéros. Cela a été fait dans le livre de Dedieu et ici nous chercherons à adapter les démonstrations appliquées à gamma, aux séries majorantes.
+	
 	\begin{definition} Soient $\mathbb{E}$ et $\mathbb{F}$ des espaces de Banach et 
 		Soit $f:\mathbb{E}\rightarrow \mathbb{F}$ une fonction analytique, notons $\zeta$ un point de $\mathbb{E}$ tel que $f(\zeta)=0$, alors on note
 		\[sep(f,\zeta)=\inf_{f(\zeta '=0, \hspace{1mm} \zeta \neq \zeta ')}\left\|\zeta-\zeta '\right\|\] 
 	\end{definition}
 	
-		Le théorème suivant permet de minorer ce nombre de séparations à partir du coefficient $\gamma$\\
-	\begin{theorem} Lorsque $f(\zeta)=0$ et que $Df(\zeta)$ est un isomorphisme on a 
-		\[sep(f,\zeta) \geq \frac{1}{2\gamma(f,\zeta)}\]
-	
-	\end{theorem}
-	Cependant, dans notre cas, nous n'aurons bien souvent pas la valeur exacte de $\zeta$, il faut donc un théorème plus souple. 
-	\begin{theorem} Soit $f: \mathbb{C}^n\rightarrow \mathbb{C}^n$ une fonction analytique, $x_0 \in \mathbb{C}^n$ tel que $Df(x_0)$ soit un isomorphisme. Si $\alpha(f,x_0)<3-2\sqrt{2}$, il existe un et un seul zéro $\zeta$ de f avec
-		\[\left\|x_0-\zeta \right\|<\frac{2-\sqrt{2}}{2\gamma(f,x_0)}\]
+	Le théorème suivant est le théorème de Rouché, il est générale, on l'utilisera pour le cas particulier n=1
+
+	\begin{theorem}(Rouché) Donnons nous un domaine borné $D \subset \mathbb{C}^{n}$ de frontière de Jordan S et deux application analytiques f et g définies sur un voisinage ouvert de D et à valeurs dans $\mathbb{C}^n$. Si pour tout $z \in S$ 
+		\[\left\|f(z)\right\|>\left\|g(z)\right\|\]
+	alors $f+g$ admet autant de zéros (comptés avec multiplicités) que f dans D.
 	\end{theorem}
 	
-	\noindent On pourra alors certifier le zéro dans un petit intervalle de la forme $[x_0-\frac{2-\sqrt{2}}{2\gamma(f,x_0)},x_0+\frac{2-\sqrt{2}}{2\gamma(f,x_0)}]$
+	
+	\section{Adaptation de la théorie alpha de Samle aux séries majorantes}
+	
+	La suite sera une adaptation de la théorie alpha de Smale aux séries majorantes, les résultats seront plus généralistes mais moins concrêts. 
+	Nous aurons besoin d'introduire la notion de série majorante d'un reste d'une série. 
+	
+	\begin{definition} Soit f une fonction analytique en x, alors on peut écrire $f(x+t)=\sum_{k=0}^{+\infty} \frac{f^{(k)}(x)}{k!}t^{k}$, on note alors 
+	\[R_{f}^{i}(x,t)=\sum_{k=i}^{+\infty} \frac{f^{(k)}(x)}{k!}t^{k}\]
+	et on note
+	\[M_{f}^{i}(x,t) \text{Une série majorante de } R_{f}^{i}(x,t)\]
+	\end{definition}
+	
+	\subsection{Zéros répulsifs}
+	
+	On cherche à rajouter des intervalles dans l'ensemble $\mathbb{A}$ de notre algorithme. 
+	
+	\begin{theorem}	Soit f une fonction, $\zeta$ et $\zeta '$ deux points tels que $Df(\zeta)\neq 0$ et que $f(\zeta)=f(\zeta ')=0$ et $\zeta '$ dans le rayon de convergence du développement en série entière de $f$ en $\zeta$. 
+		\[S(f)=0 \text{ si } f(0) \geq 1  \hspace{4mm} \text{et} \hspace{4mm} S(f)=\min \{f^{-1}(1)\cap \mathbb{R}_{+}\}\]
+		\[Sep(f,\zeta) \geq S\Big(\left\|Df(\zeta)^{-1}\right\|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big) \hspace{4mm} \text{où t est la variable} \]
+	\end{theorem}
+	
+	\noindent \textbf{Démonstration} Raisonnons par l'absurde, 
+	\[f(\zeta ')=f(\zeta)+(\zeta '-\zeta)Df(\zeta)+ \sum_{k=2}^{+\infty}\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^k\]
+	qui se réecrit, en multipliant par $Df(\zeta ')^{-1}$
+	\[(\zeta-\zeta')=Df(\zeta)^{-1} \Big[\sum_{k=2}^{+\infty}\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^k\Big]\]
+	d'où 
+	\[1 \leq \left\|Df(\zeta)^{-1} \right\|\sum_{k=2}^{+\infty}  \left\|\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^{k-1} \right\|\]
+	\[1 \leq \left\|Df(\zeta)^{-1}\right\| \frac{M_{f}^{2}(\zeta)(\zeta-\zeta')}{(\zeta-\zeta')}\]
+	Hors $(\zeta-\zeta')<S\Big(\left\|Df(\zeta)^{-1}\right\|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)$ ce qui implique que $1<1$, c'est absurde.
+	
+	\noindent Il s'en suit de ce théorème qu'il n'y a pas de zéro dans l'intervalle \[[\zeta-S\Big(\left\|Df(\zeta)^{-1}\right\|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big),\zeta+S\Big(\left\|Df(\zeta)^{-1}\right\|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)]\]
+	
+	\subsection{Quantification de la distance au zéro}
+	Pour alléger les notations dans la suite on pose $\mathbb{S}_{f}(z)=S\Big(\left\|Df(\zeta)^{-1}\right\|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)$
+	
+	
+	
+	\noindent\textbf{Démonstration} Définissons $g(x)=f(x)-f(x_0)$, $g(x_0)=0$, $Dg(x_0)=Df(x_0)$ d'après le théorème précèdent, $x_0$ est le seul zéro dans la boule
+	$B(x_0,\mathbb{S}_{f}(x_0))$
+	La série de Taylor de g est convergente, elle est donée par
+	\[g(x)=Df(x_0)(x-x_0)+ \sum_{k=2}^{+\infty}\frac{D^{k}f(x_0)}{k!}(x-x_0)^k\]
+	Nous allons prouver que pour $0<r<1$ on a,
+	\[\left\|Df(x_0)^{-1}f(x)-Df(x_0)^{-1}g(x)\right\|=\left\|Df(x_0)^{-1}f(x_0)\right\|<\left\|Df(x_0)^{-1}g(x)\right\|\]
+	\\
+	Pour tout $x$ avec $\left\|x-x_0\right\|=r\mathbb{S}_{f}(x_0)$
+	\\
+	Par le théorème de Rouché $f$ et $g$ auront le même nombre de zéros dans cette boule. Remarquons que 
+	\[\left\|Df(x_0)^{-1}f(x)-Df(x_0)^{-1}g(x)\right\|=\left\|Df(x_0)^{-1}f(x_0)\right\|=\beta(f,x_0)\]
+	Aussi
+	\[x-x_0=Df(x_0)^{-1}g(x)-\sum_{k \geq 2}\frac{D^{k}f(x_0)}{k!}(x-x_0)^k\]
+	de sorte que
+	\[r\mathbb{S}_{f}(x_0) \leq \left\|Df(x_0)^{-1}g(x)\right\|+M_{f}^{2}(x_0)(r\mathbb{S}_{f}(x_0)) \]
+	C'est à dire que l'hypothèse de Rouché est satisfaite si
+	\[\beta(f,x_0)<r\mathbb{S}_{f}(x_0)-M_{f}^{2}(x_0)(r\mathbb{S}_{f}(x_0))\] 
+	
+	c'est cette expression qui permettra d'exclure des intervalles. Pour commencer on peut dire que si 
+	\[\beta(f,x_0)< \sup_{r \in [0,1]}\{r\mathbb{S}_{f}(x_0)-M_{f}^{2}(x_0)(r\mathbb{S}_{f}(x_0))\}\]
+	alors, soit $r_0$ le point où le sup est atteint, on peut alors exclure un intervalle de la taille $2r_0\mathbb{S}_{f}(x_0)$.
+	
+	
+	
+	
+
 	
 \end{document}
 
