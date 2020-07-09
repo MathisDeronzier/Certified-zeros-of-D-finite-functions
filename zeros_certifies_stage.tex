@@ -45,13 +45,13 @@
 	
 	\section{Approximation uniforme sur un segment}
 	
-	Dans cette section on approchera les fonctions D-finies à l'aide des polyonômes.
-	Weierstrass a montré qu'il était possible d'approximer sur un segment n'importe quelle fonction continue à partir de polynômes. Cependant, toutes les méthodes d'interpolation ne convergent pas. Un exemple est donné par Runge, la suite de polynômes qui interpole la fonction $f(x)=\frac{1}{1+x^{2}}$ sur $[-5,5]$ sur N points à distance régulière les uns des autres diverge lorsque $N \rightarrow \infty$.
+	Dans cette section, on approchera les fonctions D-finies à l'aide des polynômes.
+	Weierstrass a montré qu'il était possible d'approximer sur un segment n'importe quelle fonction continue à partir de polynômes. Cependant, toutes les méthodes d'interpolation ne convergent pas. Un exemple est donné par Runge, la suite de polynômes qui interpolent la fonction $f(x)=\frac{1}{1+x^{2}}$ sur $[-5,5]$ sur N points à distance régulière les uns des autres diverge lorsque $N \rightarrow \infty$.
 	
 	\subsection{Polynômes de Chebyshev méthode de Boyd}
 	
 	
-	Le mathématicien Russe Sergei Bernstein (1880-1968) a montré que la série de Chebyshev d'une fonction analytique a une convergence quadratique par rapport à la norme infinie. C'est à dire que l'erreur après avoir tronqué la série après le Nème termes est $O(exp(-N\mu))$. Dans notre cadre, il est intéressant de vouloir quantifier avec des bornes concrêtes notre approximation.
+	Le mathématicien Russe Sergei Bernstein (1880-1968) a montré que la série de Chebyshev d'une fonction analytique a une convergence quadratique par rapport à la norme infinie. C'est à dire que l'erreur, après avoir tronqué la série après le Nème terme, est $O(exp(-N\mu))$. Dans notre cadre, il est intéressant de vouloir quantifier avec des bornes concrêtes notre approximation.
 	C'est cette majoration avec le théorème des valeurs intermédiaires qui nous permettra de certifier les zéros de notre fonction D-finie f.
 	
 	
@@ -89,16 +89,16 @@
 	
 	\noindent $T_{j}(x)=cos(j$  $arccos(x))$
 	
-	\noindent On voit ici la limite de cet algorithme, il necessite une connaissance de la fonction, et c'est justement ce que nous cherchons ici.
+	\noindent On voit ici la limite de cet algorithme, il nécessite une connaissance de la fonction, et c'est justement ce que nous cherchons ici.
 	
 	\subsection{La méthode des éléments finis}
 	
-	Une bonne méthode de résolution d'équation différentielle est la méthode des éléments finis. Il faut réflechir à une famille de fonctions qu'il pourrait-être intéressant de prendre ici. La famille usuelle des fonctions en "escalier" ne semble pas suffisante puisqu'elle ne satisfait la condition $C^{\infty}$.
+	Une bonne méthode de résolution d'équation différentielle est la méthode des éléments finis. Il faut réfléchir à une famille de fonctions qu'il pourrait-être intéressant de prendre ici. La famille usuelle des fonctions en "escalier" ne semble pas suffisante puisqu'elle ne satisfait la condition $C^{\infty}$.
 	La famille des polynômes de Chebyshev semble donc la solution.
 	
 	\subsection{Méthode de Sturm}
 	
-	Sur un intervalle donné, on veut maintenant voir si il y a des zéros grâce à l'approximation de Chebyshev et la proposition 1. Nous allons utiliser le principe d'exclusion en comptant le nombre de racines dans l'intervalle à l'aide du théorème de Sturm.
+	Sur un intervalle donné, on veut maintenant voir s'il y a des zéros grâce à l'approximation de Chebyshev et la proposition 1. Nous allons utiliser le principe d'exclusion en comptant le nombre de racines dans l'intervalle à l'aide du théorème de Sturm.
 	
 	
 	Soit P un polynôme unitaire, $P(x)=x^{n} + \sum^{n-1}_{k=0}a_{k}x^{k}$, \textit {la suite de Sturm} est une suite finie de polynômes définie à partir de P comme suit:\\
@@ -125,7 +125,7 @@
 	
 	\begin{definition} Une application $f: \mathbb{E} \rightarrow \mathbb{E}$ est lipschitzienne s'il existe $\lambda \in \mathbb{R}_{+}$ tel que pour tout $x$ et $y in\ \mathbb{E}$ on ait $d(f(x),f'(y)) \leq \lambda$. Une application est dite contractante si elle est lipshitzienne pour une constante $\lambda <1$. 
 	\end{definition}
-	On peut par ailleus définir une constante de lipschitz d'une fonction f sur un segment $[a,b]$
+	On peut par ailleurs définir une constante de Lipschitz d'une fonction f sur un segment $[a,b]$
 	\[Lip(f)=\sup_{x \neq y,(x,y)\in [a,b]^2} \frac{d(f(x),f(y))}{d(x,y)}\]
 	
 	On va maintenant donner les théorèmes qui nous seront utiles.
@@ -133,7 +133,7 @@
 		
 		(a)Pour tout $x_0 \in \mathbb{E}$, la suite $x_{k+1}=f(x_k)$ converge vers un point fixe,\\
 		
-		(b)Ce point fixe est unique et on le nome $x$,\\
+		(b)Ce point fixe est unique et on le nomme $x$,\\
 		
 		(c)Pour tout $q \geq 0$, $d(x_q,x) \leq \frac{\lambda^q}{1-\lambda} d(x_0,x_1)$,\\
 		
@@ -152,7 +152,7 @@
 		
 		\vspace{2mm}
 		
-		\textbf{Entrée:} fonction $f(x)$. rationel a. $\epsilon$ une distance. $\lambda$ la constante de lipschitz.
+		\textbf{Entrée:} fonction $f(x)$. rationnel a. $\epsilon$ une distance. $\lambda$ la constante de Lipschitz.
 		
 		\textbf{Sortie:} point b à une distance inférieur à epsilon au zéro le plus proche. 
 		
@@ -206,7 +206,7 @@
 	(À compléter)
 	\noindent Opérateur $\gamma(f,x)$
 	
-	Ce sera ce dernier théorème qui nous permettra de vérifier si nous avons bien un zéro. Cependant le calcule de $\gamma$ et donc de $\alpha$ sont encore difficiles pour des coefficients de fonctions D-finies vérifiant une récurrence polynomiale. Le chapitre sur les séries majorantes fournie une majoration du coefficient $\alpha$
+	Ce sera ce dernier théorème qui nous permettra de vérifier si nous avons bien un zéro. Cependant le calcul de $\gamma$ et donc de $\alpha$ est encore difficile pour des coefficients de fonction D-finies vérifiant une récurrence polynomiale. Le chapitre sur les séries majorantes fournie une majoration du coefficient $\alpha$
 	
 	
 	
@@ -219,7 +219,7 @@
 	
 	Considérons une suite P-récursive u, définie par la récurrence
 	\[p^{[0]}(n+s)u_{n}+p^{[1]}(n)u_{n+s-1}+...+p^{[s]}(n)u_{n}=0,\hspace{2mm} p^{[k]}\in \mathbb{Q} \tag{*}\] 
-	\begin{theorem}Soit $(u_{n})\in \mathbb{Q}^{\mathbb{N}}$ une suite P-récursive solution de la récurrence homogène (*), avec $p^{[s]}(n) \neq 0$ et $p^{[0]}(n) \neq 0$ pour $n \in \mathbb{N}$. Étant donnée la récurrence (*) et les conditions initiales $u_{0},...,u_{s-1}$, l'algorithme défini dans cette section calcule un réel positif A, un rationnel $\kappa$, un nombre algébrique $\alpha$  et une fonction $\phi$ tels que
+	\begin{theorem}Soit $(u_{n})\in \mathbb{Q}^{\mathbb{N}}$ une suite P-récursive solution de la récurrence homogène (*), avec $p^{[s]}(n) \neq 0$ et $p^{[0]}(n) \neq 0$ pour $n \in \mathbb{N}$. Étant donnée la récurrence (*) et les conditions initiales $u_{0},...,u_{s-1}$, l'algorithme défini dans cette section calcule un réel positif A, un rationnel $\kappa$, un nombre algébrique $\alpha$  et une fonction $\phi$ telle que
 		\[\forall n\in \mathbb{N}, \hspace{6mm}|u_{n}| \leq A n!^{\kappa}\alpha^{n}\phi(n)\]
 		Avec $\phi(n)=e^{o(n)}$. Pour choix générique des conditions initiales, les paramètres $\kappa$ et $\alpha$ sont optimaux.
 	\end{theorem}
@@ -228,7 +228,7 @@
 	
 	\subsection{Le théorème de Perron-Kreuser}
 	
-	On s'interesse ici au comportement asymptotique des solutions des récurrences. Supposons que les coefficients $b_{n}(n)$ de l'équation
+	On s'intéresse ici au comportement asymptotique des solutions des récurrences. Supposons que les coefficients $b_{n}(n)$ de l'équation
 	\[b_{s}(n)u_{n+s}+b_{s-1}(n)u_{n+s-1}+...+b_{s'}(n)u_{n+s'}=0  \tag{*}\]
 	(où s' peut être négatif) ont des comportements asymptotiques de la forme
 	\[\forall k, \hspace{2mm} b_{k}(n) \sim c_{k}n^{d_{k}} \hspace{2mm} \text{quand } n \rightarrow \infty\]
@@ -238,10 +238,10 @@
 	\noindent En réécrivant l'équation séquencielle avec ses coefficients asymptotiques $n \rightarrow \infty$
 	\[c_{s}\lambda^{s} n^{d_{s}+s\kappa}+c_{s-1}u_{n}\lambda^{s-1} n^{d_{s-1}+(s-1)\kappa}+...+c_{s'}\lambda^{s'} n^{d_{s'}+s'\kappa}u_{n}\]
 	
-	pour que cette expression s'annule, il est nécessaire que les termes asymptotiquement dominants se compensent, et donc que l'exposant $d_{k}+k\kappa$ le plus grand soit atteint au moins deux fois. Alors $-\kappa$ doit être parmis les pentes du \textit{polygone de newton} de l'équation.
+	pour que cette expression s'annule, il est nécessaire que les termes asymptotiquement dominants se compensent, et donc que l'exposant $d_{k}+k\kappa$ le plus grand soit atteint au moins deux fois. Alors $-\kappa$ doit être parmi les pentes du \textit{polygone de newton} de l'équation.
 	
 	
-	\begin{definition} Le polygone de Newton est l'envellope convexe supérieure des points $(k, d_{k}) \in \mathbb{R}$, si E=[A,B] désigne une arête du polygone de Newton, on note $\kappa(E)$ l'opposé de sa pente, et on définit l'équation caractéristique associée à E (ou à $\kappa(E))$ par
+	\begin{definition} Le polygone de Newton est l'enveloppe convexe supérieure des points $(k, d_{k}) \in \mathbb{R}$, si E=[A,B] désigne une arête du polygone de Newton, on note $\kappa(E)$ l'opposé de sa pente, et on définit l'équation caractéristique associée à E (ou à $\kappa(E))$ par
 		\[\chi_{E}(\lambda)=\sum_{(k,d_{k}) \in E} c_{k}\lambda^{k-t}\]
 		Où $(t,d_{t})=A$ l'extrémité gauche du segment E.
 	\end{definition}
@@ -264,7 +264,7 @@
 		\[\limsup_{n \rightarrow \infty } \big|\frac{u_{n}^{E_{i}}}{n!^{\kappa(E)}}\big|^{\frac{1}{n}}=|\lambda_{E_{i}}|\]
 	\end{theorem}
 	
-	Certains résultats sont plus précis dans des cas particuliers et Schäfke et Noble donne alors une discussion plus précise.
+	Certains résultats sont plus précis dans des cas particuliers et Schäfke et Noble donnent alors une discussion plus précise.
 	
 	\subsection{Esquisse de l'algorithme}
 	
@@ -303,7 +303,7 @@
 		
 	\end{algorithm}
 	
-	\noindent D'après le théorème de Perron-kreuser les solutions dont "la croissance est la plus rapide", c'est à dire celle dont le coeffficient $kappa$ est le plus grand est celle la plus à droite du polygone de Newton, et dont la racine est celle de module maximal dans son équation caractéristique.
+	\noindent D'après le théorème de Perron-kreuser les solutions dont "la croissance est la plus rapide", c'est à dire celle dont le coeffficient $\kappa$ est le plus grand est celle la plus à droite du polygone de Newton, et dont la racine est celle de module maximal dans son équation caractéristique.
 	
 	l'algorithme renvoie le $kappa$ maximal et le polynôme réciproque de l'équation caractéristique correspondante au coefficient $\kappa$.
 	
@@ -414,17 +414,17 @@
 	\end{proposition}
 	
 	\noindent\textbf{Méthode de majoration avec un example simple}\\
-	On choisit une série a(z) définie sur $D=\{z,|z|<\rho\}$ soit $u$ une autre série vérifiant $u'(z)=a(z)u(z)$ alors le rayon de convergence de $u$ est le même que celui de a.\\
+	On choisit une série a(z) définie sur $D=\{z,|z|<\rho\}$ soit $u$ une autre série vérifiant $u'(z)=a(z)u(z)$, alors le rayon de convergence de $u$ est le même que celui de a.\\
 	La fonction série un rayon de convergence $\rho$ donne à s'intéresser à une majoration de la forme
 	\[M(z)=\frac{m}{(1-\rho^{-1} z)^{\kappa}}\] 
 	
 	\noindent\textbf{Méthode} Pour commencer, $\exists M \in \mathbb{R}_{+}, \forall n$ $|a_{n}|\leq M \rho^{-n}$.
-	On écrit la relation sur u en terme de séries: $(n+1)u_{n+1}=\sum_{k=0}^{n}u_{n-j}a_{j}$ en considérant $v$ telle que  $(n+1)v_{n+1}=\sum_{k=0}^{n}v_{n-j}M\rho^{-j}$ on observe $v'(z)=\frac{M}{1-z\rho^{-1}}v(z)$ \\
+	On écrit la relation sur u en termes de séries: $(n+1)u_{n+1}=\sum_{k=0}^{n}u_{n-j}a_{j}$ en considérant $v$ telle que  $(n+1)v_{n+1}=\sum_{k=0}^{n}v_{n-j}M\rho^{-j}$ on observe $v'(z)=\frac{M}{1-z\rho^{-1}}v(z)$ \\
 	On a $v=v_{0}(1-z\rho^{-1})^{-M\rho}$. Si $|u_{0}| \leq v_{0}$ la récurrence permet de conclure $ u\unlhd v$. On sait que le rayon de convergence de $v$ est $\rho$ donc celui de $u$ est supérieur à $\rho$, la condition $u'(z)=a(z)u(z)$ permet de conclure l'égalité.
 	
 	\subsection{Séries majorantes pour les fonctions D-finies}
 	Dans l'example que nous avons vu précèdement, les séries majorantes servent à majorer des fonctions, elle sont utilisées sur les restes des séries pour connaître la précision de l'approximation de la fonction étudiée.
-	Le cas qui pourrait paraître singulier de l'équation différentielle normalisée est en fait le plus courant puisqu'il correspond au cas où l'on est à une distance finie non nulle de la singularité la plus proche.
+	Le cas qui pourrait paraître singulier de l'équation différentielle normalisée est en fait le plus courant puisqu'il correspond au cas où l'on est à distance finie non nulle de la singularité la plus proche.
 	
 	
 	\[P(z,\theta) \cdot u(z)=\big[\theta^{r}p_r(z)+\theta^{r-1}p_{r-1}(z)+...+p_0(z)\big]\cdot u(z)=0\]
@@ -465,7 +465,7 @@
 	La fonction de majoration renvoyée par la fonction Bound NormalDiffeq$(D,P_{\alpha},u)$  est de la  forme
 	\[g(z)=\frac{A}{(1-\alpha z)^{K}} \hspace{2mm}\text{si T=0}\hspace{6mm} g(z)=\text{A exp}(\frac{K/T}{(1-\alpha z)^{T}}) \hspace{2mm} \text{sinon.} \]
 	
-	\noindent L'objectif ici est de borner le coefficient $\gamma(f,z)=\sup_{k \geq 2} \left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ en utilisant la fonction majorante développée dans la partie précèdente. Elle respecte la propriété interessante $f\unlhd g$ et donc trouver $\alpha(g,z)$ sur cette fonction reviendrai à majorer $\alpha(f,z)$. L'objectif serait de trouver N à partir du quel $\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ est décroissante. Alors 
+	\noindent L'objectif ici est de borner le coefficient $\gamma(f,z)=\sup_{k \geq 2} \left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ en utilisant la fonction majorante développée dans la partie précèdente. Elle respecte la propriété interessante $f\unlhd g$ et donc trouver $\alpha(g,z)$ sur cette fonction reviendrai à majorer $\alpha(f,z)$. L'objectif serait de trouver N à partir duquel $\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ est décroissante. Alors 
 	\[\gamma(g,z)=max_{k=2}^{N}\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}\] 
 	
 	\begin{proposition} Dans le cas $T=0$ on a \[\gamma(g,z)=max_{k=2}^{\lceil e^{1}K!^{\frac{1}{K-1}} \rceil}\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}\]
@@ -510,7 +510,7 @@
 	
 	\newpage
 	\section{Les méthodes d'exclusion de zéros}
-	\subsection{L'algorithme de Bissection-exclusion de J.-C.Yakoubsohn}
+	\subsection{L'algorithme de Bissection-exclusion de J.-C. Yakoubsohn}
 	L'idée fondamentale de l'algorithme de Jakoubsohn est de constuire une fonction $M(f,x)$ strictement décroissante sur $\mathbb{R}_+$ telle que si cette fonction ne s'annule pas sur un intervalle $[x-\alpha,x+\alpha]$, on peut assurer que la fonction f ne s'annule pas.
 	
 	\begin{definition}Soit f une fonction analytique en x, alors pour t suffisamment petit\\ $f(x+t)=f(x)+\sum_{k=1}^{+\infty} \frac{f^{(k)}(x)}{k!}t^{k}$. On définit $M(f,x)(t)=|f(x)|-\sum_{k=1}^{+\infty}|\frac{f^{(k)}(x)}{k!}|t^{k}$
@@ -555,7 +555,7 @@
 		
 	\end{definition}
 	
-	Le théorème suivant est le théorème de Rouché, il est générale, on l'utilisera pour le cas particulier n=1
+	Le théorème suivant est le théorème de Rouché, il est général, on l'utilisera pour le cas particulier n=1.
 
 	\begin{theorem}(Rouché) Donnons nous un domaine borné $D \subset \mathbb{C}^{n}$ de frontière de Jordan S et deux application analytiques f et g définies sur un voisinage ouvert de D et à valeurs dans $\mathbb{C}^n$. Si pour tout $z \in S$ 
 		\[\left\|f(z)\right\|>\left\|g(z)\right\|\]
@@ -630,7 +630,7 @@
 
 	\noindent\textbf{Démonstration} Définissons $g(x)=f(x)-f(x_0)$, $g(x_0)=0$, $Dg(x_0)=f'(x_0)$ d'après le théorème précèdent, $x_0$ est le seul zéro de g dans la boule
 	$B(x_0,\mathbb{S}_{f}(x_0))$
-	La série de Taylor de g est convergente, elle est donée par
+	La série de Taylor de g est convergente, elle est donnée par
 	\[g(x)=f'(x_0)(x-x_0)+ \sum_{k \geq 2}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\]
 	Nous allons prouver que pour $0<r<\mathbb{S}_{f}(x_0)$ on a,
 	\[|f'(x_0)^{-1}f(x)-f'(x_0)^{-1}g(x)|=|f'(x_0)^{-1}f(x_0)|<|f'(x_0)^{-1}g(x)|\]
@@ -647,16 +647,16 @@
 	\[\beta(f,x_0)<r-M_{f}^{2}(x_0)(r)\] 
 	Ce sera cette expression qui permettra d'exclure des intervalles. Pour commencer on peut dire que si 
 	\[\beta(f,x_0)< \sup_{r \in [0,\mathbb{S}_{f}(x_0)]}\{r-M_{f}^{2}(x_0)(r)\}\]
-	alors, il existe au moins un $t$ supérieur à $r_0$ le point où le sup est atteint dans $[0,\mathbb{S}_{f}(x_0)]$ tel que $t-M_{f}^{2}(x_0)(t)>\beta(f,x_0)$
+	alors, il existe au moins un $t$ supérieur à $r_0$ le point où le sup est atteint dans $[0,\mathbb{S}_{f}(x_0)]$ tel que $t-M_{f}^{2}(x_0)(t)>\beta(f,x_0)$.
 	Mais pour tout $t$ tels que cette inégalité est satisfaite on a
 	\[|f'(x_0)^{-1}g(x)|\geq t-M_{f}^{2}(x_0)(t)>\beta(f,x_0)=|f'(x_0)^{-1}f(x)-f'(x_0)^{-1}g(x)| \tag{*}\]
 	On peut appliquer le théorème de Rouché sur la boule $B(x_0,t)$, mais on a alors
- 	\[B(x_0,\tau)=\bigcup_{t}B(x_0,t) \hspace{4mm} \text{ t vérifiant (*) et } \tau \text{ celui défini dans l'énoncé}\]
-	 Ne contient lui même qu'un seul zéro.
+ 	\[B(x_0,\tau)=\bigcup_{t}B(x_0,t) \hspace{4mm} \]
+	t vérifiant (*) $\tau$ celui défini dans l'énoncé ne contient lui même qu'un seul zéro.
 	 
 	
 	
-	\subsection{Taille minimales des intervalles ajoutés à $\mathbb{A}_i$}
+	\subsection{Taille minimale des intervalles ajoutés à $\mathbb{A}_1$}
 
 	
 \end{document}
