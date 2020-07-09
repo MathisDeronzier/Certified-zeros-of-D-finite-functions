@@ -33,8 +33,11 @@
 	\subsection{Cadre}
 	\section{Fonctions D-finies}
 	
-	Fonctions vérifiants une équation différentielles de la forme
-	\[a_{r}(z)y^{(r)}(z)+a_{n-1}(z)y^{(n-1)}(z)+...+a_{0}(z)y(z)=0, \hspace{3mm} a_{k}\in \mathbb{C}[z].\] 
+	Une fonction est dite  D-finies si elle satisfait une équation différentielles de la forme
+	\begin{equation}
+		a_{r}(z)y^{(r)}(z)+a_{n-1}(z)y^{(n-1)}(z)+...+a_{0}(z)y(z)=0, \hspace{3mm} a_{k}\in \mathbb{C}[z].
+	\end{equation}
+ 
 	
 	
 	
@@ -43,12 +46,12 @@
 	\section{Approximation uniforme sur un segment}
 	
 	Dans cette section on approchera les fonctions D-finies à l'aide des polyonômes.
-	Wierstrass a montré qu'il était possible d'approximer sur un segment n'importe quelle fonction continue à partir de polynômes. Cependant, toutes les méthodes d'interpollation de polynômes ne convergent pas. Un exemple est donné par Runge, la suite de polynômes qui interpollent à intervalles égaux la fonction $f(x)=\frac{1}{1+x^{2}}$ sur $[-5,5]$ diverge lorsque $N \rightarrow \infty$.
+	Weierstrass a montré qu'il était possible d'approximer sur un segment n'importe quelle fonction continue à partir de polynômes. Cependant, toutes les méthodes d'interpolation ne convergent pas. Un exemple est donné par Runge, la suite de polynômes qui interpole la fonction $f(x)=\frac{1}{1+x^{2}}$ sur $[-5,5]$ sur N points à distance régulière les uns des autres diverge lorsque $N \rightarrow \infty$.
 	
 	\subsection{Polynômes de Chebyshev méthode de Boyd}
 	
 	
-	Le mathématicien Russe Sergei Bernstein (1880-1968) a montré que la série de Chebyshev d'une fonction analytique a une convergence quadratique par rapport à la norme infinie. C'est à dire que l'erreur après avoir tronqué la série après le Nème termes est $O(exp(-N\mu))$. On s'intéressera plus tard à une vrai majoration du reste de la série.
+	Le mathématicien Russe Sergei Bernstein (1880-1968) a montré que la série de Chebyshev d'une fonction analytique a une convergence quadratique par rapport à la norme infinie. C'est à dire que l'erreur après avoir tronqué la série après le Nème termes est $O(exp(-N\mu))$. Dans notre cadre, il est intéressant de vouloir quantifier avec des bornes concrêtes notre approximation.
 	C'est cette majoration avec le théorème des valeurs intermédiaires qui nous permettra de certifier les zéros de notre fonction D-finie f.
 	
 	
@@ -90,29 +93,29 @@
 	
 	\subsection{La méthode des éléments finis}
 	
-	Une bonne méthode de résolution d'équations différentielles est la méthode des éléments finis. Il faut réflechir à une famille de fonctions qu'il pourrait-être intéressant de prendre ici. La famille usuelle des fonctions en "escalier" ne semble pas être suffisante puisqu'elle ne satisfait la condition $C^{\infty}$.
+	Une bonne méthode de résolution d'équation différentielle est la méthode des éléments finis. Il faut réflechir à une famille de fonctions qu'il pourrait-être intéressant de prendre ici. La famille usuelle des fonctions en "escalier" ne semble pas suffisante puisqu'elle ne satisfait la condition $C^{\infty}$.
 	La famille des polynômes de Chebyshev semble donc la solution.
 	
 	\subsection{Méthode de Sturm}
 	
-	Sur un intervalle donné, on veut maintenant voir si il y a des zéros grace à l'approximation de Chebyshev et la proposition 1. Nous allons utiliser le principe d'exclusion en comptant le nombre de racines dans l'intervalle à l'aide du théorème de Sturm.
+	Sur un intervalle donné, on veut maintenant voir si il y a des zéros grâce à l'approximation de Chebyshev et la proposition 1. Nous allons utiliser le principe d'exclusion en comptant le nombre de racines dans l'intervalle à l'aide du théorème de Sturm.
 	
 	
-	Soit P un polynome unitaire, $P(x)=x^{n} + \sum^{n-1}_{k=0}a_{k}x^{k}$, \textit {la suite de Sturm} est une suite finie de polynôme défini à partir de P comme suit:\\
+	Soit P un polynôme unitaire, $P(x)=x^{n} + \sum^{n-1}_{k=0}a_{k}x^{k}$, \textit {la suite de Sturm} est une suite finie de polynômes définie à partir de P comme suit:\\
 	$P_{0}=P$, $P_{1}=P'$, et pour $k > 1$ si $P_{k} \neq 0$,  $P_{k+1}$ vérifie
 	\[P_{k-1}=P_{k}Q_{k}-P_{k+1},\hspace{2mm}\text{avec }    deg(P_{k+1})<deg(P_{k})\] 
 	$P_{k+1}$ est l'opposée du reste dans la division euclidienne de $P_{k-1}$ par $P_{k}$. On a alors le théorème suivant 
 	
 
 	\begin{theorem}(Sturm-Habicht)
-		Notons $\sigma(\xi)$ le nombre de fois où la suite $P(\xi),P_{1}(\xi),...,P_{m}(\xi)$ change de signe (un zéro ne comptant pas comme changement de signe).
+		Notons $\sigma(\xi)$ le nombre de fois où la suite $P(\xi),P_{1}(\xi),...,P_{m}(\xi)$ change de signe (un zéro ne compte pas comme changement de signe).
 		Pour deux réels $a,b$ avec $a<b$ où $a$ et $b$ ne sont pas des racines de P, le nombre de racines dans l'intervalle $[a,b]$ vaut
 		$\sigma(a)-\sigma(b)$.
 	\end{theorem}
 	
 	\section{Méthode de Newton}
 	
-	La méthode de Newton définie par la suite $x_{k+1}=N_{f}(x_{k})$ avec $N_{f}(x)=x-Df(x)^{-1}f(x)$ dans notre cas, nous sommes dans $\mathbb{R}$ alors la méthode de Newton se réécrit $N_{f}(x)=x-\frac{f(x)}{Df(x)}$ 
+	La méthode de Newton définie par la suite $x_{k+1}=N_{f}(x_{k})$ avec $N_{f}(x)=x-f'(x)^{-1}f(x)$ dans notre cas, nous sommes dans $\mathbb{R}$ alors la méthode de Newton se réécrit $N_{f}(x)=x-\frac{f(x)}{f'(x)}$ 
 	
 	\subsection{Les applications contractantes}
 	
@@ -120,7 +123,7 @@
 	Notons $\mathbb{E}$ un espace métrique complet et $d$ sa distance.
 	
 	
-	\begin{definition} Une application $f: \mathbb{E} \rightarrow \mathbb{E}$ est lipschitzienne s'il existe $\lambda \in \mathbb{R}_{+}$ tel que pour tout $x$ et $y in\ \mathbb{E}$ on ait $d(f(x),df(y)) \leq \lambda$. Une application est dite contractante si elle est lipshitzienne pour une constante $\lambda <1$. 
+	\begin{definition} Une application $f: \mathbb{E} \rightarrow \mathbb{E}$ est lipschitzienne s'il existe $\lambda \in \mathbb{R}_{+}$ tel que pour tout $x$ et $y in\ \mathbb{E}$ on ait $d(f(x),f'(y)) \leq \lambda$. Une application est dite contractante si elle est lipshitzienne pour une constante $\lambda <1$. 
 	\end{definition}
 	On peut par ailleus définir une constante de lipschitz d'une fonction f sur un segment $[a,b]$
 	\[Lip(f)=\sup_{x \neq y,(x,y)\in [a,b]^2} \frac{d(f(x),f(y))}{d(x,y)}\]
@@ -136,7 +139,7 @@
 		
 		(d)$\frac{d(x_0,x_1)}{1+\lambda} \leq d(x_0,x) \leq \frac{d(x_0,x_1)}{1-\lambda}$.
 	\end{theorem}
-	Ce théorème est bien utile, surtout la dernière inégalité permettant d'encadrer la distance au zéro, bien utile pour trouver un zéro à une précision $epsilon$. 
+	Ce théorème est bien utile, la dernière inégalité permet d'encadrer la distance au zéro, bien utile pour trouver un zéro à une précision $epsilon$. 
 	
 	\subsection{Comment vérifier les hypothèses de contraction} 
 	
@@ -149,13 +152,13 @@
 		
 		\vspace{2mm}
 		
-		\textbf{Entrée:} fonction $f(x)$. rationel a
+		\textbf{Entrée:} fonction $f(x)$. rationel a. epsilon une distance. $\lambda$ la constante de lipschitz.
 		
-		\textbf{Sortie:} point b
+		\textbf{Sortie:} point b à une distance inférieur à epsilon au zéro le plus proche. 
 		
 		\begin{algorithmic}[1]
-			
-			\STATE return $a-\frac{f(a)}{Df(a)}=N_{f}(a)$
+			\STATE Tant que $d(a,N_{f}(a))>\frac{epsilon}{1+\lambda}$
+			 return $a-\frac{f(a)}{f'(a)}=N_{f}(a)$
 		\end{algorithmic}
 	\end{algorithm}
 
@@ -167,12 +170,12 @@
 		
 		On définit les trois opérateurs $\gamma(f,x)$, $\beta(f,x)$, et $\alpha(f,x)$ sur les fonctions analytiques sur $\mathbb{R}$:
 		
-		\[\gamma(f,x)=\sup_{k \geq 2}\left\|Df(x)^{-1}\frac{D^{k}f(x)}{k!}\right\|^{\frac{1}{k-1}}\]
-		\[\beta(f,x)=\left\|Df(x)^{-1}f(x)\right\|\]
+		\[\gamma(f,x)=\sup_{k \geq 2}\left\|f'(x)^{-1}\frac{f^{(k)}(x)}{k!}\right\|^{\frac{1}{k-1}}\]
+		\[\beta(f,x)=\left\|f'(x)^{-1}f(x)\right\|\]
 		\[\alpha(f,x)=\gamma(f,x)\beta(f,x)\]
 	\end{definition}
 	
-	\begin{theorem}(Théorème gamma) Soit $\zeta \in U$ tel que $f(\zeta)=0$ et $Df(\zeta)$ soient inversibles. Soit $x_{0} \in U$ tel que \\
+	\begin{theorem}(Théorème gamma) Soit $\zeta \in U$ tel que $f(\zeta)=0$ et $f'(\zeta)$ soient inversibles. Soit $x_{0} \in U$ tel que \\
 		\[\left\|x_{0}-\zeta\right\|\gamma(f,\zeta) \leq \frac{3-\sqrt{7}}{2}=0.17712.... \]
 		Alors la suite de Newton $x_{k+1}=N_{f}(x_{k})$ converge vers $\zeta$. De plus\\
 		\[\left\|x_{k}-\zeta\right\| \leq \left(\frac{1}{2}\right)^{n}\left\|x_{0}-\zeta\right\|\]
@@ -214,7 +217,7 @@
 	
 	Considérons une suite P-récursive u, définie par la récurrence
 	\[p^{[0]}(n+s)u_{n}+p^{[1]}(n)u_{n+s-1}+...+p^{[s]}(n)u_{n}=0,\hspace{2mm} p^{[k]}\in \mathbb{Q} \tag{*}\] 
-	\begin{theorem}Soit $(u_{n})\in \mathbb{Q}^{\mathbb{N}}$ une suite P-récursive solution de la récurrence homogène (*), avec $p^{[s]}(n) \neq 0$ et $p^{[0]}(n) \neq 0$ pour $n \in \mathbb{N}$. Étant donnée la récurrence (*) et les conditions initiales $u_{0},...,u_{s-1}$, l'algorithme définit dans cette section calcule un réel positif A, un rationnel $\kappa$, un nombre algébrique $\alpha$  et une fonction $\phi$ tels que
+	\begin{theorem}Soit $(u_{n})\in \mathbb{Q}^{\mathbb{N}}$ une suite P-récursive solution de la récurrence homogène (*), avec $p^{[s]}(n) \neq 0$ et $p^{[0]}(n) \neq 0$ pour $n \in \mathbb{N}$. Étant donnée la récurrence (*) et les conditions initiales $u_{0},...,u_{s-1}$, l'algorithme défini dans cette section calcule un réel positif A, un rationnel $\kappa$, un nombre algébrique $\alpha$  et une fonction $\phi$ tels que
 		\[\forall n\in \mathbb{N}, \hspace{6mm}|u_{n}| \leq A n!^{\kappa}\alpha^{n}\phi(n)\]
 		Avec $\phi(n)=e^{o(n)}$. Pour choix générique des conditions initiales, les paramètres $\kappa$ et $\alpha$ sont optimaux.
 	\end{theorem}
@@ -233,10 +236,10 @@
 	\noindent En réécrivant l'équation séquencielle avec ses coefficients asymptotiques $n \rightarrow \infty$
 	\[c_{s}\lambda^{s} n^{d_{s}+s\kappa}+c_{s-1}u_{n}\lambda^{s-1} n^{d_{s-1}+(s-1)\kappa}+...+c_{s'}\lambda^{s'} n^{d_{s'}+s'\kappa}u_{n}\]
 	
-	pour que cette expression s'annule, il est nécessaire que les termes asymptotiquement dominants se compense, et donc que l'exposant $d_{k}+k\kappa$ le plus grand soit atteint au moins deux fois. Alors $-\kappa$ doit être parmis les pentes des tes du \textit{polygone de newton} de l'équation.
+	pour que cette expression s'annule, il est nécessaire que les termes asymptotiquement dominants se compensent, et donc que l'exposant $d_{k}+k\kappa$ le plus grand soit atteint au moins deux fois. Alors $-\kappa$ doit être parmis les pentes du \textit{polygone de newton} de l'équation.
 	
 	
-	\begin{definition} Le polygône de Newton est l'envellope convexe supérieure des points $(k, d_{k}) \in \mathbb{R}$, si E=[A,B] désigne une arête du polygône de Newton, on note $\kappa(E)$ l'opposée de sa pente, et on définit l'équation caractéristique associée à E (ou à $\kappa(E))$ par
+	\begin{definition} Le polygone de Newton est l'envellope convexe supérieure des points $(k, d_{k}) \in \mathbb{R}$, si E=[A,B] désigne une arête du polygone de Newton, on note $\kappa(E)$ l'opposé de sa pente, et on définit l'équation caractéristique associée à E (ou à $\kappa(E))$ par
 		\[\chi_{E}(\lambda)=\sum_{(k,d_{k}) \in E} c_{k}\lambda^{k-t}\]
 		Où $(t,d_{t})=A$ l'extrémité gauche du segment E.
 	\end{definition}
@@ -255,11 +258,11 @@
 		telle que 
 		\[\frac{u_{n+1}^{[E_{i}]}}{u_{n}^{[E_{i}]}}\sim \lambda n^{\kappa(E)} \hspace{2mm} \text{quand } n \rightarrow \infty\]
 		
-		(c)Dans le cas où il existe E et $i \neq j$ tels que $|\lambda_{E_{i}}|=|\lambda_{E_{j}}|$ les analogues des deux assertions précédente subsistent mais avec la conclusion plus faible
+		(c)Dans le cas où il existe E et $i \neq j$ tels que $|\lambda_{E_{i}}|=|\lambda_{E_{j}}|$ les analogues des deux assertions précédentes subsistent mais avec la conclusion plus faible
 		\[\limsup_{n \rightarrow \infty } \big|\frac{u_{n}^{E_{i}}}{n!^{\kappa(E)}}\big|^{\frac{1}{n}}=|\lambda_{E_{i}}|\]
 	\end{theorem}
 	
-	Certains résultats sont plus précis dans des cas particuliers dans le Schäfke et Noble.
+	Certains résultats sont plus précis dans des cas particuliers et Schäfke et Noble donne alors une discussion plus précise.
 	
 	\subsection{Esquisse de l'algorithme}
 	
@@ -269,12 +272,12 @@
 	
 	\begin{definition} Si P $\in \mathbb{Q}[z]$ est un polynôme non réduit à un monôme, on note respectivement
 		\[\delta(P)=min\{|\zeta| \neq 0: P(\zeta)=0\} \text{ et } \nu_{\delta}=max\{\nu(\zeta,P):|\zeta|=\delta(P)\}\] 
-		On appelle \textit{pôles dominants} d'une fraction rationelle et $\delta$-racines  de son dénominateur, et \textit{singularités dominantes} d'un opérateur différentielle à coefficient polynomiaux celles de son coefficient de tête.  
+		On appelle \textit{pôles dominants} d'une fraction rationelle et $\delta$-racines  de son dénominateur, et \textit{singularités dominantes} d'un opérateur différentiel à coefficient polynomiaux celles de son coefficient de tête.  
 	\end{definition}
 	
 	\subsection{Croissance générique des solutions}
 	
-	\begin{definition} Soit $R \in \mathbb{Q}[n]\big< S\big>$ unn opérateur réversible non singulier, d'ordre s. Une solution $(u_{n})$ de la récurrence R.u=0 est alors déterminée de façon unique par ses s premières valeurs. Nous dirons qu'une proposition est vrai pour une solution générique si elle est satisfaite pour $(u_{0},u_{1},...,u_{s-1}) \in \mathbb{Q}^{s}/V$ où V est un sous-espace strict de $\mathbb{Q}^{s}$
+	\begin{definition} Soit $R \in \mathbb{R}[n]\big< S\big>$ unn opérateur réversible non singulier, d'ordre s. Une solution $(u_{n})$ de la récurrence R.u=0 est alors déterminée de façon unique par ses s premières valeurs. Nous dirons qu'une proposition est vrai pour une solution générique si elle est satisfaite pour $(u_{0},u_{1},...,u_{s-1}) \in \mathbb{R}^{s}/V$ où V est un sous-espace strict de $\mathbb{R}^{s}$
 		
 	\end{definition}
 	
@@ -298,9 +301,9 @@
 		
 	\end{algorithm}
 	
-	\noindent D'après le théorème de Perron-kreuser les solutions dont "la croissance est la plus rapide", c'est à dire celle dont le coeffficient $kappa$ est le plus grand est celle la plus à droite du polygone de Newton, et les racines de module maximal de son équation caractéristique.
+	\noindent D'après le théorème de Perron-kreuser les solutions dont "la croissance est la plus rapide", c'est à dire celle dont le coeffficient $kappa$ est le plus grand est celle la plus à droite du polygone de Newton, et dont la racine est celle de module maximal dans son équation caractéristique.
 	
-	l'algorithme renvoie le $kappa$ maximale et le polynôme réciproque de l'équation caractéristique correspondante au coefficient $\kappa$.
+	l'algorithme renvoie le $kappa$ maximal et le polynôme réciproque de l'équation caractéristique correspondante au coefficient $\kappa$.
 	
 	\begin{proposition} Posons $R=\sum_{k=0}^{s} b^{[k]}(n)S^{k} \hspace{4mm} \in \mathbb{Q}[n]\big<S\big>$ et supposons que R n'est pas réduit à un terme $b^{[s]}S^{k}$. On a donc
 		\[\limsup_{n \rightarrow \infty }\Big|\frac{u_{n}}{n!^{k}}\Big|^{\frac{1}{n}} \hspace{4mm} \text{où } \alpha=\frac{1}{\delta(P_{\alpha})}\]
@@ -318,7 +321,7 @@
 	\[\frac{\lambda^{[1]}u^{[1]}_{n}+...+\lambda^{[s-1]}u^{[s-1]}_{n}}{u^{[0]}_{n}}\rightarrow_{n \rightarrow \infty}-\lambda^{[0]}\]
 	Condition fausse pour des $\lambda^{[k]}$ génériques.
 	
-	\begin{definition} On appelle arête dominante l'arête la plus à droite du polygone de Newton, équation caractéristique dominante son équation caractéristique associée, et récurence normalisé une récurrence pour laquelle cette arête est horizontale. C'est à dire que le comportement asymptotique est purement exponentiel, et non factoriel ($\kappa=0$).
+	\begin{definition} On appelle arête dominante l'arête la plus à droite du polygone de Newton, équation caractéristique dominante son équation caractéristique associée, et récurence normalisée une récurrence pour laquelle cette arête est horizontale. C'est à dire que le comportement asymptotique est purement exponentiel, et non factoriel ($\kappa=0$).
 	\end{definition}
 	
 	\subsection{Fonction génératrice normalisée}
@@ -350,8 +353,10 @@
 	s'affranchissent des potentielles contraintes crées par les termes indéxés sur les coefficients négatifs. Mais ne change pas la relation pour les termes supérieurs à s.
 	
 	Considérons $R \in \mathbb{Q}[n]\big< S\big>$ un opérateur non singulier, d'ordre s. Une solution $(u_{n})$ de la récurrence R.u=0, u(z) est annulée par l'opérateur RecToDiffeq$(R)(\theta)=\sum_{k=0}^{r}a^{[k]}\theta^{k} \in \mathbb{Q}[z]\big< \theta\big>$. En divisant par $a^{[r]}$ on obtient
-	
-	\[\big(\theta^{r}+\frac{a^{[r-1]}\theta^{r-1}+...+a^{[0]}}{a^{[r]}}\big).u=0\]
+	\begin{equation}
+	\big(\theta^{r}+\frac{a^{[r-1]}\theta^{r-1}+...+a^{[0]}}{a^{[r]}}\big).u=0
+	\end{equation}
+
 	
 	\begin{proposition}Si l'opérateur R est normalisé, alors l'origine est un point régulier de D=RecToDiffeq et l'équation caractéristique dominante de $R$ est le polynôme réciproque de $a^{[r]}$ 
 	\end{proposition}
@@ -397,7 +402,7 @@
 		
 		(a)Le rayon de convergence de $v$ est inclus dans celui de $u$;
 		
-		(b)Si $\zeta$ appartient qu disque de convergence de $v$, alors $|u(\zeta)|\leq v(|\zeta|)$;
+		(b)Si $\zeta$ appartient au disque de convergence de $v$, alors $|u(\zeta)|\leq v(|\zeta|)$;
 		
 		(c)On a les majorations
 		\[u' \unlhd v'; \hspace{6mm} u^{[1]}+u^{[2]}\unlhd v^{[1]}+v^{[2]}; \hspace{6mm}u^{[1]}u^{[2]}\unlhd v^{[1]}v^{[2]}; \]
@@ -432,7 +437,7 @@
 	La fonction de majoration renvoyée par la fonction Bound NormalDiffeq$(D,P_{\alpha},u)$  est de la  forme
 	\[g(z)=\frac{A}{(1-\alpha z)^{K}} \hspace{2mm}\text{si T=0}\hspace{6mm} g(z)=\text{A exp}(\frac{K/T}{(1-\alpha z)^{T}}) \hspace{2mm} \text{sinon.} \]
 	
-	\noindent L'objectif ici est de borner le coefficient $\gamma(f,z)=\sup_{k \geq 2} \left\|Df(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ en utilisant la fonction majorante développée dans la partie précèdente. Elle respecte la propriété interessante $f\unlhd g$ et donc trouver $\alpha(g,z)$ sur cette fonction reviendrai à majorer $\alpha(f,z)$. L'objectif serait de trouver N à partir du quel $\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ est décroissante. Alors 
+	\noindent L'objectif ici est de borner le coefficient $\gamma(f,z)=\sup_{k \geq 2} \left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ en utilisant la fonction majorante développée dans la partie précèdente. Elle respecte la propriété interessante $f\unlhd g$ et donc trouver $\alpha(g,z)$ sur cette fonction reviendrai à majorer $\alpha(f,z)$. L'objectif serait de trouver N à partir du quel $\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ est décroissante. Alors 
 	\[\gamma(g,z)=max_{k=2}^{N}\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}\] 
 	
 	\begin{proposition} Dans le cas $T=0$ on a \[\gamma(g,z)=max_{k=2}^{\lceil e^{1}K!^{\frac{1}{K-1}} \rceil}\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}\]
@@ -452,17 +457,17 @@
 	\noindent Étudions la fonction $h(x)=(f(x))^{\frac{1}{x-1}}$ où f est strictement positive, on peut la réecrire
 	\[h(x)=\text{exp}(\frac{ln(f(x))}{x-1}) \]
 	Une étude de signe donne à nous intéresser au signe de l'expression
-	\[(x-1)Df(x)-f(x)ln(f(x)) \tag{1}\] 
+	\[(x-1)f'(x)-f(x)ln(f(x)) \tag{1}\] 
 	qui détermine le signe de la dérivée de h. On regarde donc l'expression 
 	\[(k-1)P'(k)-P(k)log(P(k))=P(k)\Big[\big(\sum_{i=1}^{K-1}\frac{k-1}{k+i}\big)-log(P(k))\Big]\]
 	On majore $\frac{k-1}{k+i}$ par 1 et minore $P(k)$ par $\frac{k^{K-1}}{K!}$ On est sûr que la série est décroissante lorsque 
 	\[K-1-ln\big(\frac{k^{K-1}}{K!}\big)<0 \Longleftrightarrow e^{1}K!^{\frac{1}{K-1}}< k\]
 	On a finalement 
-	\[\gamma(f,z)=max_{k=2}^{\lceil e^{1}K!^{\frac{1}{K-1}} \rceil}\left\|Df(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\| \]
+	\[\gamma(f,z)=max_{k=2}^{\lceil e^{1}K!^{\frac{1}{K-1}} \rceil}\left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\| \]
 	
 	\vspace{1cm} 
 	
-	On s'intéresse maintenant au cas où $T\neq 0$ de l'expression, on veut développer $f(z)$ dans le cas où $T \neq 0$. On ne s'en est pas préoccupé précèdement, mais ici, la constante A ne servira pas dans la majoration, la constante sera absorbée dans division par $Df(z)$. En posant \[\alpha_{k}(z)=\frac{\big(\frac{1}{(1-\alpha z)^{T}}\big)}{k!}^{(k)}=\frac{\alpha^{k}}{(1-\alpha z)^{T+k}} \frac{\prod_{i=1}^{T-1}(k+i)}{(K-1)!},\] On a,
+	On s'intéresse maintenant au cas où $T\neq 0$ de l'expression, on veut développer $f(z)$ dans le cas où $T \neq 0$. On ne s'en est pas préoccupé précèdement, mais ici, la constante A ne servira pas dans la majoration, la constante sera absorbée dans division par $f'(z)$. En posant \[\alpha_{k}(z)=\frac{\big(\frac{1}{(1-\alpha z)^{T}}\big)}{k!}^{(k)}=\frac{\alpha^{k}}{(1-\alpha z)^{T+k}} \frac{\prod_{i=1}^{T-1}(k+i)}{(K-1)!},\] On a,
 	\[g(z+t)=\text{A exp}(\frac{K/T}{(1-\alpha (z+t))^{T}})\]
 	En intégrant ce qui a été dit précèdement et en développant en série entière à l'intérieur de l'exponentiel on s'intéressera à
 	\[f(z+t)=\text{exp}\Big(K/T \sum_{k=1}^{+\infty}\alpha_{k}(z)t^{k} \Big)\]
@@ -475,7 +480,7 @@
 	\[\Pi(r_{1},r_{2},...,r_{i})=\dbinom{i}{\Gamma_{g}}\times \dbinom{i-\Gamma_{g}}{\Gamma_{g-1}}\times ...\times \dbinom{\Gamma_{1}}{\Gamma_{1}}=\frac{i!}{\Gamma_h! \times \Gamma_{h-1}! \times ... \times \Gamma_1!}\]
 	
 	
-	
+	\newpage
 	\section{Les méthodes d'exclusion de zéros}
 	\subsection{L'algorithme de Bissection-exclusion de J.-C.Yakoubsohn}
 	L'idée fondamentale de l'algorithme de Jakoubsohn est de constuire une fonction $M(f,x)$ strictement décroissante sur $\mathbb{R}_+$ telle que si cette fonction ne s'annule pas sur un intervalle $[x-\alpha,x+\alpha]$, on peut assurer que la fonction f ne s'annule pas.
@@ -504,15 +509,12 @@
 		
 	\end{algorithm}
 	
-	\noindent Ici, on n'a qu'une étape de l'algorithme et l'idée sera bien sûr d'appliquer récursivement cette fonction pour avoir des intervalles de plus en plus précis. L'article de Jakoubsohn donne une discussion plus complète sur la taille des intervalles en fonctions des "clusters" de zéros.\\
+	\noindent Ici, on n'a qu'une étape de l'algorithme et l'idée sera bien sûr d'appliquer récursivement cette fonction pour avoir des intervalles de plus en plus précis. L'article de Yakoubsohn donne une discussion plus complète sur la taille des intervalles en fonctions des "clusters" de zéros.\\
 	\noindent maj: fonction de majoration fournie dans le module Ore\_algebra.analytic de Marc Mezzarobba\\
 	zéropositif(g): le premier zéro sur lequel la fonction g s'annule sur ${R}$
 	\\
 	
-	\begin{definition}
-		
-	\end{definition}
-	
+
 	
 	\subsection{Séparation des zéros via la méthode de Rouché}
 	Nous allons ici nous intéresser au moyen de certifier nos zéros. On sait que les zéros des fonctions analytiques sont isolés, mais on cherche ici évaluer concrètement la distance entre deux zéros. Cela a été fait dans le livre de Dedieu et ici nous chercherons à adapter les démonstrations appliquées à gamma, aux séries majorantes.
@@ -530,67 +532,95 @@
 	\end{theorem}
 	
 	
-	\section{Adaptation de la théorie alpha de Samle aux séries majorantes}
+	\section{De la théorie alpha de Smale aux séries majorantes}
 	
-	La suite sera une adaptation de la théorie alpha de Smale aux séries majorantes, les résultats seront plus généralistes mais moins concrêts. 
-	Nous aurons besoin d'introduire la notion de série majorante d'un reste d'une série. 
+	La suite sera une adaptation de la théorie alpha de Smale aux séries majorantes, l'objectif de cettte partie est de fournir des résultats plus généraux que la théorie de gamma pour n'importe quelle série majorante. L'inconvénient c'est que les conditions "légères" de la théorie alpha seront remplacés par des conditions plus "lourdes". \\
+	Nous aurons besoin d'introduire des notations pour parler de la série majorante sur le reste d'une série à l'ordre k.
 	
-	\begin{definition} Soit f une fonction analytique en x, alors on peut écrire $f(x+t)=\sum_{k=0}^{+\infty} \frac{f^{(k)}(x)}{k!}t^{k}$, on note alors 
-	\[R_{f}^{i}(x,t)=\sum_{k=i}^{+\infty} \frac{f^{(k)}(x)}{k!}t^{k}\]
-	et on note
-	\[M_{f}^{i}(x,t) \text{Une série majorante de } R_{f}^{i}(x,t)\]
+	\begin{definition} Soit f une fonction analytique en x, alors on peut écrire $f(x+t)=\sum_{k \geq 0} \frac{f^{(k)}(x)}{k!}t^{k}$, Le reste de la série à l'ordre k est 
+	\[R_{f}^{k}(x,t)=\sum_{i \geq k} \frac{f^{(i)}(x)}{i!}t^{i}\]
+	et la série majorante de ce reste
+	\[M_{f}^{i}(x,t) \unrhd R_{f}^{i}(x,t)\]
 	\end{definition}
 	
 	\subsection{Zéros répulsifs}
+	On définit trois ensembles pour notre algorithme.
+	\begin{definition} Soient les trois ensembles suivants.
+		
+	$\mathbb{A}_i=\{[c,d], \exists ! \zeta \text{ de multiplicité i } \in [c,d], f(\zeta)=0\}$
 	
-	On cherche à rajouter des intervalles dans l'ensemble $\mathbb{A}$ de notre algorithme. 
+	$\mathbb{E}=\{[c,d], \not\exists \zeta \in [c,d], f(\zeta)=0\}$
 	
-	\begin{theorem}	Soit f une fonction, $\zeta$ et $\zeta '$ deux points tels que $Df(\zeta)\neq 0$ et que $f(\zeta)=f(\zeta ')=0$ et $\zeta '$ dans le rayon de convergence du développement en série entière de $f$ en $\zeta$. 
-		\[S(f)=0 \text{ si } f(0) \geq 1  \hspace{4mm} \text{et} \hspace{4mm} S(f)=\min \{f^{-1}(1)\cap \mathbb{R}_{+}\}\]
-		\[Sep(f,\zeta) \geq S\Big(\left\|Df(\zeta)^{-1}\right\|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big) \hspace{4mm} \text{où t est la variable} \]
+	$\mathbb{I}=\{[c,d] \text{ indéterminés }\}$\\
+	\end{definition}
+
+	\noindent On cherche à rajouter des intervalles dans l'ensemble $\mathbb{A}$, c'est à dire des intervalles contenant des zéros  de multiplicité 1.
+	Avant d'énoncer le théorème, on définit la fonction. 
+	\begin{definition} Soit $f$ une fonction définie de$\mathbb{R}$ dans $\mathbb{R}_+$ croissante sur $\mathbb{R}_+$ on définit la fonction $S:(\mathbb{R}_+ \rightarrow \mathbb{R}) \longrightarrow \mathbb{R}_+$  telle que $S(f)$ renvoie le premier $x \in \mathbb{R}_+$ tel que $f(x)=1$, elle renvoie zéro si $f(0) \geq1$. On  peut l'écrire formellement
+		\begin{equation}
+		S(f)=
+		\left\lbrace
+		\begin{array}{ccc}
+		0  & \mbox{si} & f(0) \geq 1\\
+		\inf (f^{-1}(1)\cap \mathbb{R}_{+}) & \mbox{sinon}\\
+		\end{array}\right.
+		\end{equation}
+	\end{definition}
+	\begin{theorem}	Soit f une fonction, $\zeta$ et $\zeta '$ deux points de $\mathbb{R}$ tels que $f'(\zeta)\neq 0$ et que $f(\zeta)=f(\zeta ')=0$ et $|\zeta '-\zeta|$ inférieur au rayon de convergence du développement en série entière de $f$ en $\zeta$. 
+		
+		\[Sep(f,\zeta) \geq S\Big(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big) \hspace{4mm} \text{S la fonction de la définition} \]
 	\end{theorem}
-	
+
 	\noindent \textbf{Démonstration} Raisonnons par l'absurde, 
-	\[f(\zeta ')=f(\zeta)+(\zeta '-\zeta)Df(\zeta)+ \sum_{k=2}^{+\infty}\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^k\]
-	qui se réecrit, en multipliant par $Df(\zeta ')^{-1}$
-	\[(\zeta-\zeta')=Df(\zeta)^{-1} \Big[\sum_{k=2}^{+\infty}\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^k\Big]\]
+	\[f(\zeta ')=f(\zeta)+(\zeta '-\zeta)f'(\zeta)+ \sum_{k \geq 2}\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^k\]
+	qui se réecrit, en multipliant par $f'(\zeta ')^{-1}$
+	\[(\zeta-\zeta')=f'(\zeta)^{-1} \sum_{k \geq 2}\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^k]\]
 	d'où 
-	\[1 \leq \left\|Df(\zeta)^{-1} \right\|\sum_{k=2}^{+\infty}  \left\|\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^{k-1} \right\|\]
-	\[1 \leq \left\|Df(\zeta)^{-1}\right\| \frac{M_{f}^{2}(\zeta)(\zeta-\zeta')}{(\zeta-\zeta')}\]
-	Hors $(\zeta-\zeta')<S\Big(\left\|Df(\zeta)^{-1}\right\|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)$ ce qui implique que $1<1$, c'est absurde.
+	\[1 \leq |f'(\zeta)^{-1}|\sum_{k \geq 2}  \big|\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^{k-1} \big|\leq |f'(\zeta)^{-1}| \frac{M_{f}^{2}(\zeta)(|\zeta-\zeta'|)}{|\zeta-\zeta'|}\]
+	\[1 \]
+	Hors $|\zeta-\zeta'|<S\Big(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)$ la fonction majorante est croisssante alors $1<1$, c'est absurde.
 	
-	\noindent Il s'en suit de ce théorème qu'il n'y a pas de zéro dans l'intervalle \[[\zeta-S\Big(\left\|Df(\zeta)^{-1}\right\|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big),\zeta+S\Big(\left\|Df(\zeta)^{-1}\right\|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)]\]
+	\noindent Il s'en suit de ce théorème qu'il n'y a pas de zéro dans l'intervalle \[\Big[\zeta-S\Big(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big),\zeta+S\Big(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)\Big]\]
+	
+	\noindent Remarque, nous devons nous assurer que la fonction majorante $M_{f}^{2}(\zeta)$ est $o(t)$ en zéro. Sinon, rien n'assure que $S(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t})>0$. Et l'on ne pourra pas exclure d'intervalle.
+	
 	
 	\subsection{Quantification de la distance au zéro}
-	Pour alléger les notations dans la suite on pose $\mathbb{S}_{f}(z)=S\Big(\left\|Df(\zeta)^{-1}\right\|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)$
+	Pour alléger les notations dans la suite on pose $\mathbb{S}_{f}(z)=S\Big(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)$
 	
+	\begin{theorem} Soit $f:\mathbb{C} \rightarrow \mathbb{C}$ une fonction analytique, soit $x_0 \in \mathbb{C}$ tel que $f'(x_0) \neq 0$. Si 
+	\[\beta(f,x_0)<\sup_{r \in [0,\mathbb{S}_{f}(x_0)]} r-|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(r)}{r}\]
+	 alors on peut assurer qu'il existe un unique zéro sur un intervalle ouvert de taille $\tau$ avec
+	 \[\frac{\tau}{2}=\sup \Big\{t \in [0,\mathbb{S}_{f}(x_0)],  t-|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}>\beta(f,x_0)\Big\} \]
+	 Plus précisément $]x_0-\frac{\tau}{2},x_0+\frac{\tau}{2}[$ contient un unique zéro.
+	 
+		
+
+	\end{theorem}
 	
-	
-	\noindent\textbf{Démonstration} Définissons $g(x)=f(x)-f(x_0)$, $g(x_0)=0$, $Dg(x_0)=Df(x_0)$ d'après le théorème précèdent, $x_0$ est le seul zéro dans la boule
+	\noindent\textbf{Démonstration} Définissons $g(x)=f(x)-f(x_0)$, $g(x_0)=0$, $Dg(x_0)=f'(x_0)$ d'après le théorème précèdent, $x_0$ est le seul zéro de g dans la boule
 	$B(x_0,\mathbb{S}_{f}(x_0))$
 	La série de Taylor de g est convergente, elle est donée par
-	\[g(x)=Df(x_0)(x-x_0)+ \sum_{k=2}^{+\infty}\frac{D^{k}f(x_0)}{k!}(x-x_0)^k\]
-	Nous allons prouver que pour $0<r<1$ on a,
-	\[\left\|Df(x_0)^{-1}f(x)-Df(x_0)^{-1}g(x)\right\|=\left\|Df(x_0)^{-1}f(x_0)\right\|<\left\|Df(x_0)^{-1}g(x)\right\|\]
+	\[g(x)=f'(x_0)(x-x_0)+ \sum_{k \geq 2}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\]
+	Nous allons prouver que pour $0<r<\mathbb{S}_{f}(x_0)$ on a,
+	\[|f'(x_0)^{-1}f(x)-f'(x_0)^{-1}g(x)|=|f'(x_0)^{-1}f(x_0)|<|f'(x_0)^{-1}g(x)|\]
 	\\
-	Pour tout $x$ avec $\left\|x-x_0\right\|=r\mathbb{S}_{f}(x_0)$
+	Pour tout $x$ avec $|x-x_0|=r$
 	\\
-	Par le théorème de Rouché $f$ et $g$ auront le même nombre de zéros dans cette boule. Remarquons que 
-	\[\left\|Df(x_0)^{-1}f(x)-Df(x_0)^{-1}g(x)\right\|=\left\|Df(x_0)^{-1}f(x_0)\right\|=\beta(f,x_0)\]
+	Par le théorème de Rouché $|f'(x_0)^{-1}|f$ et $|f'(x_0)^{-1}|g$ auront le même nombre de zéros dans cette boule. Remarquons que 
+	\[|f'(x_0)^{-1}f(x)-f'(x_0)^{-1}g(x)|=|f'(x_0)^{-1}f(x_0)|=\beta(f,x_0)\]
 	Aussi
-	\[x-x_0=Df(x_0)^{-1}g(x)-\sum_{k \geq 2}\frac{D^{k}f(x_0)}{k!}(x-x_0)^k\]
+	\[x-x_0=f'(x_0)^{-1}g(x)-\sum_{k \geq 2}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\]
 	de sorte que
-	\[r\mathbb{S}_{f}(x_0) \leq \left\|Df(x_0)^{-1}g(x)\right\|+M_{f}^{2}(x_0)(r\mathbb{S}_{f}(x_0)) \]
+	\[r \leq |f'(x_0)^{-1}g(x)|+M_{f}^{2}(x_0)(r) \]
 	C'est à dire que l'hypothèse de Rouché est satisfaite si
-	\[\beta(f,x_0)<r\mathbb{S}_{f}(x_0)-M_{f}^{2}(x_0)(r\mathbb{S}_{f}(x_0))\] 
-	
-	c'est cette expression qui permettra d'exclure des intervalles. Pour commencer on peut dire que si 
-	\[\beta(f,x_0)< \sup_{r \in [0,1]}\{r\mathbb{S}_{f}(x_0)-M_{f}^{2}(x_0)(r\mathbb{S}_{f}(x_0))\}\]
-	alors, soit $r_0$ le point où le sup est atteint, on peut alors exclure un intervalle de la taille $2r_0\mathbb{S}_{f}(x_0)$.
-	
+	\[\beta(f,x_0)<r-M_{f}^{2}(x_0)(r)\] 
+	Ce sera cette expression qui permettra d'exclure des intervalles. Pour commencer on peut dire que si 
+	\[\beta(f,x_0)< \sup_{r \in [0,\mathbb{S}_{f}(x_0)]}\{r-M_{f}^{2}(x_0)(r)\}\]
+	alors, soit $r_0$ le point où le sup est atteint, on peut alors réccupérer un intervalle de la taille $2r_0$.
 	
 	
-	
+	\subsection{Cas des }
 
 	
 \end{document}
