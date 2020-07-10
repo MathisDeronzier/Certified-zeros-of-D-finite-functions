@@ -29,6 +29,7 @@
 	\newtheorem{proposition}{Proposition}
 	\newtheorem{corollaire}{Corollaire}
 	\newtheorem{definition}{Définition}
+	\newtheorem{demonstration}{Démonstration}
 	\subsection{Remerciments}
 	\subsection{Cadre}
 	\section{Fonctions D-finies}
@@ -597,38 +598,43 @@
 		\end{array}\right.
 		\end{equation}
 	\end{definition}
+	\vspace{7mm}
+	Pour alléger les notations dans la suite on pose $\mathbb{S}_{f}(\zeta)=S\Big(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)$\\
+	Rappel $\beta(f,\zeta)=|f'(\zeta)^{-1}f(\zeta)|$, c'est aussi la longueur de pas de l'itération de Newton.
+	\vspace{7mm}
 	\begin{theorem}	Soit f une fonction, $\zeta$ et $\zeta '$ deux points de $\mathbb{R}$ tels que $f'(\zeta)\neq 0$ et que $f(\zeta)=f(\zeta ')=0$ et $|\zeta '-\zeta|$ inférieur au rayon de convergence du développement en série entière de $f$ en $\zeta$. 
 		
 		\[Sep(f,\zeta) \geq S\Big(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big) \hspace{4mm} \]
 	\end{theorem}
 
-	\noindent \textbf{Démonstration} Raisonnons par l'absurde, 
+	\begin{demonstration}Raisonnons par l'absurde, 
 	\[f(\zeta ')=f(\zeta)+(\zeta '-\zeta)f'(\zeta)+ \sum_{k \geq 2}\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^k\]
 	qui se réecrit, en multipliant par $f'(\zeta ')^{-1}$
 	\[(\zeta-\zeta')=f'(\zeta)^{-1} \sum_{k \geq 2}\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^k]\]
 	d'où 
 	\[1 \leq |f'(\zeta)^{-1}|\sum_{k \geq 2}  \big|\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^{k-1} \big|\leq |f'(\zeta)^{-1}| \frac{M_{f}^{2}(\zeta)(|\zeta-\zeta'|)}{|\zeta-\zeta'|}\]
 	\[1 \]
-	Hors $|\zeta-\zeta'|<S\Big(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)$ la fonction majorante est croisssante alors $1<1$, c'est absurde.
+	Or $|\zeta-\zeta'|<S\Big(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)=\mathbb{S}_{f}(\zeta)$ la fonction majorante est croisssante alors $1<1$, c'est absurde.
 	
-	\noindent Il s'en suit de ce théorème qu'il n'y a pas de zéro dans l'intervalle \[\Big[\zeta-S\Big(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big),\zeta+S\Big(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)\Big]\]
-	
-	\noindent Remarque, nous devons nous assurer que la fonction majorante $M_{f}^{2}(\zeta)$ est $o(t)$ en zéro. Sinon, rien n'assure que $S(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t})>0$. Et l'on ne pourra pas exclure d'intervalle.
-	
-	
+	\noindent Il s'en suit de ce théorème qu'il n'y a pas de zéro autre que $\zeta$  dans l'intervalle $[\zeta-\mathbb{S}_{f}(\zeta),\zeta+\mathbb{S}_{f}(\zeta)]$
+	\end{demonstration} 
+	\noindent Remarque, si la fonction majorante $M_{f}^{2}(\zeta)$ est $o(t)$ en zéro alors $\mathbb{S}_{f}(\zeta)>0$. Ça sera le cas des séries majorantes que nous utilisierons.
 	\subsection{Quantification de la distance au zéro}
-	Pour alléger les notations dans la suite on pose $\mathbb{S}_{f}(z)=S\Big(|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}\Big)$
 	
 	\begin{theorem} Soit $f:\mathbb{C} \rightarrow \mathbb{C}$ une fonction analytique, soit $x_0 \in \mathbb{C}$ tel que $f'(x_0) \neq 0$. Si 
 	\[\beta(f,x_0)<\sup_{r \in [0,\mathbb{S}_{f}(x_0)]} r-|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(r)}{r}\]
-	 alors on peut assurer qu'il existe un unique zéro pour f sur $B(x_0,\tau)$ la boule ouverte centré en $x_0$ avec
-	 \[\tau=\sup \Big\{t \in [0,\mathbb{S}_{f}(x_0)],  t-|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}>\beta(f,x_0)\Big\} \]
+	 alors on peut assurer que quel que soit $r\in [0,\mathbb{S}_{f}(x_0)]$ vérifiant
+	 \[r-|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{r}>\beta(f,x_0)\]
+	 existe un unique zéro pour f sur $B(x_0,r)$ la boule ouverte centré en $x_0$ de rayon $r$. 
 	\end{theorem}
 	 Nous montrerons que dans le cas réel que $]x_0-\tau,x_0+\tau[$ contient un unique zéro. Ce qui vient du fait qu'une racine complexe admet aussi son conjugué comme racine, hors la boule trouvé est centrée sur un point de l'axe des réels donc il devrait y avoir 2 zéros et non pas 1 dans la boule.
 	 
 	 \vspace{7mm}	
-
-	\noindent\textbf{Démonstration} Définissons $g(x)=f(x)-f(x_0)$, $g(x_0)=0$, $Dg(x_0)=f'(x_0)$ d'après le théorème précèdent, $x_0$ est le seul zéro de g dans la boule
+	 
+	
+	\begin{demonstration}
+	
+	Définissons $g(x)=f(x)-f(x_0)$, $g(x_0)=0$, $Dg(x_0)=f'(x_0)$ d'après le théorème précèdent, $x_0$ est le seul zéro de g dans la boule
 	$B(x_0,\mathbb{S}_{f}(x_0))$
 	La série de Taylor de g est convergente, elle est donnée par
 	\[g(x)=f'(x_0)(x-x_0)+ \sum_{k \geq 2}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\]
@@ -647,18 +653,21 @@
 	\[\beta(f,x_0)<r-M_{f}^{2}(x_0)(r)\] 
 	Ce sera cette expression qui permettra d'exclure des intervalles. Pour commencer on peut dire que si 
 	\[\beta(f,x_0)< \sup_{r \in [0,\mathbb{S}_{f}(x_0)]}\{r-M_{f}^{2}(x_0)(r)\}\]
+	alors, pour tout r tel que l'inégalité  $\beta(f,x_0)<r-M_{f}^{2}(x_0)(r)$ soit satisfaite, on peut assurer avec le théorème de Rouché qu'il n'existe qu'un seul zéro dans l'intervalle $[x_0-r,x_0+r]$
+	
+	\end{demonstration} 
+	 
+	
+	
+	\section{Taille minimale des intervalles ajoutés à $\mathbb{A}_1$}
+	On peut maximiser la taille de l'intervalle dans 
+	\[\tau=\sup \Big\{t \in [0,\mathbb{S}_{f}(x_0)],  t-|f'(\zeta)^{-1}|\frac{M_{f}^{2}(\zeta)(t)}{t}>\beta(f,x_0)\Big\} \]
 	alors, il existe au moins un $t$ supérieur à $r_0$ le point où le sup est atteint dans $[0,\mathbb{S}_{f}(x_0)]$ tel que $t-M_{f}^{2}(x_0)(t)>\beta(f,x_0)$.
 	Mais pour tout $t$ tels que cette inégalité est satisfaite on a
 	\[|f'(x_0)^{-1}g(x)|\geq t-M_{f}^{2}(x_0)(t)>\beta(f,x_0)=|f'(x_0)^{-1}f(x)-f'(x_0)^{-1}g(x)| \tag{*}\]
 	On peut appliquer le théorème de Rouché sur la boule $B(x_0,t)$, mais on a alors
- 	\[B(x_0,\tau)=\bigcup_{t}B(x_0,t) \hspace{4mm} \]
+	\[B(x_0,\tau)=\bigcup_{t}B(x_0,t) \hspace{4mm} \]
 	t vérifiant (*) $\tau$ celui défini dans l'énoncé ne contient lui même qu'un seul zéro.
-	 
-	
-	
-	\subsection{Taille minimale des intervalles ajoutés à $\mathbb{A}_1$}
-
-	
 \end{document}
 
 
