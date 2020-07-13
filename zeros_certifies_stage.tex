@@ -32,8 +32,27 @@
 	\newtheorem{demonstration}{Démonstration}
 	\subsection{Remerciments}
 	\subsection{Cadre}
+	
+	Le problème que nous cherchons à résoudre est le suivant, nous avons une fonction D-finie donnée par son équation différentielle et ses conditions initiales et nous allons chercher à trouver tous les zéros de cette fonction sur un segment $[a,b]$ tel que la fonction ne contient aucune singularité sur ce segment. \\
+	Premièrement, les fonctions D-finies ont été définies sur le corps $\mathbb{C}$ initialement, cependant notre problème se concentre sur les zéros sur $\mathbb{R}$, la fonction est donc $f: \mathbb{R} \rightarrow \mathbb{R}$.
+	Ensuite, le nombre de zéros d'une fonction analytique est borné sur un compact, alors on cherchera bien un nombre fini de zéros.
+	Et finalement qu'est-ce que veut dire que trouver un zéro sur un ordinateur? La nature même de la représentation des nombres sur ordinateur ne permet de manipuler que des nombres rationnels, alors il est évident que l'on ne pourra pas trouver tous les zéros des fonctions. On ne manipulera pas ici d'expression symbolique sur ordinateur. Alors, il faut signifier ce que veut dire "trouver un zéro".
+	
+	\subsubsection{Plan}
+	
+	Tout d'abord il faudra nous familiariser avec la notion de fonction D-finie, ça sera l'objectif du premier chapitre, on introduira les propriétés des fonctions D-finies que nous utiliserons dans la suite du travail.
+	
+	La troisième partie est une partie "inutile", puisque, même si elle a un intérêt théorique, nous expliquerons pourquoi il est difficile d'utiliser cette méthode certifier tous les zéros d'un segment.
+	
+	On introduira ensuite, la méthode de Newton, méthode très connue et utilisée dans les problèmes de recherche de zéros. On regardera les avantages et les limites de cette méthode, pour finalement cibler dans quel contexte l'utiliser.
+	
+	La cinquième partie aura pour objectif d'expliquer les méthodes algorithmiques utilisées pour manipuler les fonctions D-finies sur ordinateur.
+	
+	Les dernières parties seront une exploitation des outils introduits dans les premières parties pour construire notre algorithme. 
+	
+	
 	\section{Fonctions D-finies}
-	Ce chapitre énoncera quelques propriétés des fonctions D-finies, de sorte à donner des notions fondamentales au lecteur non familier avec ce type de fonctions. les démonstration ne seront pas présentés ici, mais sont présentes dans l'article de Stanley d'où elles sont issues.\\
+	Ce chapitre énoncera quelques propriétés des fonctions D-finies sur, de sorte à donner des notions fondamentales au lecteur non familier avec cette famille de fonctions. les démonstration ne seront pas présentés ici, mais sont présentes dans l'article de Stanley d'où elles sont issues.\\
 	\\
 	On dénotera dans la suite $\mathbb{K}[z]$ les polynômes à une variable sur le corps $\mathbb{K}$, les deux corps que nous verrons ici sont $\mathbb{R}$ et $\mathbb{C}$. On dénotera aussi $\mathbb{K}((z))$ le corps des séries de Laurents à coefficients dans $\mathbb{K}$
 	
@@ -490,9 +509,58 @@
 	\end{equation}
 	Où c est un nombre complex. Il faut maintenant choisir les paramètres $\hat{a}$, $\hat{q}$ et c de sorte à ce que les inégalités ~\eqref{maj1},~\eqref{maj2},~\eqref{maj3} soient respectées. On aura alors une série majorante de $R_u^{N}$.
 	
-	\section{Étude de la fonction de majoration et détermination d'un majorant de alpha}
-	La fonction de majoration renvoyée par la fonction Bound NormalDiffeq$(D,P_{\alpha},u)$  est de la  forme
-	\[g(z)=\frac{A}{(1-\alpha z)^{K}} \hspace{2mm}\text{si T=0}\hspace{6mm} g(z)=\text{A exp}(\frac{K/T}{(1-\alpha z)^{T}}) \hspace{2mm} \text{sinon.} \]
+	\subsubsection{Séries majorantes dans le cas particulier réel}
+	
+	Dans ce chapitre on se trouve dans le cas particulier de notre problème, nous sommes sur un intervalle $[a,b]$ tel qu'il n'y ait aucune singularité sur cet intervalle. Ce qui signifie vis à vis de l'équation différentielle
+	\[P(z,\theta) \cdot u(z)=\big[\theta^{r}p_r(z)+\theta^{r-1}p_{r-1}(z)+...+p_0(z)\big]\cdot u(z)=0 \tag{*}\]
+	où les polynômes sont premiers entre eux, que le polynôme $p_r$ ne s'annulle pas sur l'intervalle.\\
+	
+	Plusieurs familles de fonctions majorantes existent, mais ici ceux sont les  fonctions majorantes de la forme $\frac{A}{(1-\alpha z)^\lambda}$ qui sont utilisées pour majorer le reste. Remarquons que $\alpha$ doit vérifier que $\frac{1}{\alpha}$ est supérieure à la distance à la singularité la plus proche de f. C'est aussi égale à $\delta(p_r)$ introduit en section 4.
+	Ce chapitre est une explication plus en détails de la méthode de majoration utilisée. Tout d'abord il faut se munir du théorème suivant
+	
+	\begin{theorem}
+		Soient $u$ et $v$ deux fonctions analytiques solutions des équations différentielles
+		\[u^{(r)}=a^{[r-1]}u^{(r-1)}+...+a^{[0]}u,\]
+		\[v^{(r)}=b^{[r-1]}v^{(r-1)}+...+b^{[0]}v,\]
+		pour des fonctions méromorphes $(a^{[i]})_{i=0}^{r-1}$ et $(b^{[i]})_{i=0}^{r-1}$ satisfaisant 
+		\[a^{[i]} \unlhd b^{[i]}, \hspace{4mm} i=0...r-1\]
+		Si de plus, aucune de ces fonctions a une singularité en 0 et
+		\[|u^{(i)}(0)|<v^{(i)}(0),\hspace{4mm} i=0...r-1\] 
+		alors $u\unlhd v$.
+	\end{theorem}
+	Nous avons une méthode permettant de trouver un majorant de façon concrête:\\
+	
+	(1)Trouver un majorant pour chaque fraction rationnelle 
+	\[a^{[i]} \unlhd \frac{M^{[i]}}{(1-\alpha z)^{r-i}}\]
+	
+	(2)Vérifier que $A/(1-\alpha z)^\lambda$ est une solution de 
+	\[y^{(r)}=\sum_{i=0}^{r-1}\frac{M^{[i]}}{(1-\alpha)^{r-i}}y^{(i)}\]
+	avec $\lambda$, l'unique racine positive de\[\alpha^{r}\lambda^{\uparrow r}=\sum_{i=0}^{r-1}{M^{[i]}}\alpha^i\lambda^{\uparrow r} \]
+	$\lambda^{\uparrow r}=\prod_{i=0}^{r-1}(\lambda+i)$\\
+	
+	(3)Avec $v(z)=(1-\alpha)^{-\lambda}$, avec le théorème précèdent si l'on choisit
+	\[A=\max_{0\leq i\leq r-1}\Big(\frac{v^{(i)}(0)}{f^{(i)}(0)}\Big),\]
+	on a
+	\[f(z)\unlhd  \frac{A}{(1-\alpha z)^\lambda}\]
+	
+	Il n'est pas toujours possible de trouver $\lambda$, mais on peut l'approcher aussi près que l'on veut. Dans la suite, on considérera qu'on a la valeur exacte de $\lambda$ pour simplifier les arguments.
+	
+	Si l'on veut trouver une série majorante de $\frac{P(z)}{Q(z)}$ de la forme $M=\frac{1}{(1-\alpha)^m}$ on cherchera 
+	\[P(z)\unlhd \frac{M_0}{(1-\alpha)^{m/2}}\]
+	et 
+	\[\frac{1}{Q(z)}\unlhd \frac{M_1}{(1-\alpha)^{m/2}}\]
+	donc 
+	\[\frac{P(z)}{Q(z)}\unlhd \frac{M_0M_1}{(1-\alpha z)^{m}}\]
+	Nous n'irons pas plus loins dans l'explication de l'obtention des bornes, mais la démonstration est détaillée dans le rapport de Thomas Grégoire
+	
+	Les coefficients $M_0$ et $M_1$ vérifient:
+	
+	
+	
+	
+	\subsection{Étude de la fonction de majoration et détermination d'un majorant de alpha}
+	La fonction de majoration renvoyée est donc de la  forme
+	\[g(z)=\frac{A}{(1-\alpha z)^{K}}\]
 	
 	\noindent L'objectif ici est de borner le coefficient $\gamma(f,z)=\sup_{k \geq 2} \left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ en utilisant la fonction majorante développée dans la partie précèdente. Elle respecte la propriété interessante $f\unlhd g$ et donc trouver $\alpha(g,z)$ sur cette fonction reviendrai à majorer $\alpha(f,z)$. L'objectif serait de trouver N à partir duquel $\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ est décroissante. Alors 
 	\[\gamma(g,z)=max_{k=2}^{N}\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}\] 
@@ -521,40 +589,24 @@
 	\[K-1-ln\big(\frac{k^{K-1}}{K!}\big)<0 \Longleftrightarrow e^{1}K!^{\frac{1}{K-1}}< k\]
 	On a finalement 
 	\[\gamma(f,z)=max_{k=2}^{\lceil e^{1}K!^{\frac{1}{K-1}} \rceil}\left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\| \]
-	
-	\vspace{1cm} 
-	
-	On s'intéresse maintenant au cas où $T\neq 0$ de l'expression, on veut développer $f(z)$ dans le cas où $T \neq 0$. On ne s'en est pas préoccupé précèdement, mais ici, la constante A ne servira pas dans la majoration, la constante sera absorbée dans division par $f'(z)$. En posant \[\alpha_{k}(z)=\frac{\big(\frac{1}{(1-\alpha z)^{T}}\big)}{k!}^{(k)}=\frac{\alpha^{k}}{(1-\alpha z)^{T+k}} \frac{\prod_{i=1}^{T-1}(k+i)}{(K-1)!},\] On a,
-	\[g(z+t)=\text{A exp}(\frac{K/T}{(1-\alpha (z+t))^{T}})\]
-	En intégrant ce qui a été dit précèdement et en développant en série entière à l'intérieur de l'exponentiel on s'intéressera à
-	\[f(z+t)=\text{exp}\Big(K/T \sum_{k\geq1}\alpha_{k}(z)t^{k} \Big)\]
-	
-	\[= 1+(K/T)\frac{\sum_{k\geq1}\alpha_{k}(z)t^{k}}{1!}+(K/T)^{2}\frac{\big(\sum_{k\geq1}\alpha_{k}(z)t^{k}\big)^{2}}{2!}+...+(K/T)^{l}\frac{\big(\sum_{k\geq1}\alpha_{k}(z)t^{k}\big)^{l}}{l!}+...\]
-	En identifiant les coefficients correspondants à $t^{k}$
-	\[\frac{f^{(k)}(z)}{k!}=\sum_{i=1}^{k}\frac{(K/T)^{i}}{i!}\Big(\sum_{r_{1}\leq r_{2}\leq ...\leq{r_{i}}}\Pi(r_{1},...,r_{i})\prod_{h=1}^{i}\alpha_{r_{h}}(z) \Big) \hspace{2mm} \text{avec }\sum_{h=1}^{i} r_{h}=k\]
-	Où $\Pi(r_{1},...,r_{i})$ est définie comme suit:\\
-	On regroupe les $r_{h}$ en $g$ groupes $\Gamma$ de coefficients égaux, soit $\Gamma_{h}$ leur taille telle que $\sum_{h=1}^{g}\Gamma_{h}=i$, alors
-	\[\Pi(r_{1},r_{2},...,r_{i})=\dbinom{i}{\Gamma_{g}}\times \dbinom{i-\Gamma_{g}}{\Gamma_{g-1}}\times ...\times \dbinom{\Gamma_{1}}{\Gamma_{1}}=\frac{i!}{\Gamma_h! \times \Gamma_{h-1}! \times ... \times \Gamma_1!}\]
 	\end{demonstration}
-	
-	
-	\newpage
+
 	\section{Les méthodes d'exclusion de zéros}
 	\subsection{L'algorithme de Bissection-exclusion de J.-C. Yakoubsohn}
 	
 	Cette partie a pour objectif de proposer un algorithme permettant d'exclure des intervalles dans lesquels on peut certifier qu'il n'y a pas de zéro. Une méthode à été proposée dans le plan complexe par J.-C. Yakoubsohn, nous réutiliserons la fonction introduite dans son article (faire une bib).
 	
-	\begin{definition}Soit f une fonction analytique en x, alors pour t suffisamment petit\\ $f(x+t)=\sum_{k\geq0} \frac{f^{(k)}(x)}{k!}t^{k}$. On définit $m(f,x)(t)=|f(x)|-\sum_{k\geq1}|\frac{f^{(k)}(x)}{k!}|t^{k}$
+	\begin{definition}Soit f une fonction analytique en x, alors pour t suffisamment petit\\ $f(x+t)=\sum_{k\geq0} \frac{f^{(k)}(x)}{k!}t^{k}$. On définit $M(f,x)(t)=|f(x)|-\sum_{k\geq1}|\frac{f^{(k)}(x)}{k!}|t^{k}$
 	\end{definition}
 	\begin{proposition}
-		Soit $f$ une fonction analytique, alors $m(f,x)$ vérifie 
-		\[\forall t \in \mathbb{R}_+, \hspace{3mm} m(f,x)(t) \leq |f(x+t)|, \hspace{3mm} m(f,x)(t) \leq |f(x-t)|.\]
-		 Si de plus elle est non constante, on pose $\tau=m(f,x)^{-1}(0)$, on peut assurer que $f$ ne s'annule pas sur l'intervalle $]x-\tau,x+\tau[$.
+		Soit $f$ une fonction analytique, alors $M(f,x)$ vérifie 
+		\[\forall t \in \mathbb{R}_+, \hspace{3mm} M(f,x)(t) \leq |f(x+t)|, \hspace{3mm} M(f,x)(t) \leq |f(x-t)|.\]
+		 Comme elle est strictement décroissante pour $t>0$, on pose $m(x)=M(f,x)^{-1}(0)$, on peut assurer que $f$ ne s'annule pas sur l'intervalle $]x-m(x),x+m(x)[$.
 	\end{proposition}
 	\vspace{7mm}
-	On voit que la partie négative de $m(f,x)$ peut être remplaçée par une série majorante et respecter encore ces propriétés. C'est ce que nous feront concrêtement sur ordinateur.\\
+	On voit que la partie négative de $M(f,x)$ peut être remplaçée par n'importe quelle série majorante et encore respecter ces propriétés. C'est ce que nous ferons concrêtement sur ordinateur.\\
 	\\
-	Plus généralement les fonctions de la forme \[m(f,x)(t)=\big|f(x)+tf'(x)+...+t^{k-1}f^{(k-1)}(x)\big|-M_f^{k}(t)\] où $M_f^{k}$ la série  majorante du reste à l'orde k, vérifient encore les propriétés énoncées précèdement.\\
+	Plus généralement les fonctions de la forme \[M(f,x)(t)=\big|f(x)+tf'(x)+...+t^{k-1}f^{(k-1)}(x)\big|-M_f^{k}(t)\] où $M_f^{k}$ la série  majorante du reste à l'orde k, vérifient encore les propriétés énoncées précèdement.\\
 	
 	\noindent L'algorithme suivant donnera une itération de l'algorithme de bissection-exclusion 
 	
@@ -568,7 +620,7 @@
 		\textbf{Sortie:} $[a+\frac{s}{2^n},b]$
 		
 		\begin{algorithmic}[1]
-			\STATE $g=:m(f,a)$
+			\STATE $g=:M(f,a)$
 			\WHILE{$g(s)<0$}
 			\STATE s:=s/2
 			\ENDWHILE
@@ -580,8 +632,28 @@
 	\noindent Ici, on n'a qu'une étape de l'algorithme et l'idée sera bien sûr d'appliquer récursivement cette fonction pour avoir des intervalles de plus en plus précis. L'article de Yakoubsohn donne une discussion plus complète sur la taille des intervalles en fonctions des "clusters" de zéros.\\
 	\noindent maj: fonction de majoration fournie dans le module Ore\_algebra.analytic de Marc Mezzarobba\\
 	
+	\subsubsection{Étude de la convergence de la fonction bissection exclusion}
+	On a ici une méthode pour exclure des intervalles, mais peut-on en exclure à une précision arbitraire? Si oui, alors on pourra se rapprocher suffisament des zéros pour les absorber. C'est ce que nous verrons dans la partie suivante. D'abord, on introduit la fonction $m(x)$, la même fonction que celle introduite dans l'article de Yakoubsohn.
+	\begin{definition}
+		On définit la fonction $m(x)$ comme l'unique point sur $\mathbb{R}_+$ tel que $M(f,m(x))=0$ 
+	\end{definition} 
+	Il est démontré que cette fonction est continue dans l'article de Yakoucsohn (à citer). 
+	D'ailleurs, la décroissance de $M(f,x)$ implique que pour tout $a$ tel que $a<m(x)$, $M(f,x)(a)>0$.\\
+	On s'intéresse maintenant à la fonction $M(f,x)$ introduite précèdement, et lorsqu'elle s'annule. C'est important de savoir si les itérations successives de cette méthode permettrons de s'approcher aussi proche du zéro que l'on veut.
+	Pour commencer, on veut  
+	\[M(f,x)=|f(x)|-\sum_{k\geq1}|\frac{f^{(k)}(x)}{k!}|t^{k}=0\]
+	On le réecrit en utilisant $\gamma(f,x)=\sup_{k \geq 2}\left\|f'(x)^{-1}\frac{f^{(k)}(x)}{k!}\right\|^{\frac{1}{k-1}}$
+	\[|f'(x)|^{-1}M(f,x)\geq \beta(f,x)-t-t\sum_{k\geq2}\gamma(f,x)^{k-1}t^{k-1}\]
+	Qui peut encore se réecrire
+	\[\beta(f,x)-t-\frac{t^2\gamma(f,x)}{1-\gamma(f,x) t}.\]
+	On cherche le point de $\mathbb{R}_+$ tel que cette fonction s'annule et l'on aura une minoration de $m(x)$. En multipliant par $(1-\gamma(f,x) t)$ puis en réarrangeant,
+	\[t=\frac{\beta(f,x)}{1+\gamma(f,x) \beta(f,x)}\]
+	Donc finalement,
+	\[m(x)>\frac{\beta(f,x)}{\gamma(f,x) \beta(f,x)+1} \]
+	Remarquons que $\gamma$ est une fonction continue donc bornée sur $[a,b]$ appellons $sup\gamma$ son sup sur l'intervalle. On a donc toujous
+	\[m(x)>\frac{\beta(f,x)}{\beta(f,x)sup\gamma+1}\]
+	Montrons alors que cet algorithme converge bien. On s'inspire de la théorie de Kantorovitch pour démontrer cette assertion.
 	
-
 	
 	\section{Séparation des zéros via la méthode de Rouché}
 	Nous allons ici nous intéresser au moyen de certifier nos zéros. On sait que les zéros des fonctions analytiques sont isolés, mais on cherche ici évaluer concrètement la distance entre deux zéros. Cela a été fait dans le livre de Dedieu et ici nous chercherons à adapter les démonstrations appliquées à gamma, aux séries majorantes.
@@ -641,7 +713,6 @@
 	Rappel $\beta(f,\zeta)=|f'(\zeta)^{-1}f(\zeta)|$, c'est aussi la longueur de pas de l'itération de Newton.
 	\vspace{7mm}
 	\begin{theorem}	Soit f une fonction, $\zeta$ et $\zeta '$ deux points de $\mathbb{R}$ tels que $f'(\zeta)\neq 0$ et que $f(\zeta)=f(\zeta ')=0$ et $|\zeta '-\zeta|$ inférieur au rayon de convergence du développement en série entière de $f$ en $\zeta$. 
-		
 		\[Sep(f,\zeta) \geq S\Big(|f'(\zeta)^{-1}|\frac{M^{2}(f,\zeta)(t)}{t}\Big) \hspace{4mm} \]
 	\end{theorem}
 
@@ -668,7 +739,7 @@
 	
 	\begin{demonstration}
 	
-	Définissons $g(x)=f(x)-f(x_0)$, $g(x_0)=0$, $Dg(x_0)=f'(x_0)$ d'après le théorème précèdent, $x_0$ est le seul zéro de g dans la boule
+	Définissons $g(x)=f(x)-f(x_0)$, $g(x_0)=0$, $g'(x_0)=f'(x_0)$ d'après le théorème précèdent, $x_0$ est le seul zéro de g dans la boule
 	$B(x_0,\mathbb{S}_{f}(x_0))$
 	La série de Taylor de g est convergente, elle est donnée par
 	\[g(x)=f'(x_0)(x-x_0)+ \sum_{k \geq 2}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\]
@@ -680,14 +751,14 @@
 	Par le théorème de Rouché $|f'(x_0)^{-1}|f$ et $|f'(x_0)^{-1}|g$ auront le même nombre de zéros dans cette boule. Remarquons que 
 	\[|f'(x_0)^{-1}f(x)-f'(x_0)^{-1}g(x)|=|f'(x_0)^{-1}f(x_0)|=\beta(f,x_0)\]
 	Aussi
-	\[x-x_0=f'(x_0)^{-1}g(x)-\sum_{k \geq 2}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\]
+	\[x-x_0=f'(x_0)^{-1}g(x)-f'(x_0)^{-1}\sum_{k \geq 2}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\]
 	de sorte que
-	\[r \leq |f'(x_0)^{-1}g(x)|+M^{2}(f,x_0)(r) \]
+	\[r \leq |f'(x_0)^{-1}g(x)|+f'(x_0)^{-1}M^{2}(f,x_0)(r) \]
 	C'est à dire que l'hypothèse de Rouché est satisfaite si
-	\[\beta(f,x_0)<r-M^{2}(f,x_0)(r)\] 
+	\[\beta(f,x_0)<r-f'(x_0)^{-1}M^{2}(f,x_0)(r)\] 
 	Ce sera cette expression qui permettra d'exclure des intervalles. Pour commencer on peut dire que si 
-	\[\beta(f,x_0)< \sup_{r \in [0,\mathbb{S}_{f}(x_0)]}\{r-M^{2}(f,x_0)(r)\}\]
-	alors, pour tout r tel que l'inégalité  $\beta(f,x_0)<r-M^{2}(f,x_0)(r)$ soit satisfaite, on peut assurer avec le théorème de Rouché qu'il n'existe qu'un seul zéro dans l'intervalle $[x_0-r,x_0+r]$
+	\[\beta(f,x_0)< \sup_{r \in [0,\mathbb{S}_{f}(x_0)]}\{r-f'(x_0)^{-1}M^{2}(f,x_0)(r)\}\]
+	alors, pour tout r tel que l'inégalité  $\beta(f,x_0)<r-f'(x_0)^{-1}M^{2}(f,x_0)(r)$ soit satisfaite, on peut assurer avec le théorème de Rouché qu'il n'existe qu'un seul zéro dans l'intervalle $[x_0-r,x_0+r]$
 	
 	\end{demonstration}
 	\vspace{7mm}
@@ -697,54 +768,7 @@
 	
 	\section{Taille minimale des intervalles ajoutés à $\mathbb{A}_1$}
 	
-	\subsection{retour sur les séries majorantes}
-	
-	Dans ce chapitre on se trouve dans le cas particulier de notre problème, nous sommes sur un intervalle $[a,b]$ tel qu'il n'y ait aucune singularité sur cet intervalle. Ce qui signifie vis à vis de l'équation différentielle
-	\[P(z,\theta) \cdot u(z)=\big[\theta^{r}p_r(z)+\theta^{r-1}p_{r-1}(z)+...+p_0(z)\big]\cdot u(z)=0 \tag{*}\]
-	où les polynômes sont premiers entre eux, que le polynôme $p_r$ ne s'annulle pas sur l'intervalle.\\
-	
-	Plusieurs familles de fonctions majorantes existent, mais ici ceux sont les  fonctions majorantes de la forme $\frac{A}{(1-\alpha z)^\lambda}$ qui sont utilisées pour majorer le reste. Remarquons que $\alpha$ doit vérifier que $\frac{1}{\alpha}$ est supérieure à la distance à la singularité la plus proche de f. C'est aussi égale à $\delta(p_r)$ introduit en section 4.
-	Ce chapitre est une explication plus en détails de la méthode de majoration utilisée. Tout d'abord il faut se munir du théorème suivant
-	
-	\begin{theorem}
-		Soient $u$ et $v$ deux fonctions analytiques solutions des équations différentielles
-		\[u^{(r)}=a^{[r-1]}u^{(r-1)}+...+a^{[0]}u,\]
-		\[v^{(r)}=b^{[r-1]}v^{(r-1)}+...+b^{[0]}v,\]
-	pour des fonctions méromorphes $(a^{[i]})_{i=0}^{r-1}$ et $(b^{[i]})_{i=0}^{r-1}$ satisfaisant 
-	\[a^{[i]} \unlhd b^{[i]}, \hspace{4mm} i=0...r-1\]
-	Si de plus, aucune de ces fonctions a une singularité en 0 et
-	\[|u^{(i)}(0)|<v^{(i)}(0),\hspace{4mm} i=0...r-1\] 
-	alors $u\unlhd v$.
-	\end{theorem}
-	Nous avons une méthode permettant de trouver un majorant de façon concrête:\\
-	
-	(1)Trouver un majorant pour chaque fraction rationnelle 
-	\[a^{[i]} \unlhd \frac{M^{[i]}}{(1-\alpha z)^{r-i}}\]
-	
-	(2)Vérifier que $A/(1-\alpha z)^\lambda$ est une solution de 
-	\[y^{(r)}=\sum_{i=0}^{r-1}\frac{M^{[i]}}{(1-\alpha)^{r-i}}y^{(i)}\]
-	avec $\lambda$, l'unique racine positive de\[\alpha^{r}\lambda^{\uparrow r}=\sum_{i=0}^{r-1}{M^{[i]}}\alpha^i\lambda^{\uparrow r} \]
-	$\lambda^{\uparrow r}=\prod_{i=0}^{r-1}(\lambda+i)$\\
-	
-	(3)Avec $v(z)=(1-\alpha)^{-\lambda}$, avec le théorème précèdent si l'on choisit
-	\[A=\max_{0\leq i\leq r-1}\Big(\frac{v^{(i)}(0)}{f^{(i)}(0)}\Big),\]
-	on a
-	\[f(z)\unlhd  \frac{A}{(1-\alpha z)^\lambda}\]
-	
-	Il n'est pas toujours possible de trouver $\lambda$, mais on peut l'approcher aussi près que l'on veut. Dans la suite, on considérera qu'on a la valeur exacte de $\lambda$ pour simplifier les arguments.
-	
-	Si l'on veut trouver une série majorante de $\frac{P(z)}{Q(z)}$ de la forme $M=\frac{1}{(1-\alpha)^m}$ on cherchera 
-	\[P(z)\unlhd \frac{M_0}{(1-\alpha)^{m/2}}\]
-	et 
-	\[\frac{1}{Q(z)}\unlhd \frac{M_1}{(1-\alpha)^{m/2}}\]
-	donc 
-	\[\frac{P(z)}{Q(z)}\unlhd \frac{M_0M_1}{(1-\alpha z)^{m}}\]
-	Nous n'irons pas plus loins dans l'explication de l'obtention des bornes, mais la démonstration est détaillée dans l'article de Thomas Grégoire
-	
-	Les coefficients $M_0$ et $M_1$ vérifient:
-	
-	
-	
+
 	
 	\subsection{}
 	
