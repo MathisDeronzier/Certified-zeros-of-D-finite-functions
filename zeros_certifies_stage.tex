@@ -592,6 +592,11 @@
 	\end{demonstration}
 
 	\section{Les méthodes d'exclusion de zéros}
+	\begin{definition} Soit f une fonction analytique en x, alors on peut écrire $f(x+t)=\sum_{k \geq 0} \frac{f^{(k)}(x)}{k!}t^{k}$, Le reste de la série à l'ordre k est 
+		\[R^{k}(f,x)(t)=\sum_{i \geq k} \frac{f^{(i)}(x)}{i!}t^{i}\]
+		et la série majorante de ce reste
+		\[M^{i}(f,x)(t) \unrhd R^{i}(f,x)(t)\]
+	\end{definition}
 	\subsection{L'algorithme de Bissection-exclusion de J.-C. Yakoubsohn}
 	
 	Cette partie a pour objectif de proposer un algorithme permettant d'exclure des intervalles dans lesquels on peut certifier qu'il n'y a pas de zéro. Une méthode à été proposée dans le plan complexe par J.-C. Yakoubsohn, nous réutiliserons la fonction introduite dans son article (faire une bib).
@@ -601,8 +606,12 @@
 	\begin{proposition}
 		Soit $f$ une fonction analytique, alors $M(f,x)$ vérifie 
 		\[\forall t \in \mathbb{R}_+, \hspace{3mm} M(f,x)(t) \leq |f(x+t)|, \hspace{3mm} M(f,x)(t) \leq |f(x-t)|.\]
-		 Comme elle est strictement décroissante pour $t>0$, on pose $m(x)=M(f,x)^{-1}(0)$, on peut assurer que $f$ ne s'annule pas sur l'intervalle $]x-m(x),x+m(x)[$.
 	\end{proposition}
+	 Comme $M(f,x)$ est strictement décroissante pour $t>0$, on pose $m(x)=M(f,x)^{-1}(0)$, 
+	\begin{definition}
+		On définit la fonction $m(x)$ comme l'unique point sur $\mathbb{R}_+$ tel que $M(f,x)(m(x))=0$.
+	\end{definition} 
+	On peut assurer que $f$ ne s'annule pas sur l'intervalle $]x-m(x),x+m(x)[$.
 	\vspace{7mm}
 	On voit que la partie négative de $M(f,x)$ peut être remplaçée par n'importe quelle série majorante et encore respecter ces propriétés. C'est ce que nous ferons concrêtement sur ordinateur.\\
 	\\
@@ -630,33 +639,25 @@
 	\end{algorithm}
 	
 	\noindent Ici, on n'a qu'une étape de l'algorithme et l'idée sera bien sûr d'appliquer récursivement cette fonction pour avoir des intervalles de plus en plus précis. L'article de Yakoubsohn donne une discussion plus complète sur la taille des intervalles en fonctions des "clusters" de zéros.\\
-	\noindent maj: fonction de majoration fournie dans le module Ore\_algebra.analytic de Marc Mezzarobba\\
-	
+
 	\subsubsection{Étude de la convergence de la fonction bissection exclusion}
-	On a ici une méthode pour exclure des intervalles, mais peut-on en exclure à une précision arbitraire? Si oui, alors on pourra se rapprocher suffisament des zéros pour les absorber, c'est ce que nous verrons dans la partie suivante. D'abord, on introduit la fonction $m(x)$, la même fonction que celle introduite dans l'article de Yakoubsohn.
-	\begin{definition}
-		On définit la fonction $m(x)$ comme l'unique point sur $\mathbb{R}_+$ tel que $M(f,m(x))=0$ 
-	\end{definition} 
-	Il est démontré que cette fonction est continue dans l'article de Yakoucsohn (à citer). 
+	On a ici une méthode pour exclure des intervalles, mais peut-on en exclure à une précision arbitraire du zéro? Si oui, alors on pourra se rapprocher suffisament des zéros pour les absorber, c'est ce que nous verrons dans la partie suivante.\\
+	Il est démontré que la fonction $m$ est continue dans l'article de Yakoucsohn (à citer). 
 	D'ailleurs, la décroissance de $M(f,x)$ implique que pour tout $a$ tel que $a<m(x)$, $M(f,x)(a)>0$.\\
 	On s'intéresse maintenant à la fonction $M(f,x)$ introduite précèdement, et lorsqu'elle s'annule. C'est important de savoir si les itérations successives de cette méthode permettrons de s'approcher aussi proche du zéro que l'on veut.
+	
 	\begin{theorem}
-		Soient f une fonction analytique, et $m(x)$ tel que $M(f,m(x))=0$, alors
-		\begin{equation}
-		m(x)\geq
-		\begin{array}{ccc}
-		\frac{\beta(f,x)}{\beta(f,x)\gamma(f,x)+1} & \mbox{si} & f'(x)\neq 0\\
-		\frac{1}{\gamma(f,x)} & \mbox{sinon}
-		\end{array}
-		\end{equation}
+		Soient f une fonction analytique telle que $f'(x)\neq 0$, et $m(x)$ tel que $M(f,x)(m(x))=0$, alors
+		\[m(x)\geq\frac{\beta(f,x)}{\beta(f,x)\gamma(f,x)+1}\]
 	\end{theorem}
 	\begin{demonstration}
 	
 	Pour commencer, on veut  
-	\[M(f,x)=|f(x)|-\sum_{k\geq1}|\frac{f^{(k)}(x)}{k!}|t^{k}=0\]
+	\[M(f,x)(t)=|f(x)|-\sum_{k\geq1}|\frac{f^{(k)}(x)}{k!}|t^{k}=0\]
 	On le réecrit en utilisant $\gamma(f,x)=\sup_{k \geq 2}\left\|f'(x)^{-1}\frac{f^{(k)}(x)}{k!}\right\|^{\frac{1}{k-1}}$
-	\[|f'(x)|^{-1}M(f,x)\geq \beta(f,x)-t-t\sum_{k\geq2}\gamma(f,x)^{k-1}t^{k-1}\]
-	Qui peut encore se réecrire
+	\[|f'(x)|^{-1}M(f,x)(t)=|f'(x)|^{-1}|f(x)|-t-\sum_{k\geq2}|f'(x)^{-1}\frac{f^{(k)}(x)}{k!}|t^{k}\]
+	\[|f'(x)|^{-1}M(f,x)(t)\geq \beta(f,x)-t-t\sum_{k\geq2}\gamma(f,x)^{k-1}t^{k-1}\]
+	Qui peut encore se réécrire
 	\[\beta(f,x)-t-\frac{t^2\gamma(f,x)}{1-\gamma(f,x) t}.\]
 	On cherche le point de $\mathbb{R}_+$ tel que cette fonction s'annule et l'on aura une minoration de $m(x)$. En multipliant par $(1-\gamma(f,x) t)$ puis en réarrangeant,
 	\[t=\frac{\beta(f,x)}{1+\gamma(f,x) \beta(f,x)}\]
@@ -664,21 +665,20 @@
 	\[m(x)\geq\frac{\beta(f,x)}{\gamma(f,x) \beta(f,x)+1} \]
 	\end{demonstration}
 	\vspace{7mm}
-	Remarquons que $\gamma$ est une fonction continue donc bornée sur $[a,b]$ appellons $sup\gamma(f)$ son sup sur l'intervalle étudié. On a donc toujours
+	Remarquons que $\gamma$ est une fonction continue donc bornée sur $[a,b]$ (si $f'$ ne s'annule pas sur $[a,b]$) appellons $sup\gamma(f)$ son sup sur l'intervalle étudié. On a donc toujours
 	\[m(x)\geq\frac{\beta(f,x)}{\beta(f,x)sup\gamma(f)+1}.\]
-    Cette démonstration se généralise à n'importe quelle série majorante et, si l'on conserve le premier terme $|f'(x)|$ alors le résultat est le même en remplaçant $\gamma(f,x)$ par $\gamma(M^2(f,x),x)$. Dans la suite, utiliserons $sup\gamma(M)$, pour montrer que ce résultat est encore vrai pour n'importe quelles séries majorantes telles que 
-    \[\sup\gamma(M)=\sup_{x\in[a,b]}\gamma(M^2(f,x)) \]
-    soit défini.
+    Cette démonstration se généralise à n'importe quelle série majorante et, si l'on conserve le premier terme $|f'(x)|$ alors le résultat est le même en remplaçant $\gamma(f,x)$ par $\gamma(|M^1(f,x),x)$. Dans la suite, utiliserons $sup\gamma(M)$, pour montrer que ce résultat est encore vrai pour n'importe quelles séries majorantes telles que 
+    \[\sup\gamma(M)=\sup_{x\in[a,b]}\gamma(M^1(f,x)) \]
+    soit défini et $[t^1]M^1(f,x)=|f'(x)|$.
     \\
     Étudions alors la suite $x_k$ vérifiant 
     \begin{equation}
     x_{k+1}=
     \begin{array}{ccc}
     x_k+\frac{\beta(f,x_k)}{\beta(f,x_k)sup\gamma(M)+1} & \mbox{si} & f'(x)\neq 0\\
-    x_k+\frac{1}{sup\gamma(M)} & \mbox{sinon}
     \end{array}
     \end{equation}
-    Nous étudierons convergence de cette suite. 
+    Nous étudierons la convergence de cette suite. 
 	
 	
 	\section{Séparation des zéros via la méthode de Rouché}
@@ -691,7 +691,6 @@
 		\end{equation}
 		
 	\end{definition}
-	
 	Le théorème suivant est le théorème de Rouché, il est général, on l'utilisera pour le cas particulier n=1.
 
 	\begin{theorem}(Rouché) Donnons nous un domaine borné $D \subset \mathbb{C}^{n}$ de frontière de Jordan S et deux application analytiques f et g définies sur un voisinage ouvert de D et à valeurs dans $\mathbb{C}^n$. Si pour tout $z \in S$ 
@@ -705,11 +704,6 @@
 	La suite sera une adaptation de la théorie alpha de Smale aux séries majorantes, l'objectif de cettte partie est de fournir des résultats plus généraux que la théorie de gamma pour n'importe quelle série majorante. L'inconvénient c'est que les conditions "légères" de la théorie alpha seront remplacés par des conditions plus "lourdes". \\
 	Nous aurons besoin d'introduire des notations pour parler de la série majorante sur le reste d'une série à l'ordre k.
 	
-	\begin{definition} Soit f une fonction analytique en x, alors on peut écrire $f(x+t)=\sum_{k \geq 0} \frac{f^{(k)}(x)}{k!}t^{k}$, Le reste de la série à l'ordre k est 
-	\[R^{k}(f,x)(t)=\sum_{i \geq k} \frac{f^{(i)}(x)}{i!}t^{i}\]
-	et la série majorante de ce reste
-	\[M^{i}(f,x)(t) \unrhd R^{i}(f,x)(t)\]
-	\end{definition}
 	
 	\subsubsection{Zéros répulsifs}
 	On définit trois ensembles pour notre algorithme.
@@ -784,7 +778,7 @@
 	\[\beta(f,x_0)<r-f'(x_0)^{-1}M^{2}(f,x_0)(r)\] 
 	Ce sera cette expression qui permettra d'exclure des intervalles. Pour commencer on peut dire que si 
 	\[\beta(f,x_0)< \sup_{r \in [0,\mathbb{S}_{f}(x_0)]}\{r-f'(x_0)^{-1}M^{2}(f,x_0)(r)\}\]
-	alors, pour tout r tel que l'inégalité  $\beta(f,x_0)<r-f'(x_0)^{-1}M^{2}(f,x_0)(r)$ soit satisfaite, on peut assurer avec le théorème de Rouché qu'il n'existe qu'un seul zéro dans l'intervalle $[x_0-r,x_0+r]$
+	alors, pour tout r tel que l'inégalité  $\beta(f,x_0)<r-f'(x_0)^{-1}M^{2}(f,x_0)(r)$ soit satisfaite, on peut assurer avec le théorème de Rouché qu'il n'existe qu'un seul zéro dans la boule $B(x_0,r)$.
 	
 	\end{demonstration}
 	\vspace{7mm}
