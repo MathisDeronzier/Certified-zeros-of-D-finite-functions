@@ -208,7 +208,7 @@
 	\end{theorem}
 	
 	
-	\begin{theorem} (Wang-Han)
+	\begin{theorem}(Wang-Han)
 		Pour tout $\alpha$ $\in [0,3-2\sqrt{2}]$, la quantité $(1+\alpha^{2})-8\alpha$ décroît de 0 à 1. Posons
 		
 		\[q=\frac{1-\alpha-\sqrt{(1+\alpha)^{2}-8\alpha}}{1-\alpha+\sqrt{(1+\alpha)^{2}-8\alpha}}\]
@@ -560,12 +560,12 @@
 	
 	\subsection{Étude de la fonction de majoration et détermination d'un majorant de alpha}
 	La fonction de majoration renvoyée est donc de la  forme
-	\[g(z)=\frac{A}{(1-\alpha z)^{K}}\]
+	\[g(z)=\frac{A}{(1-\alpha z)^{\lambda}}\]
 	
 	\noindent L'objectif ici est de borner le coefficient $\gamma(f,z)=\sup_{k \geq 2} \left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ en utilisant la fonction majorante développée dans la partie précèdente. Elle respecte la propriété interessante $f\unlhd g$ et donc trouver $\alpha(g,z)$ sur cette fonction reviendrai à majorer $\alpha(f,z)$. L'objectif serait de trouver N à partir duquel $\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$ est décroissante. Alors 
 	\[\gamma(g,z)=max_{k=2}^{N}\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}\] 
 	
-	\begin{proposition} Dans le cas $T=0$ on a \[\gamma(g,z)=max_{k=2}^{\lceil e^{1}K!^{\frac{1}{K-1}} \rceil}\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}\]
+	\begin{proposition} Dans le cas $T=0$ on a \[\gamma(g,z)=max_{k=2}^{\lambda}\left\|g'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}\]
 	\end{proposition}
 
 	\begin{demonstration}
@@ -585,7 +585,7 @@
 	\[(x-1)f'(x)-f(x)ln(f(x)) \tag{1}\] 
 	qui détermine le signe de la dérivée de h. On regarde donc l'expression 
 	\[(k-1)P'(k)-P(k)log(P(k))=P(k)\Big[\big(\sum_{i=1}^{K-1}\frac{k-1}{k+i}\big)-log(P(k))\Big]\]
-	On majore $\frac{k-1}{k+i}$ par 1 et minore $P(k)$ par $\frac{k^{K-1}}{K!}$ On est sûr que la série est décroissante lorsque 
+	Avec une comparaison série integralle, $\sum_{i=1}^{K-1}\frac{k-1}{k+i} \leq $ par et minore $P(k)$ par $\frac{k^{K-1}}{K!}$ On est sûr que la série est décroissante lorsque 
 	\[K-1-ln\big(\frac{k^{K-1}}{K!}\big)<0 \Longleftrightarrow e^{1}K!^{\frac{1}{K-1}}< k\]
 	On a finalement 
 	\[\gamma(f,z)=max_{k=2}^{\lceil e^{1}K!^{\frac{1}{K-1}} \rceil}\left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\| \]
@@ -633,13 +633,25 @@
 	\noindent maj: fonction de majoration fournie dans le module Ore\_algebra.analytic de Marc Mezzarobba\\
 	
 	\subsubsection{Étude de la convergence de la fonction bissection exclusion}
-	On a ici une méthode pour exclure des intervalles, mais peut-on en exclure à une précision arbitraire? Si oui, alors on pourra se rapprocher suffisament des zéros pour les absorber. C'est ce que nous verrons dans la partie suivante. D'abord, on introduit la fonction $m(x)$, la même fonction que celle introduite dans l'article de Yakoubsohn.
+	On a ici une méthode pour exclure des intervalles, mais peut-on en exclure à une précision arbitraire? Si oui, alors on pourra se rapprocher suffisament des zéros pour les absorber, c'est ce que nous verrons dans la partie suivante. D'abord, on introduit la fonction $m(x)$, la même fonction que celle introduite dans l'article de Yakoubsohn.
 	\begin{definition}
 		On définit la fonction $m(x)$ comme l'unique point sur $\mathbb{R}_+$ tel que $M(f,m(x))=0$ 
 	\end{definition} 
 	Il est démontré que cette fonction est continue dans l'article de Yakoucsohn (à citer). 
 	D'ailleurs, la décroissance de $M(f,x)$ implique que pour tout $a$ tel que $a<m(x)$, $M(f,x)(a)>0$.\\
 	On s'intéresse maintenant à la fonction $M(f,x)$ introduite précèdement, et lorsqu'elle s'annule. C'est important de savoir si les itérations successives de cette méthode permettrons de s'approcher aussi proche du zéro que l'on veut.
+	\begin{theorem}
+		Soient f une fonction analytique, et $m(x)$ tel que $M(f,m(x))=0$, alors
+		\begin{equation}
+		m(x)\geq
+		\begin{array}{ccc}
+		\frac{\beta(f,x)}{\beta(f,x)\gamma(f,x)+1} & \mbox{si} & f'(x)\neq 0\\
+		\frac{1}{\gamma(f,x)} & \mbox{sinon}
+		\end{array}
+		\end{equation}
+	\end{theorem}
+	\begin{demonstration}
+	
 	Pour commencer, on veut  
 	\[M(f,x)=|f(x)|-\sum_{k\geq1}|\frac{f^{(k)}(x)}{k!}|t^{k}=0\]
 	On le réecrit en utilisant $\gamma(f,x)=\sup_{k \geq 2}\left\|f'(x)^{-1}\frac{f^{(k)}(x)}{k!}\right\|^{\frac{1}{k-1}}$
@@ -649,10 +661,24 @@
 	On cherche le point de $\mathbb{R}_+$ tel que cette fonction s'annule et l'on aura une minoration de $m(x)$. En multipliant par $(1-\gamma(f,x) t)$ puis en réarrangeant,
 	\[t=\frac{\beta(f,x)}{1+\gamma(f,x) \beta(f,x)}\]
 	Donc finalement,
-	\[m(x)>\frac{\beta(f,x)}{\gamma(f,x) \beta(f,x)+1} \]
-	Remarquons que $\gamma$ est une fonction continue donc bornée sur $[a,b]$ appellons $sup\gamma$ son sup sur l'intervalle. On a donc toujous
-	\[m(x)>\frac{\beta(f,x)}{\beta(f,x)sup\gamma+1}\]
-	Montrons alors que cet algorithme converge bien. On s'inspire de la théorie de Kantorovitch pour démontrer cette assertion.
+	\[m(x)\geq\frac{\beta(f,x)}{\gamma(f,x) \beta(f,x)+1} \]
+	\end{demonstration}
+	\vspace{7mm}
+	Remarquons que $\gamma$ est une fonction continue donc bornée sur $[a,b]$ appellons $sup\gamma(f)$ son sup sur l'intervalle étudié. On a donc toujours
+	\[m(x)\geq\frac{\beta(f,x)}{\beta(f,x)sup\gamma(f)+1}.\]
+    Cette démonstration se généralise à n'importe quelle série majorante et, si l'on conserve le premier terme $|f'(x)|$ alors le résultat est le même en remplaçant $\gamma(f,x)$ par $\gamma(M^2(f,x),x)$. Dans la suite, utiliserons $sup\gamma(M)$, pour montrer que ce résultat est encore vrai pour n'importe quelles séries majorantes telles que 
+    \[\sup\gamma(M)=\sup_{x\in[a,b]}\gamma(M^2(f,x)) \]
+    soit défini.
+    \\
+    Étudions alors la suite $x_k$ vérifiant 
+    \begin{equation}
+    x_{k+1}=
+    \begin{array}{ccc}
+    x_k+\frac{\beta(f,x_k)}{\beta(f,x_k)sup\gamma(M)+1} & \mbox{si} & f'(x)\neq 0\\
+    x_k+\frac{1}{sup\gamma(M)} & \mbox{sinon}
+    \end{array}
+    \end{equation}
+    Nous étudierons convergence de cette suite. 
 	
 	
 	\section{Séparation des zéros via la méthode de Rouché}
@@ -689,7 +715,7 @@
 	On définit trois ensembles pour notre algorithme.
 	\begin{definition} Soient les trois ensembles suivants.
 		
-	$\mathbb{A}_i=\{[c,d], \exists ! \zeta \text{ de multiplicité i } \in [c,d], f(\zeta)=0\}$
+	$\mathbb{A}_i=\{[c,d], \exists \text{ i zeros comptés avec leur multiplicité dans } [c,d]\}$
 	
 	$\mathbb{E}=\{[c,d], \not\exists \zeta \in [c,d], f(\zeta)=0\}$
 	
