@@ -24,8 +24,17 @@
 	\newpage
 	\tableofcontents
 	\newpage
-	
-	
+	\renewcommand {\algorithmicrequire } {\textbf{\textsc{Entrée(s):} } }
+	\renewcommand {\algorithmicensure } {\textbf{\textsc{Sortie:} } }
+	\renewcommand {\algorithmicwhile } {\textbf{Tant que} }
+	\renewcommand {\algorithmicdo } {\textbf{faire} }
+	\renewcommand {\algorithmicendwhile } {\textbf{fin du Tant que} }
+	\renewcommand {\algorithmicif } {\textbf{Si} }
+	\renewcommand {\algorithmicthen } {\textbf{alors} }
+	\renewcommand {\algorithmicendif } {\textbf{fin du Si} }
+	\renewcommand {\algorithmicelse } {\textbf{Sinon} }
+	\renewcommand {\algorithmicreturn } {\textbf{Renvoyer} }
+
 	\section{Introduction}
 	\newtheorem{theorem}{Théorème}[section] 
 	\newtheorem{proposition}{Proposition}
@@ -258,11 +267,11 @@
 	(où s' peut être négatif) ont des comportements asymptotiques de la forme
 	\[\forall k, \hspace{2mm} b_{k}(n) \sim c_{k}n^{d_{k}} \hspace{2mm} \text{quand } n \rightarrow \infty\]
 	avec $c_{k} \in E$ et $d_{k} \in \mathbb{Z}$. Supposons de plus que $u_{n}$ est une solution telle que  
-	\[\frac{u_{n+1}}{u_{n}}\sim \lambda n^{\kappa} \hspace{2mm} \text{quand}n \rightarrow \infty\]
+	\[\frac{u_{n+1}}{u_{n}}\sim \lambda n^{\kappa} \hspace{2mm} \text{quand }n \rightarrow \infty\]
 	
 	\noindent En réécrivant l'équation séquencielle avec ses coefficients asymptotiques $n \rightarrow \infty$
 	\[c_{s}\lambda^{s} n^{d_{s}+s\kappa}+c_{s-1}u_{n}\lambda^{s-1} n^{d_{s-1}+(s-1)\kappa}+...+c_{s'}\lambda^{s'} n^{d_{s'}+s'\kappa}u_{n}\]
-	pour que cette expression s'annule, il est nécessaire que les termes asymptotiquement dominants se compensent, et donc que l'exposant $d_{k}+k\kappa$ le plus grand soit atteint au moins deux fois. Alors $-\kappa$ doit être parmi les pentes du \textit{polygone de newton} de l'équation.
+	pour que cette expression s'annule, il est nécessaire que les termes asymptotiquement dominants se compensent, et donc que l'exposant $d_{k}+k\kappa$ le plus grand, soit atteint au moins deux fois. Alors $-\kappa$ doit être parmi les pentes du \textit{polygone de newton} de l'équation.
 	
 	
 	\begin{definition} Le polygone de Newton est l'enveloppe convexe supérieure des points $(k, d_{k}) \in \mathbb{R}$, si E=[A,B] désigne une arête du polygone de Newton, on note $\kappa(E)$ l'opposé de sa pente, et on définit l'équation caractéristique associée à E (ou à $\kappa(E))$ par
@@ -273,7 +282,7 @@
 	Remarquons que la somme des degrés des différentes équations caractéristiques est égale à l'ordre de l'équation de récurrence 
 	
 	\begin{theorem} (Perron-Kreuser)
-		Pour toute arête E du polygone de Newton de la récurrence (*) notons $\lambda_{E_{1}},\lambda{E_{2}},...$ les racines de $\chi(E)$ comptées avec leur multiplicité.
+		Pour toute arête E du polygone de Newton de la récurrence (*) notons $\lambda_{E_{1}},\lambda_{E_{2}},...$ les racines de $\chi(E)$ comptées avec leur multiplicité.
 		
 		(a) Supposons que pour toute arête E, les modules $|\lambda_{E_{i}}|$ des racines de $\chi(E)$ sont deux à deux distincts. Alors toute solution non ultimement nulle de (*) satisfait
 		\[\frac{u_{n+1}}{u_{n}}\sim \lambda_{E_{i}}n^{\kappa(E)} \hspace{2mm} \text{quand } n \rightarrow \infty\]
@@ -305,14 +314,10 @@
 	
 	\begin{algorithm}
 		\caption{Asympt(R)}
-		
-		\vspace{2mm}
-		
-		\textbf{Entrée:} $R=\sum_{k=0}^{s} b^{[k]}(n)S^{k} \hspace{4mm} \in \mathbb{Q}[n]\big<S\big>$
-		
-		\textbf{Sortie:} $\kappa \in \mathbb{Q}, P_{\alpha} \in \mathbb{Q}[z].$
-		
 		\begin{algorithmic}[1]
+			\REQUIRE Un opérateur de récurrence $R=\sum_{k=0}^{s} b^{[k]}(n)S^{k} \hspace{2mm} \in \mathbb{Q}[n]\big<S\big>$
+			\vspace{4mm}
+			\ENSURE $\kappa \in \mathbb{Q}, P_{\alpha} \in \mathbb{Q}[z].$
 			\vspace{4mm}
 			\STATE $\kappa:= max_{k=0}^{s-1}\frac{\text{deg } b^{[k]}-\text{deg } b{[s]}}{s-k}$
 			\vspace{4mm}
@@ -549,112 +554,10 @@
 	Nous n'irons pas plus loins dans l'explication de l'obtention des bornes, mais la démonstration et l'obtention des coefficients sont détaillés dans le rapport de Thomas Grégoire.
 	\newpage
 
-	\section{Les méthodes d'exclusion de zéros}
-	\begin{definition} Soit f une fonction analytique en x, alors on peut écrire $f(x+t)=\sum_{k \geq 0} \frac{f^{(k)}(x)}{k!}t^{k}$, Le reste de la série à l'ordre k est 
-		\[R^{k}(f,x)(t)=\sum_{i \geq k} \frac{f^{(i)}(x)}{i!}t^{i}\]
-		et la série majorante de ce reste
-		\[M^{i}(f,x)(t) \unrhd R^{i}(f,x)(t).\]
-	\end{definition}
-	Dans cette partie nous utiliserons aussi la notation $[t^k]f(t)=u_k$, où f est une série entière $f(t)=\sum_{k\geq0}u_kt^k$.
-	\subsection{L'algorithme de Bissection-exclusion de J.-C. Yakoubsohn}
-	
-	Cette partie a pour objectif de proposer un algorithme permettant d'exclure des intervalles dans lesquels on peut certifier qu'il n'y a pas de zéro. Une méthode à été proposée dans $\mathbb{C}$ par J.-C. Yakoubsohn \cite{DBLP:journals/jc/Yakoubsohn05}, nous réutiliserons la fonction introduite dans son article.
-	
-	\begin{definition}Soit f une fonction analytique en x, alors pour t suffisamment petit\\ $f(x+t)=\sum_{k\geq0} \frac{f^{(k)}(x)}{k!}t^{k}$. On définit $M(f,x)(t)=|f(x)|-\sum_{k\geq1}|\frac{f^{(k)}(x)}{k!}|t^{k}$
-	\end{definition}
-	\begin{proposition}
-		Soit $f$ une fonction analytique, alors $M(f,x)$ vérifie 
-		\[\forall t \in \mathbb{R}_+, \hspace{3mm} M(f,x)(t) \leq |f(x+t)|, \hspace{3mm} M(f,x)(t) \leq |f(x-t)|.\]
-	\end{proposition}
-	 Comme $M(f,x)$ est strictement décroissante pour $t>0$, on pose $m(x)=M(f,x)^{-1}(0)$, 
-	\begin{definition}
-		On définit la fonction $m(x)$ comme l'unique point sur $\mathbb{R}_+$ tel que $M(f,x)(m(x))=0$.
-	\end{definition} 
-	On peut assurer que $f$ ne s'annule pas sur l'intervalle $]x-m(x),x+m(x)[$.
-	La partie négative de $M(f,x)$ peut être remplaçée par n'importe quelle série majorante et encore respecter ces propriétés. C'est ce que nous ferons concrêtement sur ordinateur.\\
-	\\
-	Plus généralement les fonctions de la forme \[M(f,x)(t)=\big|f(x)+tf'(x)+...+t^{k-1}f^{(k-1)}(x)\big|-M^{k}(f,x)(t)\] où $M^{k}(f,x)$ est la série  majorante du reste à l'orde k en x, vérifie encore les propriétés énoncées précèdement.\\
-	
-	\noindent L'algorithme suivant donnera une itération de l'algorithme de bissection-exclusion 
-	
-	
-	\begin{algorithm}
-		\caption{bisection-exclusion method}
-		
-		\vspace{2mm}
-		
-		\textbf{Entrée:} fonction D-finie $f(x)=\sum_{n \geq 0} u_nx^{n}$. intervalle $[a,b]$. réel strictement positif s\\
-		\textbf{Sortie:} $[a+\frac{s}{2^n},b]$
-		
-		\begin{algorithmic}[1]
-			\STATE $g=:M(f,a)$
-			\WHILE{$g(s)<0$}
-			\STATE s:=s/2
-			\ENDWHILE
-			\STATE Return($[a+s,b]$)
-		\end{algorithmic}
-		
-	\end{algorithm}
-	
-	\noindent Ici, on n'a qu'une étape de l'algorithme et l'idée sera bien sûr d'appliquer récursivement cette fonction pour avoir des intervalles de plus en plus précis. L'article de Yakoubsohn donne une discussion plus complète sur la taille des intervalles en fonctions des "clusters" de zéros.\\
 
-	\subsection{Étude de la convergence de la fonction bissection exclusion}
-	On a ici une méthode pour exclure des intervalles, mais peut-on en exclure à une précision arbitraire du zéro? Si oui, alors on pourra se rapprocher suffisament des zéros pour les absorber, c'est ce que nous verrons dans la partie suivante.\\
-	Il est démontré que la fonction $m$ est continue dans l'article de Yakoucsohn. 
-	D'ailleurs, la décroissance de $M(f,x)$ implique que pour tout $a$ tel que $a<m(x)$, $M(f,x)(a)>0$.\\
-	On s'intéresse maintenant à la fonction $M(f,x)$ introduite précèdement, et lorsqu'elle s'annule. C'est important de savoir si les itérations successives de cette méthode permettrons de s'approcher aussi proche du zéro que l'on veut.\\
-	\\
-	\subsubsection{convergence vers un zéro}
-	On va ici démontrer que la fonction permet de se rapprocher aussi proche que l'on veut d'un zéro.
-	Il va falloir introduire plusieurs concepts, soit $[a,b]$  le segement sur lequel on travaille, $S_0$ sa longueure.
-	On suppose que l'intervalle contient $d$ zéros $z_1,...,z_d$ de $f$ comptés avec leur multiplicité alors on peut écrire
-	\[f(z)=\prod_{i=1}^{d}(z-z_i)h(z)\]
-	où $h(z)$ est une fonction analytique.
-		
-		(1)$\forall z \in S_0, \hspace{3mm} \frac{|h^{(k)}(z)|}{k!|h(x)|}\leq \lambda \tau^{k-1}$
-		
-		(2)2$\tau S_0 \geq \frac{1}{2}$
-		
-	\subsubsection{Comportement local proche d'un zéro}
-	S'intéresse maintenant au comportement locale, proche d'un zéro de cette fonction.
-	\begin{theorem}
-		Soient f une fonction analytique telle que $f'(x)\neq 0$, et $m(x)$ tel que $M(f,x)(m(x))=0$, alors
-		\[\beta(f,x) \geq m(x)\geq\frac{\beta(f,x)}{\beta(f,x)\gamma(f,x)+1}\]
-	\end{theorem}
-	\begin{demonstration}
-	
-	Pour commencer, on veut  
-	\[M(f,x)(t)=|f(x)|-\sum_{k\geq1}|\frac{f^{(k)}(x)}{k!}|t^{k}=0\]
-	On le réecrit en utilisant $\gamma(f,x)=\sup_{k \geq 2}\left\|f'(x)^{-1}\frac{f^{(k)}(x)}{k!}\right\|^{\frac{1}{k-1}}$
-	\[|f'(x)|^{-1}M(f,x)(t)=|f'(x)|^{-1}|f(x)|-t-\sum_{k\geq2}|f'(x)^{-1}\frac{f^{(k)}(x)}{k!}|t^{k}\]
-	\[|f'(x)|^{-1}M(f,x)(t)\geq \beta(f,x)-t-t\sum_{k\geq2}\gamma(f,x)^{k-1}t^{k-1}\]
-	Qui peut encore se réécrire
-	\[\beta(f,x)-t-\frac{t^2\gamma(f,x)}{1-\gamma(f,x) t}.\]
-	On cherche le point de $\mathbb{R}_+$ tel que cette fonction s'annule et l'on aura une minoration de $m(x)$. En multipliant par $(1-\gamma(f,x) t)$ puis en réarrangeant,
-	\[t=\frac{\beta(f,x)}{1+\gamma(f,x) \beta(f,x)}\]
-	Donc finalement,
-	\[m(x)\geq\frac{\beta(f,x)}{\gamma(f,x) \beta(f,x)+1} \]
-	\end{demonstration}
-	\vspace{7mm}
-	Remarquons que $\gamma$ est une fonction continue donc bornée sur $[a,b]$ (si $f'$ ne s'annule pas sur $[a,b]$) appellons $sup\gamma(f)$ son sup sur l'intervalle étudié. On a donc toujours
-	\[m(x)\geq\frac{\beta(f,x)}{\beta(f,x)sup\gamma(f)+1}.\]
-    Cette démonstration se généralise à n'importe quelle série majorante et, si l'on conserve le premier terme $|f'(x)|$ dans la série majorante, alors le résultat sera le même en remplaçant $\gamma(f,x)$ par $\gamma(|M^1(f,x),x)$. Dans la suite, nous utiliserons $sup\gamma(M)$, pour montrer que ce résultat est encore vrai pour n'importe quelles séries majorantes telles que 
-    \[\sup\gamma(M)=\sup_{x\in[a,b]}\gamma(M^1(f,x),x) \]
-    soit défini et $[t^1]M^1(f,x)(t)=|f'(x)|$.
-    \\
-    Étudions alors la suite $x_k$ vérifiant 
-    \begin{equation}
-    x_{k+1}=
-    \begin{array}{ccc}
-    x_k+\frac{\beta(f,x_k)}{\beta(f,x_k)sup\gamma(M^1)+1} & \mbox{si} & f'(x)\neq 0\\
-    \end{array}
-    \end{equation}
-    Nous étudierons la convergence de cette suite. On voit clairement que lorsque $\beta(f,x_k)sup\gamma(M^1) \geq 1$, cette suite converge quadratiquement.
-	
-	
 	
 	\section{Séparation des zéros via la méthode de Rouché}
-	Nous allons ici nous intéresser au moyen de certifier nos zéros. On sait que les zéros des fonctions analytiques sont isolés, mais on cherche ici évaluer concrètement la distance entre deux zéros. Cela a été fait dans le livre de Dedieu et ici nous chercherons à adapter les démonstrations de la théorie alpha de Smale aux séries majorantes.
+	Nous allons ici nous intéresser au moyen de certifier nos zéros. On sait que les zéros des fonctions analytiques sont isolés, mais on cherche ici évaluer concrètement la distance entre deux zéros. Cela a été fait dans le livre de Dedieu, et ici nous chercherons à adapter les démonstrations de la théorie alpha de Smale aux séries majorantes.
 	
 	\begin{definition} Soient $\mathbb{E}$ et $\mathbb{F}$ des espaces de Banach et 
 		Soit $f:\mathbb{E}\rightarrow \mathbb{F}$ une fonction analytique, notons $\zeta$ un point de $\mathbb{E}$ tel que $f(\zeta)=0$, alors on note
@@ -677,7 +580,7 @@
 	Nous aurons besoin d'introduire des notations pour parler de la série majorante sur le reste d'une série à l'ordre k.
 	
 	
-	\subsubsection{Zéros répulsifs}
+	\subsection{Zéros répulsifs}
 	On définit trois ensembles pour notre algorithme.
 	\begin{definition} Soient les trois ensembles suivants.
 		
@@ -725,7 +628,7 @@
 	\subsubsection{Quantification de la distance au zéro}
 	Dans cette partie comme dans la précèdente, toutes les séries majorantes vérifient la propriété $[t^1]M^{1}(f,x)(t)=|f'(x)|$.
 	\begin{theorem} Soit $f:\mathbb{C} \rightarrow \mathbb{C}$ une fonction analytique, soit $x_0 \in \mathbb{C}$ tel que $f'(x_0) \neq 0$. Alors, quel que soit $r\in [0,\mathbb{S}_{f}(x_0)]$ vérifiant
-	\[\beta(f,x)(1-r\gamma(M^1(f,x))<r,\]
+	\[\beta(f,x)<r-|f'(x_0)|^{-1}M^2(f,x)(r),\]
 	il existe un unique zéro pour f sur $B(x_0,r)$ la boule ouverte centrée en $x_0$ de rayon $r$. 
 	\end{theorem}
 	 Nous montrerons que dans le cas où f est à coefficients réels que $]x_0-r,x_0+r[$ contient un unique zéro. Ce qui vient du fait qu'une racine complexe admet aussi son conjugué comme racine, or la boule trouvée est centrée sur un point de l'axe des réels, donc il devrait y avoir 2 zéros et non pas 1 dans la boule.
@@ -751,48 +654,189 @@
 	\[r \leq |f'(x_0)^{-1}g(x)|+|f'(x_0)|^{-1}M^{2}(f,x_0)(r) .\]
 	C'est à dire que l'hypothèse de Rouché est satisfaite si
 	\[\beta(f,x_0)<r-|f'(x_0)|^{-1}M^{2}(f,x_0)(r)\] 
-	Qu'on peut encore réecrire en utilisant la définition de $\gamma$
-	\[\beta(f,x_0)< \frac{r}{1 -\gamma(M^1(f,x),x)r}\]
 	
 	\end{demonstration}
-	Ce sera cette expression qui permettra d'exclure des intervalles. Et de façon générale on fera le calcule dans l'autre sens, on regardera le plus petit r vérifiant l'inégalité et si ce r vérifie la condition $|f'(x_0)^{-1}|\frac{M^{2}(f,\zeta)(r)}{r}\leq 1$, alors on exclura l'intervalle $[x_0-r,x_0+r]$ assurant qu'il y a un unique zéro dans cet intervalle.
+	Ce sera cette expression qui permettra d'exclure des intervalles. Et de façon générale on fera le calcule dans l'autre sens, on regardera le plus petit r vérifiant l'inégalité et si ce r vérifie la condition $|f'(x_0)^{-1}|\frac{M^{2}(f,\zeta)(r)}{r}\leq 1$, alors on pourra assurer que l'intervalle $[x_0-r,x_0+r]$, contient un unique zéro.
+	
+	\subsection{Algorithme}
+	
+	Au vu de ce qui a été démontré précèdement, on peut se rapprocher aussi proche que l'on veut d'un zéro, et si l'on est suffisamment proche et que ce zéro est de multiplicité 1, alors on peut trouver un intervalle dans lequel ce zéro est unique.
+	On va commencer par décrire l'algorithme permettant de trouver l'intervalle tel que le zéro soit unique dans cet intervalle.
+	On suppose ici que l'on dispose d'un module permettant d'avoir des série majorantes à une précision $\epsilon$ de la plus petite série majorante de la fonction.\\
+	D'après ce qui a été vu dans le chapitre 7.2 on peut chercher à trouver le max de la  fonction $T(t)=|f'(x)|t-M^2(f,x)(t)$, on sait que la dérivée est strictement décroissante. Alors, l'endroit où la dérivée s'annule est aussi là où la fonction atteint son maximum, avec ces conditions on peut rechercher le zéro de la dérivée par une méthode dichotomique. Nous avons donc un premier algorithme que nous ne décrirons pas plus, mais qui permet d'approcher $x_0$ où le max est atteint.
+	
+	
+	\begin{algorithm}
+		\caption{admis}
+		
+		\begin{algorithmic}[1]
+			\REQUIRE Une fonction D-finie $f(x)=\sum_{n \geq 0} u_nx^{n}$. Un réel $x$. 
+			\ENSURE Un intervalle, vide où contenant un unique zéro.
+			\STATE $t_0=T'^{-1}(0)$
+			\IF {$|f(x)|<T(t_0)$ \textbf{et} $t_0<\mathbb{S}_f(x)<1$}
+			\STATE \textbf{Renvoyer}($[x,x+t_0]$)
+			\ENDIF
+			\STATE \textbf{Renvoyer}($[]$)
+		\end{algorithmic}
+	\end{algorithm}
 
-	\subsection{Détermination du coefficient de $\gamma(M^1(f,z),z)$}
-	Nous avons vu que nous devrons souvent déterminer le coefficient $\gamma(M^1(f,z),z)$ dans notre algorithme, nous allons trouver une façon rapide de le calculer.
-	La fonction de majoration de $R^1(f,z)$ renvoyée est donc de la  forme
-	\[h(z)=t|f'(z)|+t^2\frac{A}{(1-\alpha z)^{\lambda}}\]
-	Avec $f'(z)\neq 0$. On rappelle la formule $\gamma(f,z)=max_{k=2}^{N}\left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$. 
-	On s'intéresse donc à la fonction $g(z)=\frac{A}{(1-\alpha z)^{\lambda}}$, la multiplication par $t^2$ ne fait que décaler les indices des coefficients, on aura donc la formule suivante
-	\[\gamma(M^1(f,z),z)=\sup_{k\geq0}\Big|f'(z)^{-1}\frac{g^{(k)}(z)}{k!}\Big|^{\frac{1}{k+1}}\]
-	\begin{theorem}
-		\[\gamma(M^1(f,z),z)=\max_{k=0}^{\lambda}\Big|f'(z)^{-1}\frac{g^{(k)}(z)}{k!}\Big|^{\frac{1}{k+1}}\]
-	\end{theorem}
-	
+	\begin{proposition}
+		L'intervalle renvoyé par l'algorithme admis possède un unique zéro, et la fonction est strictement monotone sur cet intervalle.
+	\end{proposition}
 	\begin{demonstration}
-		\noindent Nous nous placerons dans le cas $k\geq 1$, en étudiant l'expression de la fonction de majoration, en rentrant $|f'(z)|^{-1}$ dans la constante $A$. 
-		\[|f'(z)|^{-1}\frac{g^{(k)}}{k!}(z)=\frac{A\alpha^{k}}{(1-\alpha z)^{\lambda+k}}\frac{\lambda^{\uparrow k-1}}{k!}\]
-		Où $\lambda^{\uparrow k}=\prod_{i=0}^{k-1}(\lambda+i)$, On peut encore écrire,
-		\[|f'(z)|^{-1}\frac{g^{(k)}(z)}{k!}=\frac{A\alpha^{k}}{(1-\alpha z)^{\lambda+k}} \binom{\lambda+k-1}{k}\]
-		On a finalement, pour $z < \alpha$,
-		\[\left\|f'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k+1}}= \frac{\alpha}{1-\alpha z} \left\|\frac{A}{\alpha(1-\alpha z)^{\lambda-1}}\binom{\lambda+k-1}{k}\right\|^{\frac{1}{k+1}} \tag{*}\]
-		Considérons cette expression comme une fonction de $\mathbb{R}$ dans $\mathbb{R}$. On pose $K=\frac{A}{\alpha(1-\alpha z)^{\lambda-1}}$
-		\[Q(k)=\frac{K\prod_{i=0}^{k-1}(\lambda+i)}{k!} \text{   bof...}\]
-		\\
-		\\
-		La démonstration reste à terminer...
-		\\
-		\\
-		\noindent Étudions la fonction $h(x)=f(x)^{\frac{1}{x+1}}$ où f est strictement positive, on peut la réecrire
-		\[h(x)=\text{exp}(\frac{\log f(x)}{x+1}) \]
-		Une étude de signe donne à nous intéresser au signe de l'expression
-		\[(x+1)f'(x)-f(x)\log f(x) \tag{1}\] 
-		qui détermine le signe de la dérivée de h. On regarde donc l'expression 
-		\[(k-1)P'(k)-P(k)log(P(k))=P(k)\Big[\big(\sum_{i=1}^{K-1}\frac{k-1}{k+i}\big)-log(P(k))\Big]\]
-		Avec une comparaison série integralle, $\sum_{i=1}^{K-1}\frac{k-1}{k+i} \leq $ par et minore $P(k)$ par $\frac{k^{K-1}}{K!}$ On est sûr que la série est décroissante lorsque 
-		\[K-1-ln\big(\frac{k^{K-1}}{K!}\big)<0 \Longleftrightarrow e^{1}K!^{\frac{1}{K-1}}< k\]
-		On a finalement 
-		\[\gamma(f,z)=max_{k=2}^{\lceil e^{1}K!^{\frac{1}{K-1}} \rceil}\left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\| \]
+		C'est une conséquence directe de la condition du théorème précèdent.
 	\end{demonstration}
+	
+	Ça a l'intérêt théorique que l'on peut peut se rapprocher aussi proche que l'on veut du zéro par une méthode de dichotomie.
+
+% 	\subsection{Détermination du coefficient de $\gamma(M^1(f,z),z)$ (pas important pour l'instant)}
+%	La fonction de majoration de $R^1(f,z)$ renvoyée est donc de la  forme
+%	\[h(z)=t|f'(z)|+t^2\frac{A}{(1-\alpha z)^{\lambda}}\]
+%	Avec $f'(z)\neq 0$. On rappelle la formule $\gamma(f,z)=max_{k=2}^{N}\left\|f'(z)^{-1}\frac{f^{(k)}(z)}{k!}\right\|^{\frac{1}{k-1}}$. 
+%	On s'intéresse donc à la fonction $g(z)=\frac{A}{(1-\alpha z)^{\lambda}}$, la multiplication par $t^2$ ne fait que décaler les indices des coefficients, on aura donc la formule suivante
+%	\[\gamma(M^1(f,z),z)=\sup_{k\geq0}\Big|f'(z)^{-1}\frac{g^{(k)}(z)}{k!}\Big|^{\frac{1}{k+1}}\]
+%	\begin{theorem}
+%		\[\gamma(M^1(f,z),z)=\max_{k=0}^{\lambda}\Big|f'(z)^{-1}\frac{g^{(k)}(z)}{k!}\Big|^{\frac{1}{k+1}}\]
+%	\end{theorem}
+%	\begin{demonstration}
+%		\noindent Nous nous placerons dans le cas $k\geq 1$, en étudiant l'expression de la fonction de majoration, en rentrant $|f'(z)|^{-1}$ dans la constante $A$. 
+%		\[|f'(z)|^{-1}\frac{g^{(k)}}{k!}(z)=\frac{A\alpha^{k}}{(1-\alpha z)^{\lambda+k}}\frac{\lambda^{\uparrow k-1}}{k!}\]
+%		Où $\lambda^{\uparrow k}=\prod_{i=0}^{k-1}(\lambda+i)$, On peut encore écrire,
+%		\[|f'(z)|^{-1}\frac{g^{(k)}(z)}{k!}=\frac{A\alpha^{k}}{(1-\alpha z)^{\lambda+k}} \binom{\lambda+k-1}{k}\]
+%		On a finalement, pour $z < \alpha$,
+%		\[\left\|f'(z)^{-1}\frac{g^{(k)}(z)}{k!}\right\|^{\frac{1}{k+1}}= \frac{\alpha}{1-\alpha z} \left\|\frac{A}{\alpha(1-\alpha z)^{\lambda-1}}\binom{\lambda+k-1}{k}\right\|^{\frac{1}{k+1}} \tag{*}\]
+%		Considérons cette expression comme une fonction de $\mathbb{R}$ dans $\mathbb{R}$. On pose $K=\frac{A}{\alpha(1-\alpha z)^{\lambda-1}}$
+%		\[Q(k)=\frac{K\prod_{i=0}^{k-1}(\lambda+i)}{k!} \text{   bof...}\]
+%		\noindent Étudions la fonction $h(x)=f(x)^{\frac{1}{x+1}}$ où f est strictement positive, on peut la réecrire
+%		\[h(x)=\text{exp}(\frac{\log f(x)}{x+1}) \]
+%		Une étude de signe donne à nous intéresser au signe de l'expression
+%		\[(x+1)f'(x)-f(x)\log f(x) \tag{1}\] 
+%		qui détermine le signe de la dérivée de h. On regarde donc l'expression \\
+%		La démonstration reste à terminer...\\
+%	\end{demonstration}
+		\section{Une méthode d'exclusion de zéros}
+	\begin{definition} Soit f une fonction analytique en x, alors on peut écrire $f(x+t)=\sum_{k \geq 0} \frac{f^{(k)}(x)}{k!}t^{k}$, Le reste de la série à l'ordre k est 
+		\[R^{k}(f,x)(t)=\sum_{i \geq k} \frac{f^{(i)}(x)}{i!}t^{i}\]
+		et la série majorante de ce reste
+		\[M^{i}(f,x)(t) \unrhd R^{i}(f,x)(t).\]
+	\end{definition}
+	Dans cette partie nous utiliserons aussi la notation $[t^k]f(t)=u_k$, où f est une série entière $f(t)=\sum_{k\geq0}u_kt^k$.
+	\subsection{L'algorithme de Bissection-exclusion de J.-C. Yakoubsohn}
+	
+	Cette partie a pour objectif de proposer un algorithme permettant d'exclure des intervalles dans lesquels on peut certifier qu'il n'y a pas de zéro. Une méthode à été proposée dans $\mathbb{C}$ par J.-C. Yakoubsohn \cite{DBLP:journals/jc/Yakoubsohn05}, nous réutiliserons la fonction introduite dans son article.
+	
+	\begin{definition}Soit f une fonction analytique en x, alors pour t suffisamment petit\\ $f(x+t)=\sum_{k\geq0} \frac{f^{(k)}(x)}{k!}t^{k}$. On définit $M(f,x)(t)=|f(x)|-\sum_{k\geq1}|\frac{f^{(k)}(x)}{k!}|t^{k}$
+	\end{definition}
+	\begin{proposition}
+		Soit $f$ une fonction analytique, alors $M(f,x)$ vérifie 
+		\[\forall t \in \mathbb{R}_+, \hspace{3mm} M(f,x)(t) \leq |f(x+t)|, \hspace{3mm} M(f,x)(t) \leq |f(x-t)|.\]
+	\end{proposition}
+	Comme $M(f,x)$ est strictement décroissante pour $t>0$, on pose $m(x)=M(f,x)^{-1}(0)$, 
+	\begin{definition}
+		On définit la fonction $m(x)$ comme l'unique point sur $\mathbb{R}_+$ tel que $M(f,x)(m(x))=0$.
+	\end{definition} 
+	On peut assurer que $f$ ne s'annule pas sur l'intervalle $]x-m(x),x+m(x)[$.
+	La partie négative de $M(f,x)$ peut être remplaçée par n'importe quelle série majorante et encore respecter ces propriétés. C'est ce que nous ferons concrêtement sur ordinateur.\\
+	\\
+	Plus généralement les fonctions de la forme \[M(f,x)(t)=\big|f(x)+tf'(x)+...+t^{k-1}f^{(k-1)}(x)\big|-M^{k}(f,x)(t)\] où $M^{k}(f,x)$ est la série  majorante du reste à l'orde k en x, vérifie encore les propriétés énoncées précèdement.\\
+	
+	\noindent L'algorithme suivant donnera une itération de l'algorithme de bissection-exclusion 
+	
+	
+	\begin{algorithm}
+		\caption{bissection-exclusion}
+		\begin{algorithmic}[1]
+			\REQUIRE Une fonction D-finie $f(x)=\sum_{n \geq 0} u_nx^{n}$. Un intervalle $[a,b]$. Un réel strictement positif s
+			\ENSURE $a+\frac{s}{2^n}$, tel que $[a,a+\frac{s}{2^n}]$ ne contienne pas de zéro.
+			\STATE $g=:M(f,a)$
+			\WHILE{$g(s)<0$}
+			\STATE s:=s/2
+			\ENDWHILE
+			\RETURN $a+s$
+		\end{algorithmic}
+		
+	\end{algorithm}
+	
+	\noindent Ici, on n'a qu'une étape de l'algorithme et l'idée sera bien sûr d'appliquer récursivement cette fonction pour avoir des intervalles de plus en plus précis. L'article de Yakoubsohn donne une discussion plus complète sur la taille des intervalles en fonctions des "clusters" de zéros.\\
+	
+	\subsection{Étude de la convergence de la fonction bissection exclusion}
+	On a ici une méthode pour exclure des intervalles, mais peut-on en exclure à une précision arbitraire du zéro? Si oui, alors on pourra se rapprocher suffisament des zéros pour les absorber, c'est ce que nous verrons dans la partie suivante.\\
+	Il est démontré que la fonction $m$ est continue dans l'article de Yakoubsohn. 
+	D'ailleurs, la décroissance de $M(f,x)$ implique que pour tout $a$ tel que $a<m(x)$, $M(f,x)(a)>0$.\\
+	On s'intéresse maintenant à la fonction $M(f,x)$ introduite précèdement, et lorsqu'elle s'annule. C'est important de savoir si les itérations successives de cette méthode permettrons de s'approcher aussi proche du zéro que l'on veut.\\
+	\\
+	\subsubsection{convergence vers un zéro}
+	On va ici démontrer que la fonction permet de se rapprocher aussi proche que l'on veut d'un zéro.
+	Il va falloir introduire plusieurs concepts, soit $[a,b]$  le segement sur lequel on travaille, $S_0$ sa longueure.
+	On suppose que l'intervalle contient $d$ zéros $z_1,...,z_d$ de $f$ comptés avec leur multiplicité alors on peut écrire
+	\[f(z)=\prod_{i=1}^{d}(z-z_i)h(z)\]
+	où $h(z)$ est une fonction analytique.
+	
+	(1)$\forall z \in S_0, \hspace{3mm} \frac{|h^{(k)}(z)|}{k!|h(x)|}\leq \lambda \tau^{k-1}$
+	
+	(2)2$\tau S_0 \geq \frac{1}{2}$
+	
+	\subsubsection{Comportement local proche d'un zéro}
+	S'intéresse maintenant au comportement locale, proche d'un zéro de cette fonction.
+	\begin{theorem}
+		Soient f une fonction analytique telle que $f'(x)\neq 0$, et $m(x)$ tel que $M(f,x)(m(x))=0$, alors
+		\[\beta(f,x) \geq m(x)\geq\frac{\beta(f,x)}{\beta(f,x)\gamma(f,x)+1}\]
+	\end{theorem}
+	\begin{demonstration}
+		
+		Pour commencer, on veut  
+		\[M(f,x)(t)=|f(x)|-\sum_{k\geq1}|\frac{f^{(k)}(x)}{k!}|t^{k}=0\]
+		On le réecrit en utilisant $\gamma(f,x)=\sup_{k \geq 2}\left\|f'(x)^{-1}\frac{f^{(k)}(x)}{k!}\right\|^{\frac{1}{k-1}}$
+		\[|f'(x)|^{-1}M(f,x)(t)=|f'(x)|^{-1}|f(x)|-t-\sum_{k\geq2}|f'(x)^{-1}\frac{f^{(k)}(x)}{k!}|t^{k}\]
+		\[|f'(x)|^{-1}M(f,x)(t)\geq \beta(f,x)-t-t\sum_{k\geq2}\gamma(f,x)^{k-1}t^{k-1}\]
+		Qui peut encore se réécrire
+		\[\beta(f,x)-t-\frac{t^2\gamma(f,x)}{1-\gamma(f,x) t}.\]
+		On cherche le point de $\mathbb{R}_+$ tel que cette fonction s'annule et l'on aura une minoration de $m(x)$. En multipliant par $(1-\gamma(f,x) t)$ puis en réarrangeant,
+		\[t=\frac{\beta(f,x)}{1+\gamma(f,x) \beta(f,x)}\]
+		Donc finalement,
+		\[m(x)\geq\frac{\beta(f,x)}{\gamma(f,x) \beta(f,x)+1} \]
+	\end{demonstration}
+	\vspace{7mm}
+	Remarquons que $\gamma$ est une fonction continue donc bornée sur $[a,b]$ (si $f'$ ne s'annule pas sur $[a,b]$) appellons $sup\gamma(f)$ son sup sur l'intervalle étudié. On a donc toujours
+	\[m(x)\geq\frac{\beta(f,x)}{\beta(f,x)sup\gamma(f)+1}.\]
+	Cette démonstration se généralise à n'importe quelle série majorante et, si l'on conserve le premier terme $|f'(x)|$ dans la série majorante, alors le résultat sera le même en remplaçant $\gamma(f,x)$ par $\gamma(|M^1(f,x),x)$. Dans la suite, nous utiliserons $sup\gamma(M)$, pour montrer que ce résultat est encore vrai pour n'importe quelles séries majorantes telles que 
+	\[\sup\gamma(M)=\sup_{x\in[a,b]}\gamma(M^1(f,x),x) \]
+	soit défini et $[t^1]M^1(f,x)(t)=|f'(x)|$.
+	\\
+	Étudions alors la suite $x_k$ vérifiant 
+	\begin{equation}
+	x_{k+1}=
+	\begin{array}{ccc}
+	x_k+\frac{\beta(f,x_k)}{\beta(f,x_k)sup\gamma(M^1)+1} & \mbox{si} & f'(x)\neq 0\\
+	\end{array}
+	\end{equation}
+	Nous étudierons la convergence de cette suite. On voit clairement que lorsque $\beta(f,x_k)sup\gamma(M^1)\leq 1$, cette suite converge quadratiquement.
+	
+	
+
+		
+	\section{Algorithme}
+	
+	L'algorithme générale est finalement
+	
+	\begin{algorithm}
+		\caption{Recherche des zéros simples}
+		\begin{algorithmic}[1]
+			\REQUIRE Une fonction D-finie $f(x)=\sum_{n \geq 0} u_nx^{n}$. Un intervalle $[a,b]$. Un réel strictement positif s
+			\ENSURE  Une liste d'intervalles contenant un unique zéro, tels que la fonction soit strictement monotone sur ces intervalles.
+			\STATE Admis:=$[]$
+			\STATE Indéterminé:=$a$
+			\WHILE{Indéterminé$<b$}
+			\IF {admis($f,$ Indéterminé)$=[$Indéterminé$,d] \neq \emptyset$}
+				\STATE Admis:=Admis $\cup=[$Indéterminé$,d]$
+				\STATE Indéterminés:= $d$  
+			\ELSE 
+			\STATE Indéterminé=bissection-exclusion($f,a$)
+			\ENDIF
+			\ENDWHILE
+			\RETURN Admis
+		\end{algorithmic}
+	\end{algorithm}	
 
 	\bibliography{mabib}
 	\bibliographystyle{plain}
