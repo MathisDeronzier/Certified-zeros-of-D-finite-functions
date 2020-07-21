@@ -63,7 +63,7 @@
 	
 	
 	\section{Fonctions D-finies}
-	Ce chapitre énoncera quelques propriétés des fonctions D-finies sur, de sorte à donner des notions fondamentales au lecteur non familier avec cette famille de fonctions. les démonstration ne seront pas présentés ici, mais sont présentes dans l'article de Stanley d'où elles sont issues.\\
+	Ce chapitre énoncera quelques propriétés des fonctions D-finies sur, de sorte à donner des notions fondamentales au lecteur non familier avec cette famille de fonctions. les démonstrations ne seront pas présentées ici, mais sont présentes dans l'article de Stanley \cite{stanley1980differentiably} d'où elles sont issues.\\
 	\\
 	On dénotera dans la suite $\mathbb{K}[z]$ les polynômes à une variable sur le corps $\mathbb{K}$, les deux corps que nous verrons ici sont $\mathbb{R}$ et $\mathbb{C}$. On dénotera aussi $\mathbb{K}((z))$ le corps des séries de Laurents à coefficients dans $\mathbb{K}$
 	
@@ -247,7 +247,7 @@
 	
 	\section{Majoration des suites P-récursives}
 	
-	Ce chapitre est quasiment une réécriture du chapitre 5 de la thèse de Marc Mezzarobba. Il majore les suites P-récursives à l'aide du théorème de Perron-Kreuser.
+	Ce chapitre est quasiment une réécriture du chapitre 5 de la publication de Marc Mezzarobba et Bruno Salvy \cite{MezzarobbaSalvy2010} sur une méthode de majoration des séries P-récursives. Il majore les suites P-récursives à l'aide du théorème de Perron-Kreuser.
 	L'avantage de cette majoration est qu'elle sera fine, c'est à dire qu'on peut quantifier la différence entre la majoration et la solution.
 	Cette majoration terme à terme permettra donc de trouver une majoration fine du coefficient alpha et donc des bassins d'attractions donnés par le théorème de (Wang-Han), ce qui permettra à notre algorithme de certifier ses zéros.
 	
@@ -279,8 +279,7 @@
 		Où $(t,d_{t})=A$ l'extrémité gauche du segment E.
 	\end{definition}
 	
-	Remarquons que la somme des degrés des différentes équations caractéristiques est égale à l'ordre de l'équation de récurrence 
-	
+	Remarquons que la somme des degrés des différentes équations caractéristiques est égale à l'ordre de l'équation de récurrence. On peut retrouver la démonstration de ce théorème dans l'ouvrage \cite{hp1885aj}.
 	\begin{theorem} (Perron-Kreuser)
 		Pour toute arête E du polygone de Newton de la récurrence (*) notons $\lambda_{E_{1}},\lambda_{E_{2}},...$ les racines de $\chi(E)$ comptées avec leur multiplicité.
 		
@@ -465,6 +464,7 @@
 	$P(z,\theta)\cdot R_u^{N}$ commence à N, et qu'il soit de degrés $N+s$ que $P(z,\theta)\cdot\overset{\sim}{u}(z)$ est de degré $N+s$.
 	\\
 	\subsubsection{l'équation majorante}
+	Cette méthode, la méthode des séries majorantes est issue de l'article de Marc Mezzarobba sur son travail sur les séries majorantes dans sage \cite{mezzarobba2019truncation}. 
 	On pose
 	\[y(z)=p_r(z)(\overset{\sim}{u}(z)-u(z))\]
 	Supposant que $p_r(0) \neq 0$, c'est à dire qu'on soit sur un point régulier, on a alors 
@@ -551,7 +551,7 @@
 	\[\frac{1}{Q(z)}\unlhd \frac{M_1}{(1-\alpha)^{m/2}}\]
 	donc 
 	\[\frac{P(z)}{Q(z)}\unlhd \frac{M_0M_1}{(1-\alpha z)^{m}}.\]
-	Nous n'irons pas plus loins dans l'explication de l'obtention des bornes, mais la démonstration et l'obtention des coefficients sont détaillés dans le rapport de Thomas Grégoire.
+	Nous n'irons pas plus loins dans l'explication de l'obtention des bornes, mais la démonstration et l'obtention des coefficients sont détaillés dans le rapport de Thomas Grégoire \cite.
 	\newpage
 
 
@@ -578,7 +578,11 @@
 	
 	La suite sera une adaptation de la théorie alpha de Smale aux séries majorantes, l'objectif de cettte partie est de fournir des résultats plus généraux que la théorie de gamma pour n'importe quelle série majorante. L'inconvénient c'est que les conditions "légères" de la théorie alpha seront remplacés par des conditions plus "lourdes". \cite{dedieu2006points}\\
 	Nous aurons besoin d'introduire des notations pour parler de la série majorante sur le reste d'une série à l'ordre k.
-	
+	\begin{definition} Soit f une fonction analytique en x, alors on peut écrire $f(x+t)=\sum_{k \geq 0} \frac{f^{(k)}(x)}{k!}t^{k}$, Le reste de la série à l'ordre k est 
+	\[R^{k}(f,x)(t)=\sum_{i \geq k} \frac{f^{(i)}(x)}{i!}t^{i}\]
+	et la série majorante de ce reste
+	\[M^{i}(f,x)(t) \unrhd R^{i}(f,x)(t).\]
+	\end{definition}
 	
 	\subsection{Zéros répulsifs}
 	On définit trois ensembles pour notre algorithme.
@@ -604,59 +608,83 @@
 		\end{equation}
 	\end{definition}
 	\vspace{7mm}
-	Pour alléger les notations dans la suite on pose $\mathbb{S}_{f}(\zeta)=S\Big(|f'(\zeta)^{-1}|\frac{M^{2}(f,\zeta)(t)}{t}\Big)$\\
-	Rappel $\beta(f,\zeta)=|f'(\zeta)^{-1}f(\zeta)|$, c'est aussi la longueur de pas de l'itération de Newton.
+	Pour alléger les notations dans la suite on introduit l'application $S_{f}^{m}(\zeta)$.
+	\begin{definition}
+		Soit l'application $S_{f}^{m}(\zeta) : \mathbb{D}\times \mathbb{N}^* \times \mathbb{C} \rightarrow \mathbb{C}$, vérifiant
+		\[\mathbb{S}_{f}^{m}(\zeta)=S\big(\Big|\frac{f^{(m)}}{m!}(\zeta)\Big|^{-1}\frac{M^{m+1}(f,\zeta)(t)}{t^{m}}\big).\]
+		Avec $\mathbb{D}$ l'anneau des fonctions D-finies, $\mathbb{N}^{*}$ les entiers strictement positifs.
+	\end{definition}
 	\vspace{7mm}
-	\begin{theorem}	Soit f une fonction, $\zeta$ et $\zeta '$ deux points de $\mathbb{R}$ tels que $f'(\zeta)\neq 0$ et que $f(\zeta)=f(\zeta ')=0$ et $|\zeta '-\zeta|$ inférieur au rayon de convergence du développement en série entière de $f$ en $\zeta$. 
-		\[Sep(f,\zeta) \geq S\Big(|f'(\zeta)^{-1}|\frac{M^{2}(f,\zeta)(t)}{t}\Big) \hspace{4mm} \]
+	\noindent On peut en effet appliquer $S$ aux fonctions $t \rightarrow \Big|\frac{f^{(m)}}{m!}(\zeta)\Big|^{-1}\frac{M^{m+1}(f,\zeta)(t)}{t^{m}}$ car $M^{m+1}(f,x_0)$ est de la forme
+	\[M^{m+1}(f,x_0)(t)=\sum_{k \geq m+1} m_k t^k,\]
+	avec $m_k >0$ pour au moins un $k$ dans $\mathbb{N}^{*}+m$, alors
+	\[\Big|\frac{f^{(m)}}{m!}(\zeta)\Big|^{-1}\frac{M^{m+1}(f,\zeta)(t)}{t^{m}}=\Big|\frac{f^{(m)}}{m!}(\zeta)\Big|^{-1}\sum_{k \geq 1} m_{k+m} t^k\]
+	est une fonction croissante de $t$.
+	\vspace{7mm}
+
+	\begin{theorem}
+			Soit f une fonction, $\zeta$ une racine de multiplicité m de $f$, alors
+		\[Sep(f,\zeta) \geq \mathbb{S}_{f}^{m}(\zeta)\]
+	\end{theorem}
+	\begin{demonstration}
+		Pour $z \in \mathbb{C}$, $|z|$ plus petit que le rayon de convergence de la série, on écrit 
+		\[f(\zeta +z)=0+z^m\Big(\frac{f^{(m)}}{m!}(\zeta)+\frac{R^{m+1}(f,\zeta)(z)}{z^m}\Big),\]
+		On voit que cette expression s'annule seulement si
+		\[\Big|\frac{f^{(m)}}{m!}(\zeta)\Big|-\frac{M^{m+1}(f,\zeta)(|z|)}{|z|^m}\leq 0\]
+		s'annule aussi.\\
+		On a donc la conclusion
+		\[Sep(f,\zeta) \geq S\big(\Big|\frac{f^{(m)}}{m!}(\zeta)\Big|^{-1}\frac{M^{m+1}(f,\zeta)(t)}{t^{m}}\big).\]
+	\end{demonstration}
+	Ce théorème montre aussi que toutes les racines sont isolées, ou alors la fonction est la fonction nulle.
+
+	\subsubsection{Quantification de la distance au zéro}
+
+	
+	\noindent Nous allons introduire un théorème permettant de trouver le nombre de zéros dans une boulle.
+	
+	\begin{theorem}
+		Soit $f:\mathbb{C} \rightarrow \mathbb{C}$ une fonction analytique, soit $x_0 \in \mathbb{C}$ tel que $\frac{f^{(m)}(x_0)}{m!} \neq 0$. Alors, quel que soit $x$ avec $|x-x_0|\in [0,\mathbb{S}_{f}^{m}(x_0)]$ vérifiant
+		\[\Big|\frac{f^{(m)}}{m!}(x_0)^{-1}\sum_{k=0}^{m-1}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\Big|<|x-x_0|^{m}-\Big|\frac{f^{(m)}(x_0)}{m!}\Big|^{-1}M^{m+1}(f,x_0)(|x-x_0|),\]
+		il y a m zéros pour f dans $B(x_0,r)$ la boule ouverte centrée en $x_0$ de rayon $r=|x-x_0|$. 
+	\end{theorem}
+	\begin{demonstration}
+		Définissons \[g(x)=f(x)-\sum_{k=0}^{m-1}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k,\]
+		$x_0$ est un zéro de multiplicité m pour $g$ et $R^{m}(g,x_0)=R^{m}(f,x_0)$. D'après le théorème précèdent, $x_0$ est le seul zéro de g dans la boule
+		$B(x_0,\mathbb{S}_{f}^{m}(x_0))$.\\
+		La série de Taylor de g est convergente, elle est donnée par
+		\[g(x)=\frac{f^{(m)}(x_0)}{m!}(x-x_0)^m+ \sum_{k \geq m+1}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\]
+		Nous allons prouver que si pour tout $x$ vérifiant $0<|x-x_0|<\mathbb{S}_{f}^{m}(x_0)$ on a,
+		\[\Big|\frac{f^{(m)}}{m!}(x_0)^{-1}f(x)-\frac{f^{(m)}}{m!}(x_0)^{-1}g(x)\Big|=\Big|\frac{f^{(m)}}{m!}(x_0)^{-1}\sum_{k=0}^{m-1}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\Big|<\Big|\frac{f^{(m)}}{m!}(x_0)^{-1}g(x)\Big|\]
+		\\
+		Par le théorème de Rouché $\Big|\frac{f^{(m)}(x_0)}{m!}\Big|^{-1}f$ et $\Big|\frac{f^{(m)}(x_0)}{m!}\Big|^{-1}g$ auront le même nombre de zéros dans la boule $B(x_0,\mathbb{S}_{f}^{m}(x_0))$. Remarquons que 
+		\[\Big|\frac{f^{(m)}}{m!}(x_0)^{-1}f(x)-\frac{f^{(m)}}{m!}(x_0)^{-1}g(x)\Big|\leq \Big|\frac{f^{(m)}}{m!}(x_0)\Big|^{-1}\sum_{k=0}^{m-1}\Big|\frac{f^{(k)}(x_0)}{k!}\Big||x-x_0|^k\]
+		Aussi,
+		\[(x-x_0)^{m}=\frac{f^{(m)}}{m!}(x_0)^{-1}g(x)-\frac{f^{(m)}}{m!}(x_0)^{-1}\sum_{k \geq m+1}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k,\]
+		on a finalement
+		\[|x-x_0|^{m} \leq \Big|\frac{f^{(m)}}{m!}(x_0)\Big|^{-1}|g(x)|+\Big|\frac{f^{(m)}}{m!}(x_0)\Big|^{-1}M^{m+1}(f,x_0)(|x-x_0|) .\]
+		C'est à dire que l'hypothèse de Rouché est satisfaite si
+		\[\Big|\frac{f^{(m)}}{m!}(x_0)^{-1}\sum_{k=0}^{m-1}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\Big|<|x-x_0|^{m}-\Big|\frac{f^{(m)}(x_0)}{m!}\Big|^{-1}M^{m+1}(f,x_0)(|x-x_0|).\] 
+	\end{demonstration}
+	\vspace{7mm}
+	\noindent Notre porblème est dans le cas réel nous allons montrer un résultat sur le segment
+	\begin{theorem}
+		Soit $f \in \mathbb{D}$ dont tous les coefficients sont réels, alors si $f$ satisfait toutes les propriétés précèdentes et que $m$ est impaire, alors f possède un nombre de zéros impaires dans l'intervalle $[x_0-r,x_0+r]$.
 	\end{theorem}
 
-	\begin{demonstration}Raisonnons par l'absurde, 
-	\[f(\zeta ')=f(\zeta)+(\zeta '-\zeta)f'(\zeta)+ \sum_{k \geq 2}\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^k\]
-	qui se réecrit, en multipliant par $f'(\zeta ')^{-1}$
-	\[(\zeta-\zeta')=f'(\zeta)^{-1} \sum_{k \geq 2}\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^k\]
-	d'où 
-	\[1 \leq |f'(\zeta)^{-1}|\sum_{k \geq 2}  \big|\frac{f^{(k)}(\zeta)}{k!}(\zeta'-\zeta)^{k-1} \big|\leq |f'(\zeta)^{-1}| \frac{M^{2}(f,\zeta)(|\zeta-\zeta'|)}{|\zeta-\zeta'|}\]
-	\[1 \]
-	Or $|\zeta-\zeta'|<S\Big(|f'(\zeta)^{-1}|\frac{M^{2}(f,\zeta)(t)}{t}\Big)=\mathbb{S}_{f}(\zeta)$ la fonction majorante est croisssante alors $1<1$, c'est absurde. Il n'y a donc  pas de zéro autre que $\zeta$  dans l'intervalle $[\zeta-\mathbb{S}_{f}(\zeta),\zeta+\mathbb{S}_{f}(\zeta)]$
-	\end{demonstration} 
-	\vspace{7mm}
-	\noindent Une autre façon de le voir est de développer f en $\zeta$
-	\[f(\zeta +t)=0+t\Big(f'(\zeta)+\frac{R^{2}(f,\zeta)(t)}{t}\Big), \]
-	si l'on veut pour que ça reste de signe constant on veut donc $|f'(\zeta)|-\frac{M^{2}(f,\zeta)(t)}{t} >0$ ce qui mène à la même conclusion.\\
-	Remarque, cette démonstration montre que les zéros sont isolés et borne aussi la distance. Pour un zéro $\zeta$ de multiplicité supérieure, disons m, l'astuce est la même, et $sep(f,\zeta) \geq S\big(\big|\frac{f^{(m)}(\zeta)}{m!}\big|^{-1}\frac{M^{m+1}(f,\zeta)(t)|}{t^{m}}\big)$.
-	\subsubsection{Quantification de la distance au zéro}
-	Dans cette partie comme dans la précèdente, toutes les séries majorantes vérifient la propriété $[t^1]M^{1}(f,x)(t)=|f'(x)|$.
-	\begin{theorem} Soit $f:\mathbb{C} \rightarrow \mathbb{C}$ une fonction analytique, soit $x_0 \in \mathbb{C}$ tel que $f'(x_0) \neq 0$. Alors, quel que soit $r\in [0,\mathbb{S}_{f}(x_0)]$ vérifiant
-	\[\beta(f,x)<r-|f'(x_0)|^{-1}M^2(f,x)(r),\]
-	il existe un unique zéro pour f sur $B(x_0,r)$ la boule ouverte centrée en $x_0$ de rayon $r$. 
-	\end{theorem}
-	 Nous montrerons que dans le cas où f est à coefficients réels que $]x_0-r,x_0+r[$ contient un unique zéro. Ce qui vient du fait qu'une racine complexe admet aussi son conjugué comme racine, or la boule trouvée est centrée sur un point de l'axe des réels, donc il devrait y avoir 2 zéros et non pas 1 dans la boule.
-	 
-	 \vspace{7mm}	
-	 
-	
 	\begin{demonstration}
-	
-	Définissons $g(x)=f(x)-f(x_0)$, $g(x_0)=0$, $g'(x_0)=f'(x_0)$ d'après le théorème précèdent, $x_0$ est le seul zéro de g dans la boule
-	$B(x_0,\mathbb{S}_{f}(x_0))$. La série de Taylor de g est convergente, elle est donnée par
-	\[g(x)=f'(x_0)(x-x_0)+ \sum_{k \geq 2}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\]
-	Nous allons prouver que si pour r vérifiant $0<r<\mathbb{S}_{f}(x_0)$ on a,
-	\[|f'(x_0)^{-1}f(x)-f'(x_0)^{-1}g(x)|=|f'(x_0)^{-1}f(x_0)|<|f'(x_0)^{-1}g(x)|\]
-	\\
-	Pour tout $x$ avec $|x-x_0|=r$
-	\\
-	Par le théorème de Rouché $|f'(x_0)^{-1}|f$ et $|f'(x_0)^{-1}|g$ auront le même nombre de zéros dans cette boule. Remarquons que 
-	\[|f'(x_0)^{-1}f(x)-f'(x_0)^{-1}g(x)|=|f'(x_0)^{-1}f(x_0)|=\beta(f,x_0)\]
-	Aussi
-	\[x-x_0=f'(x_0)^{-1}g(x)-f'(x_0)^{-1}\sum_{k \geq 2}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k,\]
-	de sorte que
-	\[r \leq |f'(x_0)^{-1}g(x)|+|f'(x_0)|^{-1}M^{2}(f,x_0)(r) .\]
-	C'est à dire que l'hypothèse de Rouché est satisfaite si
-	\[\beta(f,x_0)<r-|f'(x_0)|^{-1}M^{2}(f,x_0)(r)\] 
-	
+		Nous commencerons par montrer le résultat suivant.\\
+		Si f est une fonction analytique à coefficients dans $\mathbb{R}$ alors chaque racine complexe admet son conjugué comme racine. Soit $z=x+iy$ une racine de f, alors
+		\[f(x+iy)=\sum_{n\geq 0} u_n (x+iy)^n= \sum_{n\geq 0}u_n\sum_{k=0}^{n}\binom{n}{k}x^{n-k}i^ky^k=0 \]
+		On sépare cette somme en deux parties la partie réelle et la partie imaginaire,
+		\[f(x,y)=u(x)+iv(y)=\sum_{n\geq 0}u_n\sum_{k=0}^{\left\lfloor \frac{n}{2}\right\rfloor}\binom{n}{2k}x^{n-2k}(-1)^ky^{2k}+ i\sum_{n\geq 0}u_n\sum_{k=0}^{\left\lfloor \frac{n-1}{2}\right\rfloor}\binom{n}{2k+1}x^{n-2k-1}(-1)^{k+1}y^{2k+1}=0 \]
+		comme $(1,i)$ est une base de $\mathbb{C}$ chacune de ces deux sommes s'annule. On pose
+		On s'intéresse seulement à la somme de droite $v$,
+		\[v(-y)=\sum_{n\geq 0}u_n\sum_{k=0}^{\left\lfloor \frac{n-1}{2}\right\rfloor}\binom{n}{2k+1}x^{n-2k-1}(-1)^{k+1}(-y)^{2k+1}=-v(y)=0\]
+		Donc $f(x-iy)=0$.
+		Alors, le nombre de racines à partie imaginaire non nulle dans $B(x_0,r)$ $im$ est paire, ce qui implique que le nombre de racine réels $rm$ est impaire puisque $m=im+rm$.
 	\end{demonstration}
-	Ce sera cette expression qui permettra d'exclure des intervalles. Et de façon générale on fera le calcule dans l'autre sens, on regardera le plus petit r vérifiant l'inégalité et si ce r vérifie la condition $|f'(x_0)^{-1}|\frac{M^{2}(f,\zeta)(r)}{r}\leq 1$, alors on pourra assurer que l'intervalle $[x_0-r,x_0+r]$, contient un unique zéro.
+	
+	
 	
 	\subsection{Algorithme}
 	
@@ -684,10 +712,11 @@
 		L'intervalle renvoyé par l'algorithme admis possède un unique zéro, et la fonction est strictement monotone sur cet intervalle.
 	\end{proposition}
 	\begin{demonstration}
-		C'est une conséquence directe de la condition du théorème précèdent.
+		C'est une conséquence directe de la condition $r\in [0,\mathbb{S}_{f}^{1}(x_0)]$ du théorème précèdent.
 	\end{demonstration}
 	
 	Ça a l'intérêt théorique que l'on peut peut se rapprocher aussi proche que l'on veut du zéro par une méthode de dichotomie.
+	
 
 % 	\subsection{Détermination du coefficient de $\gamma(M^1(f,z),z)$ (pas important pour l'instant)}
 %	La fonction de majoration de $R^1(f,z)$ renvoyée est donc de la  forme
@@ -715,12 +744,8 @@
 %		La démonstration reste à terminer...\\
 %	\end{demonstration}
 		\section{Une méthode d'exclusion de zéros}
-	\begin{definition} Soit f une fonction analytique en x, alors on peut écrire $f(x+t)=\sum_{k \geq 0} \frac{f^{(k)}(x)}{k!}t^{k}$, Le reste de la série à l'ordre k est 
-		\[R^{k}(f,x)(t)=\sum_{i \geq k} \frac{f^{(i)}(x)}{i!}t^{i}\]
-		et la série majorante de ce reste
-		\[M^{i}(f,x)(t) \unrhd R^{i}(f,x)(t).\]
-	\end{definition}
-	Dans cette partie nous utiliserons aussi la notation $[t^k]f(t)=u_k$, où f est une série entière $f(t)=\sum_{k\geq0}u_kt^k$.
+
+	Dans cette partie nous utiliserons aussi la notation $[t^k]f(x)=\frac{f^{(k)}(x)}{k!}$, où f est une série entière telle que $f(x+t)=\sum_{k\geq0}\frac{f^{(k)}(x)}{k!}t^k$.
 	\subsection{L'algorithme de Bissection-exclusion de J.-C. Yakoubsohn}
 	
 	Cette partie a pour objectif de proposer un algorithme permettant d'exclure des intervalles dans lesquels on peut certifier qu'il n'y a pas de zéro. Une méthode à été proposée dans $\mathbb{C}$ par J.-C. Yakoubsohn \cite{DBLP:journals/jc/Yakoubsohn05}, nous réutiliserons la fonction introduite dans son article.
@@ -729,7 +754,7 @@
 	\end{definition}
 	\begin{proposition}
 		Soit $f$ une fonction analytique, alors $M(f,x)$ vérifie 
-		\[\forall t \in \mathbb{R}_+, \hspace{3mm} M(f,x)(t) \leq |f(x+t)|, \hspace{3mm} M(f,x)(t) \leq |f(x-t)|.\]
+		\[\forall t \in \mathbb{R}, \hspace{3mm} M(f,x)(|t|) \leq |f(x+t)|.\]
 	\end{proposition}
 	Comme $M(f,x)$ est strictement décroissante pour $t>0$, on pose $m(x)=M(f,x)^{-1}(0)$, 
 	\begin{definition}
@@ -759,6 +784,10 @@
 	
 	\noindent Ici, on n'a qu'une étape de l'algorithme et l'idée sera bien sûr d'appliquer récursivement cette fonction pour avoir des intervalles de plus en plus précis. L'article de Yakoubsohn donne une discussion plus complète sur la taille des intervalles en fonctions des "clusters" de zéros.\\
 	
+	\begin{definition}
+		On appelle un cluster de m zéros une boule de rayon r $B(x,r)$ telle qu'il y ait m zéros dans cette boule.
+	\end{definition}
+	
 	\subsection{Étude de la convergence de la fonction bissection exclusion}
 	On a ici une méthode pour exclure des intervalles, mais peut-on en exclure à une précision arbitraire du zéro? Si oui, alors on pourra se rapprocher suffisament des zéros pour les absorber, c'est ce que nous verrons dans la partie suivante.\\
 	Il est démontré que la fonction $m$ est continue dans l'article de Yakoubsohn. 
@@ -766,18 +795,12 @@
 	On s'intéresse maintenant à la fonction $M(f,x)$ introduite précèdement, et lorsqu'elle s'annule. C'est important de savoir si les itérations successives de cette méthode permettrons de s'approcher aussi proche du zéro que l'on veut.\\
 	\\
 	\subsubsection{convergence vers un zéro}
-	On va ici démontrer que la fonction permet de se rapprocher aussi proche que l'on veut d'un zéro.
-	Il va falloir introduire plusieurs concepts, soit $[a,b]$  le segement sur lequel on travaille, $S_0$ sa longueure.
-	On suppose que l'intervalle contient $d$ zéros $z_1,...,z_d$ de $f$ comptés avec leur multiplicité alors on peut écrire
-	\[f(z)=\prod_{i=1}^{d}(z-z_i)h(z)\]
-	où $h(z)$ est une fonction analytique.
-	
-	(1)$\forall z \in S_0, \hspace{3mm} \frac{|h^{(k)}(z)|}{k!|h(x)|}\leq \lambda \tau^{k-1}$
-	
-	(2)2$\tau S_0 \geq \frac{1}{2}$
+	Dans l'article de Yakoubsohn \cite{DBLP:journals/jc/Yakoubsohn05}, il est démontré que la fonction $m$ vérifie la propriété importante qu'il existe un a tel que 
+	$a\d(x,Z)<m(x)$, où $\d(x,Z)$ est la distance de $x$ au zéro le plus proche. C'est cette propriété qui lui permet d'établir des résultats sur la convergence de l'algorithme et sur sa complexité.\\
+	Cependant ce résultat est sur la fonction théorique $M(f,x)(t)=|f(x)|-\sum_{k\geq1}\big|\frac{f^{(k)}(x)}{k!}\big|t^k$. Cependant, nous ne pouvons manipuler que des fonctions de majoration qui peuvent néamoins vérifier $\Big|M^1(f,x)(t)-\sum_{k\geq1}\big|\frac{f^{(k)}(x)}{k!}\big|t^k\Big| < \epsilon, \, \forall \epsilon>0$ sur un rayon donné.
 	
 	\subsubsection{Comportement local proche d'un zéro}
-	S'intéresse maintenant au comportement locale, proche d'un zéro de cette fonction.
+	On s'intéresse ici au comportement locale, proche d'un zéro de cette fonction.
 	\begin{theorem}
 		Soient f une fonction analytique telle que $f'(x)\neq 0$, et $m(x)$ tel que $M(f,x)(m(x))=0$, alors
 		\[\beta(f,x) \geq m(x)\geq\frac{\beta(f,x)}{\beta(f,x)\gamma(f,x)+1}\]
@@ -827,8 +850,8 @@
 			\STATE Admis:=$[]$
 			\STATE Indéterminé:=$a$
 			\WHILE{Indéterminé$<b$}
-			\IF {admis($f,$ Indéterminé)$=[$Indéterminé$,d] \neq \emptyset$}
-				\STATE Admis:=Admis $\cup=[$Indéterminé$,d]$
+			\IF {admis($f,$ Indéterminé)$=[$Indéterminé$,d] \neq []$}
+				\STATE Admis:=Admis $\cup$ [Indéterminé$,d]$
 				\STATE Indéterminés:= $d$  
 			\ELSE 
 			\STATE Indéterminé=bissection-exclusion($f,a$)
@@ -837,7 +860,7 @@
 			\RETURN Admis
 		\end{algorithmic}
 	\end{algorithm}	
-
+	\newpage
 	\bibliography{mabib}
 	\bibliographystyle{plain}
 	
