@@ -5,14 +5,16 @@ from ore_algebra.analytic.bounds import *
 from sage.rings.real_arb import RealBallField
 
 
-
+def sign(x):
+    return (x>0)-(x<0)
 #Dans cette partie se trouvent toutes les outils essentiels et élémentaires à notre code
-def abs(list):
-#transforme une liste en la liste de la valeur abs de ses coeffs
-    l=[]
-    for el in list:
-        l.append(abs(el))
-    return l
+def sum(Pol1,Pol2,h):
+#Calcule la somme de deux polynômes
+    Pol=0
+    for i in range (h):
+        Pol+=(Pol1[i]+Pol2[i])*x^i
+    return Pol
+
 def product(M,u,n):
 #produit d'une matrice par un vecteur dans RBF sans perte de précision
     v=[]
@@ -29,8 +31,7 @@ def translate_ini(dop,ini,x,epsilon):
     ini_to_DSE(ini,n)
     M=dop.numerical_transition_matrix([0,x],epsilon)
     v=product(M,ini,n)
-    DSE_to_ini(v,n)
-        return v
+    return v
 #Remarque cette fonction est utile si l'on veut les conditions initiale, mais
 #dans le cas où ord(dop)<2 on n'a pas la dérivée bien évaluée. On peut la
 #Récupérer à partir de l'équation différentielle.
@@ -40,7 +41,7 @@ def ini_to_DSE(ini,n):
     for k in range(n):
         ini[k]/=factorial(k)
 
-def DSE_to_ini(ini):
+def DSE_to_ini(ini,n):
 #f(x)/0!,...,f^(n-1)(x)/(n-1)! -> f(x),...,f^(n-1)(x)
     for k in range(n):
         ini[k]*=factorial(k)
@@ -50,15 +51,6 @@ def to_sequential_op(A,dop):
     Rn.<n> = QQ['n']
     OreAlgebra(Rn, 'Sn')
     return dop.to_S(A)
-
-def separation(RBF_list):
-#sépare les balls pour plus de précision
-    mid=[]
-    rad=[]
-    for el in RBF_list:
-        mid.append(el.mid())
-        rad.append(el.rad())
-    return mid,rad
 
 
 #def majore_n_dernier_coeff():
@@ -75,6 +67,16 @@ def diff_dop(dop):
     ddop=0
     for i in range(n):
         ddop+=Dx^(exp[i])*diff(coeff[i],x)+Dx^(exp[i]+1)*coeff[i]
+    return ddop
+
+def diff_dop_Dx(dop):
+#différencie par rapport à Dx
+    coeff=dop.coefficients()
+    exp=dop.exponents()
+    n=len(coeff)
+    ddop=0
+    for i in range(n):
+        ddop+=Dx^(exp[i]+1)*coeff[i]
     return ddop
 
 def DSE(dop,ini,n,x):
@@ -101,7 +103,6 @@ def extend_coeffdop(coeff,exp,ini,x):#n est la taille  de l'opérateur
     sol=0
     for i in range (n-1):
         sol+=ini[exp[i]]*coeff[i](x)
-        print(sol)
     sol=-sol/(coeff[n-1](x))
     return sol
 """
@@ -122,29 +123,156 @@ sage: dop.numerical_transition_matrix([0,i,3+i,3],1e-20)
 [   [1.307818686187017226438 +/- 3.22e-22] + [3.760054349333636200978 +/- 5.21e-22]*I    [1.696050455566830862584 +/- 4.70e-22] + [2.780420408555851744543 +/- 4.98e-22]*I]
 [ [-0.9502961786628460069257 +/- 3.14e-23] + [1.211859120812618032217 +/- 2.93e-22]*I [-0.4677638217023139947250 +/- 6.65e-23] + [0.8961247680898814220572 +/- 6.22e-23]*I]
 """
+
+#Ici est la partie où commence réelement notre algorithme
+
+
 def to_pol(DSE,k):
 #Renvoie le polynome associé au calcul des coefficients
-    t=QQ['t'].gen()
+    x=QQ['x'].gen()
     pol=0
     for i in range (len(DSE)):
         pol+=DSE[i]*t^i
     return pol
 
-#Ici est la partie où commence réelement notre algorithme
+def separation(RBF_list):
+#sépare les balls pour plus de précision, mais majore la série des RBF
+    mid=[]
+    rad=[]
+    for el in RBF_list:
+        mid.append(el.mid())
+        rad.append(RBF(el.rad()))
+    return mid,rad
 
+def power_serie_sol(dop,ini,n,ord):
+#calcule une solution approchée de dop à partir de la série de Taylor à l'ordre n
+    PSS=dop.power_series_solutions(n)
+    s=0
+    for i in range(ord):
+        s+=ini[i]*PSS[ord-1-i]
+    return s
 
-def last(DSE,n,s):
-#Donne les indices de fn-1 à fn-s, n est aussi la taille de la liste DSE
-    l=[]
-    for i in range(n-1,n-s):
-        l.append([DSE[i]])
-    return l
+def res_pol(pol,ord,n):
+#transforme un polynôme dans la forme demandée dans normalized_residual
+    coeff=pol.coefficients()
+    n=len(coeff)
+    res=[]
+    for i in range(ord+1):
+        res.append([abs(coeff[n-1-i])])
+    return res
 
-def majorant_rest(dop,DSE,n,x,eps):
+def res(dop,ini,n,ord):
+#Donne le résidu d'une équation différentielle pour la forme normalized_residual
+    PSS=power_serie_sol(dop,ini,n,ord)
+    return res_pol(PSS,ord,n)
+
+def majorant_rest(dop,ord,n,PSS):
 #on crée ici la série majorante
-    translate_ini(dop, ini, eps)
-    DSE=DSE(dop,ini,n,x)
     maj=DiffOpBound(dop,max_effort=2)
-    res_list=[]
-    s=dop.coefficients()[len(dop.coefficients())]
-    return maj.normalized_residual(n,last(DSE,n))
+    return maj.tail_majorant(n,[maj.normalized_residual(n,res_pol(PSS,ord,n))])
+
+def truncation(pol,h,l):
+#Fonction découpant un polynôme en deux partie, la partie de degré inférieure à k
+#et la partie de degré supérieure à k
+    coeff=pol.coefficients()
+    exp=pol.exponents()
+    r1=0
+    r2=0
+    x=QQ['x'].gen()
+    for i in range (l):
+        if exp[i]<h:
+            r1+=coeff[i]*x^(exp[i])
+        else:
+            r2+=coeff[i]*x^(exp[i])
+    return r1,r2
+#########################Travail sur RBF########################
+def real(r_b):
+#Transforme un polynôme dans RBF en sa série majorante idéale
+    return r_b.mid()+r_b.rad()
+def abs_pol(pol,l):
+#récupère le majorant idéal du polynôme pol
+    x=QQ['x'].gen()
+    p=0
+    for i in range(l):
+        p+=abs(pol[i])*x^i
+    return p
+
+def maj_rbf(pol,l):
+#récupère la série maj parfaite de pol
+    x=QQ['x'].gen()
+    P=0
+    for i in range(l):
+        P+=(abs(pol[i].mid())+pol[i].rad())*x^i
+    return P
+
+
+"""
+Remarque, nous sommes obligés d'avoir tous ces paramètres sans quoi on perdrait
+la précision.
+"""
+
+
+def M_function(n,k,dop,ini,x,eps):
+#renvoie une fonction de la forme |f(x)t+...+f^(n-1)t^(n-1)|-M^n(f,x)(t)
+#Où M^n a ses k premiers coefficients exactes
+    order=len(ini)
+    new_ini,new_eps=separation(translate_ini(dop,ini,x,eps))#translatation des paramètres donc RBF, séparation de la RBF
+    PSS_new_ini=power_serie_sol(dop,new_ini,n+k,order)
+    PSS_new_eps=maj_rbf(power_serie_sol(dop,new_eps,n+k,order),n+k)
+    M_nk_ini=majorant_rest(dop,order,n+k,PSS_new_ini)
+    M_nk_eps=majorant_rest(dop,order,n+k,PSS_new_eps)
+    left_ini,right_ini=truncation(PSS_new_ini,n,n+k)
+    return left_ini,abs_pol(right_ini,n+k),PSS_new_eps,M_nk_ini,M_nk_eps
+
+def evaluate(left_ini,right_ini,PSS_new_eps,M_nk_ini,M_nk_eps,n,t):
+#Évaluation de la fonction M définie dans le rapport de stage
+    if n==1:
+        return sign(left_ini)*left_ini-PSS_new_eps(t)-right_ini(t)\
+        -real(M_nk_ini.bound(RBF(t)))-real(M_nk_eps.bound(RBF(t)))
+    else:
+        return abs(left_ini(t))-PSS_new_eps(t)-right_ini(t)\
+        -real(M_nk_ini.bound(RBF(t)))-real(M_nk_eps.bound(RBF(t)))
+
+"""
+Dans le cas M^1(f,x), on sait que la fonction est strictement décroissante, on a
+donc un unique zéro
+"""
+def zero(f,eps):
+#Recherche le premier zéro d'une fonction f décroissante
+    a=0
+    b=1
+    while f(b)>=0:
+        a,b=b,2*b
+    while (b-a)>eps:
+        m=(a+b)/2
+        if f(m)>=0:
+            a=m
+        else:
+            b=a
+    return a
+              ####### Algorithmes principaux #########
+def bissection_exclusion(k,dop,ini,eps,segment):
+#la méthode de bissection-exclusion récursive
+    a,b=segment[0],segment[1]
+    m=(a+b)/2
+    def M(t):
+        left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps=M_function(1,k,dop,ini,m,eps)
+        return evaluate(left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps,t,1)
+    pas=zero(M,eps)
+    if pas>(b-a)/2:
+        return[]
+    else:
+        return bissection_exclusion(k,dop,ini,x,eps,[a,m-pas])+\
+               bissection_exclusion(k,dop,ini,x,eps,[m+pas,b])
+
+
+def S_(k,dop,ini,x,eps,t):
+    left_ini,right_ini,PSS_new_eps,M_nk=M_function(2,k,dop,ini,x,eps)
+    left,right=truncation(PSS_new_eps,2,len(PSS_new_eps))
+    x=QQ['x'].gen()
+    right,PSS_new_eps,M_nk=right*x^(-1),right_ini*x^(-1),M_nk*x^(-1)
+    f1=left_ini[1]-left[1]
+    if f1>0:
+        return (right(t)+right_ini(t)+real(M_nk.bound(RBF(t))))<f1
+    else:
+        return False
