@@ -61,6 +61,25 @@ def ini_to_DSE(ini,n):
     for k in range(n):
         ini[k]/=factorial(k)
 
+def recc_order(dop):
+#Require a dop  Pr(x)*Dx^r+...+Po(x)
+#Return the order of the Sequencial recurrence corresponding to this differential
+#operator
+    coeff=dop.coefficients()
+    exp=dop.exponents()
+    maxeq=-100000000000
+    mineq=100000000000
+    for i in range (len(exp)):
+        pol=coeff[i]
+        if pol in QQ:
+            val=exp[i]
+            maxeq=max(val,maxeq)
+            mineq=min(val,mineq)
+        else:
+            maxeq=max(maxeq,exp[i]-coeff[i].exponents()[0])
+            mineq=min(mineq,exp[i]-coeff[i].degree())
+    return maxeq-mineq
+
 
 ############################Work over RBF#######################################
 def maj_rb(r_b):
@@ -133,6 +152,7 @@ def res_pol(pol,order,n):
         res.append([abs(pol[n-1-i])])
     return res
 
+
 def res(dop,ini,order,n):
 #Require dop,ini,order,n
 #Return the required list of coefficients [[f^(n)(0)/n!],...,[f^(n-order)(0)/(n-order)!]]
@@ -177,18 +197,18 @@ _Majorant_(1,10,dop,[1,0],3,1e-10)
  [2.44659058386122e-20 +/- 2.23e-35])*exp(int([0.1000000008815815 +/- 2.00e-17]*x)))
 """
 
-def _Majorant_(n,k,dop,ini,order,x):
+def _Majorant_(n,k,dop,ini,order,seq_rec_order,x):
     if x==0: #check if ini in QQ^order
         PSS_ini=power_serie_sol(dop,ini,order,n+k)
-        M_nk_ini=majorant_rest(dop,order,n+k,PSS_ini)
+        M_nk_ini=majorant_rest(dop,seq_rec_order,n+k,PSS_ini)
         left_ini,right_ini=truncation(PSS_ini,n,n+k)
         return left_ini,abs_pol(right_ini,n+k),0,M_nk_ini,0
     else: #If ini are in RBF
         new_ini,new_eps=separation(ini)
         PSS_new_ini=power_serie_sol(dop,new_ini,order,n+k)
         PSS_new_eps=power_serie_sol(dop,new_eps,order,n+k)
-        M_nk_ini=majorant_rest(dop,order,n+k,PSS_new_ini)
-        M_nk_eps=majorant_rest(dop,order,n+k,PSS_new_eps)
+        M_nk_ini=majorant_rest(dop,seq_rec_order,n+k,PSS_new_ini)
+        M_nk_eps=majorant_rest(dop,seq_rec_order,n+k,PSS_new_eps)
         left_ini,right_ini=truncation(PSS_new_ini,n,n+k)
         return left_ini,abs_pol(right_ini,n+k),maj_rb_pol(PSS_new_eps,n+k),M_nk_ini,M_nk_eps
 
@@ -217,8 +237,7 @@ the majorant serie, a segment [a,b], and the precision prec we want to have.
 it return intervals contained in [a,b] such that there is maybe a zero in
 these intervals and such that the lenght of these interval is smaller than prec
 """
-def bisection_exclusion(k,dop,ini,order,segment,prec):
-    print(segment)
+def bisection_exclusion(k,dop,ini,order,seq_rec_order,segment,prec):
     a,b=segment[0],segment[1]
     m=(a+b)/2
     d=(b-a)
@@ -229,21 +248,20 @@ def bisection_exclusion(k,dop,ini,order,segment,prec):
         eps=1e-8*prec
         new_ini=translate_ini(dop,ini,order,m,eps)
         if not Fixe_eps(new_ini,dop,ini,order,0,m,eps):
-            return bisection_exclusion(k,dop,ini,order,[a,m-(prec/3)],prec)+bisection_exclusion(k,dop,ini,order,[m-(prec/3),m+(prec/3)],prec)+ bisection_exclusion(k,dop,ini,order,[m-(prec/3),b],prec)
+            return bisection_exclusion(k,dop,ini,order,seq_rec_order,[a,m-(prec/3)],prec)+bisection_exclusion(k,dop,ini,order,seq_rec_order,[m-(prec/3),m+(prec/3)],prec)+ bisection_exclusion(k,dop,ini,order,seq_rec_order,[m-(prec/3),b],prec)
         else:#epsilon fixed
-            left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps=_Majorant_(1,k,dop,new_ini,order,m)
+            left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps=_Majorant_(1,k,dop,new_ini,order,seq_rec_order,m)
             def M(t):
                 return evaluate(left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps,1,t,m)
             d/=2
             loop=0
             while M(d)<0:
                 d/=2
-                print(d)
                 loop+=1
             if d==(b-a)/2:
                 return []
             else:
-                return bisection_exclusion(k,dop,ini,order,[a,m-d],prec)+bisection_exclusion(k,dop,ini,order,[m+d,b],prec)
+                return bisection_exclusion(k,dop,ini,order,seq_rec_order,[a,m-d],prec)+bisection_exclusion(k,dop,ini,order,seq_rec_order,[m+d,b],prec)
 
 r"""
 increasing(f,x,eps): (fonction R->R,x in R)
@@ -276,7 +294,6 @@ def Fixe_eps(new_ini,dop,ini,order,i,x,eps):
             eps*=1e-10
             new_ini=translate_ini(dop,ini,order,x,eps)
             count+=1
-            print("count",count)
         if count==5:
             return False
         else:
@@ -288,7 +305,7 @@ def Fixe_eps(new_ini,dop,ini,order,i,x,eps):
 #This function tries to certificate a zero in a segment using theorems
 #in the internship rapport
 
-def certified_zero(dop,ini,order,x,prec):
+def certified_zero(dop,ini,order,seq_rec_order,x,prec):
 #Require dop, ini, order, x, prec
 #Return [0,0] if it can not certified a zero in an interval
 #Return [a,s] the maximum and the minimum reals such that [x-s,x+s] and
@@ -297,18 +314,15 @@ def certified_zero(dop,ini,order,x,prec):
     new_ini=translate_ini(dop,ini,order,x,eps)
     #The following section is to fixe epsilon
     if Fixe_eps(new_ini,dop,ini,order,1,x,eps):
-        left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps=_Majorant_(2,10,dop,new_ini,order,x)
+        left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps=_Majorant_(2,10,dop,new_ini,order,seq_rec_order,x)
         left_eps,right_eps=truncation(PSS_new_eps,2,PSS_new_eps.degree())
         f0=sign(left_ini[0])*left_ini[0]+left_eps[0]
-        print("f0",f0)
         f1=sign(left_ini[1])*left_ini[1]-left_eps[1]
-        print("f1",f1)
         def f(t):
             return f1*t-right_ini(t)-right_eps(t)-maj_rb(M_1k_ini.bound(RBF(t)))-maj_rb(M_1k_eps.bound(RBF(t)))-f0
         a=f0/f1
         b=max(16*a,2560*prec)
         while b-a>3*prec and f(a)<=0 and f(b)<=0:
-            print("b",b,"f(b)",f(b))
             m=(a+b)/2
             if increasing(f,m,eps):
                 a=m
@@ -336,7 +350,8 @@ def find_certified_zeros(dop,ini,segment,iteration=0,max_iteration=3):
 #Return the list of segments determinated and the segments still indeterminated
 #The user can improve max iteration there are still some segments which are unknown
     order=len(ini)
-    k=10
+    seq_rec_order=recc_order(dop)
+    k=5+seq_rec_order
     if segment==[]:
         return [[],[]]
     if iteration>max_iteration:#This is to avoid infinite loop
@@ -344,22 +359,18 @@ def find_certified_zeros(dop,ini,segment,iteration=0,max_iteration=3):
     else:
         a,b=segment[0],segment[1]
         prec=min(1e-4*(b-a),1e-1)
-        indeterminated=bisection_exclusion(k,dop,ini,order,segment,prec)
-        print(indeterminated)
+        indeterminated=bisection_exclusion(k,dop,ini,order,seq_rec_order,segment,prec)
         n=len(indeterminated)
         determinated=[False for k in range(n)]
         big_admitted=[]
         small_admitted=[]
         for i in range(n):
             x=indeterminated[i][1]
-            l=certified_zero(dop,ini,order,x,prec)
+            l=certified_zero(dop,ini,order,seq_rec_order,x,prec)
             if l[0]>0:
                 big_admitted.append([x-l[0],x+l[0]])
                 small_admitted.append([x-l[1],x+l[1]])
-        print("small_admitted",small_admitted)
-        print("big_admitted",big_admitted)
         still_indeterminate=still_indeterminated(big_admitted,indeterminated,determinated)
-        print("still_indeterminate",still_indeterminate)
         admitte=admitted(small_admitted)
         if still_indeterminate==[]:
             return [admitte,[]]
@@ -383,8 +394,8 @@ def concatenate(sol1,sol2):
 def admitted(small_admitted):
 #Require the list of segments containing only one zero
 #Return the disjoint list of segments containing only one zero
-    if small_admitted==[[]]:
-        return [[]]
+    if small_admitted==[]:
+        return []
     n=len(small_admitted)
     admit=[]
     segment=small_admitted[0]
@@ -411,7 +422,6 @@ def test_disjoint(segm_list):
 def intersection(segment1,segment2):
 #Require segment1 and segment2 that are ordered in increasing order
 #Return the intersection of segment1 and segment2
-    print("segment1",segment1,"segment2",segment2)
     if segment1[1]<segment2[0] or segment2[1]<segment1[0]:
         return []
     else:
