@@ -177,7 +177,7 @@ _Majorant_(1,10,dop,[1,0],3,1e-10)
  [2.44659058386122e-20 +/- 2.23e-35])*exp(int([0.1000000008815815 +/- 2.00e-17]*x)))
 """
 
-def _Majorant_(n,k,dop,ini,order,x,eps):
+def _Majorant_(n,k,dop,ini,order,x):
     if x==0: #check if ini in QQ^order
         PSS_ini=power_serie_sol(dop,ini,order,n+k)
         M_nk_ini=majorant_rest(dop,order,n+k,PSS_ini)
@@ -203,9 +203,9 @@ def evaluate(left_ini,right_ini,PSS_new_eps,M_nk_ini,M_nk_eps,n,t,x):
             return abs(left_ini(t))-right_ini(t)-maj_rb(M_nk_ini.bound(RBF(t)))
     else:
         if n==1:
-            return sign(left_ini)*left_ini-maj_rb(PSS_new_eps(t))-right_ini(t)-maj_rb(M_nk_ini.bound(RBF(t)))-maj_rb(M_nk_eps.bound(RBF(t)))
+            return sign(left_ini)*left_ini-PSS_new_eps(t)-right_ini(t)-maj_rb(M_nk_ini.bound(RBF(t)))-maj_rb(M_nk_eps.bound(RBF(t)))
         else:
-            return abs(left_ini(t))-maj_rb(PSS_new_eps(t))-right_ini(t)-maj_rb(M_nk_ini.bound(RBF(t)))-maj_rb(M_nk_eps.bound(RBF(t)))
+            return abs(left_ini(t))-PSS_new_eps(t)-right_ini(t)-maj_rb(M_nk_ini.bound(RBF(t)))-maj_rb(M_nk_eps.bound(RBF(t)))
 
 
 ################################################################################
@@ -218,35 +218,32 @@ it return intervals contained in [a,b] such that there is maybe a zero in
 these intervals and such that the lenght of these interval is smaller than prec
 """
 def bisection_exclusion(k,dop,ini,order,segment,prec):
+    print(segment)
     a,b=segment[0],segment[1]
     m=(a+b)/2
     d=(b-a)
-    eps=1e-5*prec
-    new_ini=translate_ini(dop,ini,order,m,eps)
     if d<prec:
         return [segment]
-    else: #The following section is to fixe epsilon
-        if m!=0:
-            count=0
-            while not ini_are_good(new_ini,0,1) and count<10:
-                eps*=1e-8
-                new_ini=translate_ini(dop,ini,order,m,eps)
-            if count==10: #suspection that f(m)==0
-                return bisection_exclusion(k,dop,ini,order,[a,m-10*eps],prec)+bisection_exclusion(k,dop,ini,order,[m-10*eps,m+5*eps],prec)+ bisection_exclusion(k,dop,ini,order,[m+5*eps,b],prec)
-        #epsilon fixed
-
-        left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps=_Majorant_(1,k,dop,new_ini,order,m,eps)
-        print("PSS_new_eps",PSS_new_eps)
-        def M(t):
-            return evaluate(left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps,1,t,m)
-        d/=2
-        while M(d)<0:
+ #The following section is to fixe epsilon and to assure there is infinite loop
+    else:
+        eps=1e-8*prec
+        new_ini=translate_ini(dop,ini,order,m,eps)
+        if not Fixe_eps(new_ini,dop,ini,order,0,m,eps):
+            return bisection_exclusion(k,dop,ini,order,[a,m-(prec/3)],prec)+bisection_exclusion(k,dop,ini,order,[m-(prec/3),m+(prec/3)],prec)+ bisection_exclusion(k,dop,ini,order,[m-(prec/3),b],prec)
+        else:#epsilon fixed
+            left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps=_Majorant_(1,k,dop,new_ini,order,m)
+            def M(t):
+                return evaluate(left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps,1,t,m)
             d/=2
-            print(d)
-        if d==(b-a)/2:
-            return []
-        else:
-            return bisection_exclusion(k,dop,ini,order,[a,m-d],prec)+bisection_exclusion(k,dop,ini,order,[m+d,b],prec)
+            loop=0
+            while M(d)<0:
+                d/=2
+                print(d)
+                loop+=1
+            if d==(b-a)/2:
+                return []
+            else:
+                return bisection_exclusion(k,dop,ini,order,[a,m-d],prec)+bisection_exclusion(k,dop,ini,order,[m+d,b],prec)
 
 r"""
 increasing(f,x,eps): (fonction R->R,x in R)
@@ -258,21 +255,33 @@ def increasing(f,x,eps):
     return (f(x+eps)-f(x))>0
 
 ################These functions aim to deal with the eps condition##############
-def ini_are_good(ini,i,j):
+def ini_are_good(ini,i):
 #Require ini, i, j
 #Check if the initial conditions f^(i)/i!,...,f^(j-1)/(j-1)! could be use
-    for k in range (i,j):
-        if (ini[k].mid()-ini[k].rad())<1e4*ini[k].rad():
-            return False
-    return True
+    return (abs(ini[i].mid())-ini[i].rad())>1e4*ini[i].rad()
 
-def ini_non_null(ini,i,j):
-#require ini, i, j
-#Check if the initial conditions f^(i)/i!,...,f^(j)/j! are all non null
-    for i in range(i,j):
-        if ini[k]==0:
+def Fixe_eps(new_ini,dop,ini,order,i,x,eps):
+#Require dop,ini int i,j
+#Check if the coefficients ini[i],..., ini[j-1] are good to manipulate it returns
+#a boolean and change the new_ini that it can can be use without any trouble.
+    if x==0:
+        if ini[0]==0:
             return False
-    return True
+        else:
+            eps=sign(ini[0])*1e-8*ini[0]
+            new_ini=new_ini=translate_ini(dop,ini,order,x,eps)
+    else:
+        count=0
+        while not ini_are_good(new_ini,i) and count<5:
+            eps*=1e-10
+            new_ini=translate_ini(dop,ini,order,x,eps)
+            count+=1
+            print("count",count)
+        if count==5:
+            return False
+        else:
+            return True
+
 ################################################################################
 
 #################This functions aims to certificate the zeros##################
@@ -287,20 +296,19 @@ def certified_zero(dop,ini,order,x,prec):
     eps=1e-5*prec
     new_ini=translate_ini(dop,ini,order,x,eps)
     #The following section is to fixe epsilon
-    if ini_non_null(new_ini,0,2):
-        count=0
-        while not ini_are_good(translate_ini,0,2) and count<10:
-            eps*=1e-8
-            new_ini=translate_ini(dop,ini,order,x,eps)
-        left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps=_Majorant_(2,10,dop,ini,order,x,eps)
+    if Fixe_eps(new_ini,dop,ini,order,1,x,eps):
+        left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps=_Majorant_(2,10,dop,new_ini,order,x)
         left_eps,right_eps=truncation(PSS_new_eps,2,PSS_new_eps.degree())
         f0=sign(left_ini[0])*left_ini[0]+left_eps[0]
+        print("f0",f0)
         f1=sign(left_ini[1])*left_ini[1]-left_eps[1]
+        print("f1",f1)
         def f(t):
-            return f1*t-right_eps(t)-maj_rb(M_1k_ini.bound(RBF(t)))-maj_rb(M_1k_eps.bound(RBF(t)))-f0
+            return f1*t-right_ini(t)-right_eps(t)-maj_rb(M_1k_ini.bound(RBF(t)))-maj_rb(M_1k_eps.bound(RBF(t)))-f0
         a=f0/f1
-        b=max(16*a,256*prec)
+        b=max(16*a,2560*prec)
         while b-a>3*prec and f(a)<=0 and f(b)<=0:
+            print("b",b,"f(b)",f(b))
             m=(a+b)/2
             if increasing(f,m,eps):
                 a=m
@@ -321,11 +329,12 @@ def certified_zero(dop,ini,order,x,prec):
     else:
         return [0,0]
 
+
 ###########################The main function####################################
-def find_certified_zeros(dop,ini,segment,iteration=0,max_iteration=10):
-#Fonction renvoyant la liste des zéros sous forme de liste de segment ou de real
-#ball si ces zéros sont simples, sinon renvoie la liste des zéros certifiés
-# et la liste des zéros de multiplicité supérieure
+def find_certified_zeros(dop,ini,segment,iteration=0,max_iteration=3):
+#Require dop, ini, segment on wich we want to certificate the zeros
+#Return the list of segments determinated and the segments still indeterminated
+#The user can improve max iteration there are still some segments which are unknown
     order=len(ini)
     k=10
     if segment==[]:
@@ -334,8 +343,9 @@ def find_certified_zeros(dop,ini,segment,iteration=0,max_iteration=10):
         return [[],segment]
     else:
         a,b=segment[0],segment[1]
-        prec=min(1e-3*(b-a),1e-1)
+        prec=min(1e-4*(b-a),1e-1)
         indeterminated=bisection_exclusion(k,dop,ini,order,segment,prec)
+        print(indeterminated)
         n=len(indeterminated)
         determinated=[False for k in range(n)]
         big_admitted=[]
@@ -346,19 +356,22 @@ def find_certified_zeros(dop,ini,segment,iteration=0,max_iteration=10):
             if l[0]>0:
                 big_admitted.append([x-l[0],x+l[0]])
                 small_admitted.append([x-l[1],x+l[1]])
-    still_indeterminate=still_indeterminated(big_admitted,indeterminated,determinated)
-    admitte=admitted(small_admitted)
-    if still_indeterminate==[]:
-        return [admitte,[]]
-    else:
-        unsure=[[]]
-        for i in range(len(still_indeterminated)):
-            admitte,unsure=concatenate([admitte,unsure],find_certified_zeros(dop,ini,still_indeterminated[i],iteration+1,max_iteration))
-    if unsure!=[[]]:
-        print("possibly a zero of multiplicity superior at 1 in the second list, you can increase max_iteration")
-        print("or test certified_zero_multiplicity(dop,ini,x,prec,m) to test how many zeros there are possibly")
-        print("in the intervals still indeterminated")
-    return [admitte,unsure]
+        print("small_admitted",small_admitted)
+        print("big_admitted",big_admitted)
+        still_indeterminate=still_indeterminated(big_admitted,indeterminated,determinated)
+        print("still_indeterminate",still_indeterminate)
+        admitte=admitted(small_admitted)
+        if still_indeterminate==[]:
+            return [admitte,[]]
+        else:
+            unsure=[[]]
+            for i in range(len(still_indeterminated)):
+                admitte,unsure=concatenate([admitte,unsure],find_certified_zeros(dop,ini,still_indeterminated[i],iteration+1,max_iteration))
+            if unsure!=[[]]:
+                print("possibly a zero of multiplicity superior at 1 in the second list, you can increase max_iteration")
+                print("or test certified_zero_multiplicity(dop,ini,x,prec,m) to test how many zeros there are possibly")
+                print("in the intervals still indeterminated")
+        return [admitte,unsure]
 
 def concatenate(sol1,sol2):
 #Require sol1 and sol2 of the form [admitted,unsure] where admitted if the list
@@ -370,17 +383,22 @@ def concatenate(sol1,sol2):
 def admitted(small_admitted):
 #Require the list of segments containing only one zero
 #Return the disjoint list of segments containing only one zero
+    if small_admitted==[[]]:
+        return [[]]
     n=len(small_admitted)
-    admitted=[]
-    i=0
-    while i<n-1:
-        intersect=intersection(small_admitted[i],small_admitted[i+1])
+    admit=[]
+    segment=small_admitted[0]
+    i=1
+    while i<n:
+        intersect=intersection(segment,small_admitted[i])
         if intersect!=[]:
-            admitted.append(intersect)
+            segment=intersect
             i+=2
         else:
-            admitted.append(small_admitted[i])
-    return admitted
+            admit.append(segment)
+            segment=small_admitted[i]
+    admit.append(segment)
+    return admit
 
 def test_disjoint(segm_list):
 #Require segm_list a list of segments ordered in increasing bounds
@@ -393,10 +411,11 @@ def test_disjoint(segm_list):
 def intersection(segment1,segment2):
 #Require segment1 and segment2 that are ordered in increasing order
 #Return the intersection of segment1 and segment2
-    if segment1[1]<segment2[0]:
+    print("segment1",segment1,"segment2",segment2)
+    if segment1[1]<segment2[0] or segment2[1]<segment1[0]:
         return []
     else:
-        return [segment2[0],segment1[1]]
+        return [max(segment1[0],segment2[0]),min(segment1[1],segment2[1])]
 
 def still_indeterminated(big_admitted,indeterminated,determinated):
 #Require the list of segment containing one zero, the list of indeterminated
