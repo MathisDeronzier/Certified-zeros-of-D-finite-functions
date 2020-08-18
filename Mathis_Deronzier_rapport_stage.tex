@@ -1,0 +1,1301 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage[square,sort,comma,numbers]{natbib}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage[francais]{babel}	
+\usepackage[utf8]{inputenc}
+\textwidth16cm
+\oddsidemargin-0.38cm
+\textheight24cm
+\topmargin-2cm
+\pagestyle{plain}
+
+
+
+\begin{document}
+	\hypersetup{pdfborder=0 0 0}
+	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+	\textsc{\LARGE Laboratoire de l'Informatique du Parallélisme}\\[1.5cm] 
+	\HRule \\[0.5cm]
+	{ \huge \bfseries Zéros certifiés des fonctions D-finies  }\\[0.4cm] 
+	\HRule \\[1.5cm]
+	
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft} \Large
+			\emph{Auteur}\\
+		\end{flushleft}
+	\end{minipage}
+	~
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushright} \Large
+			\emph{Maîtres de stage} \\
+		\end{flushright}
+	\end{minipage}\\[0.5 cm]
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft} \large
+			\textsc{Mathis Deronzier}\\
+			\textsc{Mines Saint-Étienne}
+		\end{flushleft}
+	\end{minipage}
+	~
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushright} \large
+			\textsc{Bruno Salvy}\\
+			\textsc{I.N.R.I.A}\\
+			\textsc{Nicolas Brisebarre }\\
+			\textsc{C.N.R.S.}
+		\end{flushright}
+	\end{minipage}\\[2cm]
+	\begin{center}
+	\textsc{\Large Stage de recherche de master 1 }\\[0.5cm]  
+	\large Août \\2020\\[2cm]
+	\end{center}
+	\renewcommand{\contentsname}{Sommaire}
+	\newpage
+	\tableofcontents
+	\newpage
+	\renewcommand {\algorithmicrequire } {\textbf{\textsc{Entrée(s):} } }
+	\renewcommand {\algorithmicensure } {\textbf{\textsc{Sortie:} } }
+	\renewcommand {\algorithmicwhile } {\textbf{Tant que} }
+	\renewcommand {\algorithmicdo } {\textbf{faire} }
+	\renewcommand {\algorithmicendwhile } {\textbf{fin du Tant que} }
+	\renewcommand {\algorithmicif } {\textbf{Si} }
+	\renewcommand {\algorithmicfor } {\textbf{Pour} }
+	\renewcommand {\algorithmicendfor } {\textbf{fin du Pour} }
+	\renewcommand {\algorithmicthen } {\textbf{alors} }
+	\renewcommand {\algorithmicendif } {\textbf{fin du Si} }
+	\renewcommand {\algorithmicelse } {\textbf{Sinon} }
+	\renewcommand {\algorithmicreturn } {\textbf{Renvoyer} }
+	\newtheorem{theorem}{Théorème}[section] 
+	\newtheorem{proposition}{Proposition}
+	\newtheorem{corollaire}{Corollaire}
+	\newtheorem{definition}{Définition}
+	\newtheorem{remarque}{Remarque}
+	\setcounter{section}{-1}
+	\section{Introduction}
+	\subsection{Remerciements}
+	\label{subsec:intro}
+	
+	J'adresse mes sincères remerciements à Nicolas Brisebarre ainsi qu'à Bruno Salvy qui ont toujours réussi à trouver du temps pour m'aider et m'orienter dans mon stage.  C'est grâce à la confiance et au temps qu'ils m'ont accordés que ce stage de recherche a été aussi agréable et enrichissant.
+	\\
+	
+	En particulier, je remercie Nicolas Brisebarre d'avoir accepté de me prendre en stage et d'organiser le stage malgré le contexte compliqué dû à la crise du covid 19. Ses conseils m'ont aiguillé aussi bien dans mon stage que dans mon orientation personnelle. 
+	
+	Je remercie aussi Bruno Salvy pour ses précieuses remarques qui m'ont permis de comprendre plus en profondeur les problématiques de mon stage et qui m'ont donné un vrai enthousiasme dans mon travail. 
+	
+	Je remercie aussi Marc Mezzarobba pour son travail sur les fonctions D-finies sans lequel le mien aurait été irréalisable, ainsi que l'aide qu'il m'a apportée à un moment important de mon stage.
+	
+	Enfin, je remercie le service administratif de l'E.N.S. Lyon pour leur réactivité et leur amabilité.
+	
+	
+	\subsection{Cadre}
+	Cette section a pour objectif de contextualiser et de formaliser les problématiques auxquelles nous répondrons.
+	\subsubsection{Élaboration de la problématique}
+	Les zéros certifiés des fonctions D-finies, voilà une formulation qui mérite d'être expliquée plus en détails. Pour commencer, on appelle zéro d'une fonction un point de son domaine de définition où la fonction s'annule.
+	De plus, une fonction D-finie est une fonction satisfaisant une équation différentielle linéaire à coefficients polynomiaux, de la forme
+	\[a_{r}(z)y^{(r)}(z)+a_{r-1}(z)y^{(n-1)}(z)+...+a_{0}(z)y(z)=0, \hspace{3mm} a_{k}\in \mathbb{C}[z],\]
+	où $\mathbb{C}[z]$ est l'anneau des polynômes à coefficients dans $\mathbb{C}$ et $y^{(n)}(z)$ représente la dérivée n-ième de la fonction $y$. On peut parler de l'ensemble des fonctions D-finies (nous l'étudierons plus en détails dans la section \ref{sec:fonctionsD-finie}). 
+	
+	Maintenant, que nous en savons un peu plus sur les fonctions D-finies il s'agit de spécifier ce que l'on entend par certifier un zéro. Il est facile de certifier un zéro par équation, cependant l'objectif de ce stage est de certifier un zéro à partir d'une représentation informatique de la fonction D-finie $y$. Or, pour les fonctions D-finies il est souvent impossible d'avoir la valeur exacte de leur zéro. C'est par exemple le cas de la fonction $\sin$ qui vérifie l'équation différentielle
+	\[y^{(2)}(z)+y(z)=0.\]
+	Ses zéros sont les multiples de $\pi$, mais $\pi$ n'est pas un nombre rationnel, et l'on ne peut par définition avoir sa valeur exacte dans l'ensemble des nombres rationnels. Donc, on ne peut avoir une valeur exacte de ces nombres avec une représentation informatique flottante qui est un nombre rationnel. Si l'on ne peut avoir une valeur exacte, on peut néanmoins approcher à une précision donnée tous les réels par des rationnels. Cependant, pour certifier un zéro, comme toute distance est relative il ne sert à rien d'en être "proche", si ce mot a encore un sens. Ce que nous appellerons un zéro certifié sera un résultat informatique pour lequel il existe un algorithme qui permet, à partir de ce résultat de se rapprocher à une précision donnée du zéro théorique. Nous développerons la forme de ce résultat dans l'équation \eqref{intersect} et dans la partie algorithmique (algorithme \_certification-zéros\_).
+	
+	Il reste encore des points à éclaircir, en effet une fonction méromorphe peut contenir une infinité de zéros dans $\mathbb{C}$, alors le calcul informatique prendrait un temps infini. Il faut donc pour cela se restreindre à un compact, sur lequel le nombre de zéros est fini, cette propriété sera démontrée dans le rapport.
+	
+	Plus particulièrement, l'objet de ce stage est de trouver les zéros réels des fonctions D-finies à coefficients polynomiaux dans $\mathbb{R}[z]$, l'anneau des polynômes à coefficients réels. Nous traiterons des intervalles compacts de la forme $[a,b]$. En plus, on ajoutera la condition que la fonction n'admet aucune singularité sur l'intervalle $[a,b]$.
+	Bien que ce cadre semble être très précis, les théorèmes utilisés sont dans $\mathbb{C}$. Les algorithmes pourraient sans trop de complications être généralisés dans $\mathbb{C}$.
+	\\
+	
+	Pour résumer, nous aurons une fonction D-finie $f$ satisfaisant une équation différentielle linéaire à coefficients polynomiaux dans $\mathbb{R}[z]$. Notre objectif sera de trouver tous les zéros réels de $f$ dans un intervalle $[a,b]$ ne contenant aucune singularité de $f$. Nous devrons trouver une façon pertinente de renvoyer un zéro certifié de la fonction.
+	
+	\subsubsection{Plan du rapport}
+	\label{subsubplanrapport}
+	La section \ref{sec:fonctionsD-finie} introduira les notions dont nous aurons besoin, elle rappellera les propriétés des fonctions D-finies qui nous seront utiles. Elle expliquera l'apparition des singularités à partir de l'équation différentielle.
+	
+ 	La section \ref{sec:serie-maj} sera sur les séries majorantes, elle montrera l'intérêt de ces séries pour évaluer numériquement notre fonction D-finie. Elle présentera aussi la méthode de Marc Mezzarobba \cite{Mezzarobba2019} pour obtenir des séries majorantes dans sageMath (le logiciel informatique dans lequel est écrit notre code).
+ 	
+	La section \ref{sec:outils} donnera les outils que nous utiliserons dans nos algorithmes. Elle expliquera la méthode de bissection-exclusion \cite{DBLP:journals/jc/Yakoubsohn05} permettant de localiser des intervalles ne contenant pas de zéro. Elle définira aussi une méthode permettant de localiser et de certifier les zéros réels de la fonction. Cette partie répondra aux trois questions:
+	
+		(1) Comment certifier un zéro? \\
+		
+		(2) Quel résultat renvoyer?\\
+		
+		(3) Comment savoir si l'on a trouvé tous les zéros de la fonction sur l'intervalle?\\
+
+	Nous verrons qu'il faudra reformuler notre problématique et distinguer les cas selon la multiplicité des zéros (cf. définition \ref{multiplicité}). Les méthodes introduites dans cette partie ne permettront pas de certifier les zéros de multiplicité supérieur à 1.
+	
+	La section \ref{sec:algorithme} contiendra nos algorithmes ainsi que des preuves de leur fonctionnement.
+	
+	Notre code a été développé sur sage: \url{https://www.sagemath.org/}
+	
+	\section{Les fonctions D-finies}
+	\label{sec:fonctionsD-finie}
+	Cette section énonce quelques propriétés des fonctions D-finies, de sorte à donner des notions fondamentales au lecteur non familier avec cet ensemble de fonctions. Les preuves des théorèmes ne sont pas toujours présentées ici, mais le sont dans l'article de Stanley \cite{stanley1980differentiably}  et dans le livre \textit{Algorithmes efficaces en calcul formel} \cite[chap.14]{aecf-2017-livre}. 
+	\\
+	On dénotera dans la suite $\mathbb{K}[z]$ les polynômes à une variable sur le corps $\mathbb{K}$, les deux corps sur lesquels nous travaillerons dans ce rapport seront $\mathbb{Q}$, $\mathbb{R}$ et $\mathbb{C}$. On dénotera aussi $\mathbb{K}((z))$, le corps des séries de Laurent à coefficients dans $\mathbb{K}$ et $\mathbb{C}(z)$ le corps des fractions rationnelles polynomiales. Nous appellerons l'ensemble des fonctions D-finies $\mathbb{D}$. On traitera parfois avec des polynômes à deux variables et l'on notera $\deg_{\mu}(P)$ le degré en $\mu$ du polynôme P.
+	
+	\begin{definition}
+		Soit $f(x)=\sum_{k\geq n_0}f(n)x^n$ une série de Laurent sur le corps $\mathbb{C}$, $f$ est dite  D-finies si elle satisfait une équation différentielle de la forme
+		\begin{equation}
+		a_{r}(z)y^{(r)}(z)+a_{n-1}(z)y^{(n-1)}(z)+...+a_{0}(z)y(z)=0, \hspace{3mm} a_{k}\in \mathbb{C}[z].
+		\label{diff_eq}
+		\end{equation}
+	\end{definition}
+	
+	
+	\subsection{Les suites P-récursives et les opérateurs}
+	\label{subsec:P-recursives}
+	 Nous verrons dans le paragraphe suivant le lien entre les fonctions D-finies et les suites P-récursives. Avant cela, il faut introduire quelques notions, notamment la notion d'opérateur sur les suites et les séries.
+	 
+	\begin{definition}
+		Une fonction $f:\mathbb{N}\rightarrow \mathbb{C}$ est dite P-récursive s'il existe un nombre fini de polynômes dans $\mathbb{C}[z]$, $P_0(n),...,P_d(n)$ avec $P_d$ non nul, tels que pour tout $n\in \mathbb{N}$,
+		\begin{equation}
+		P_d(n)f(n+d)+P_{d-1}(n)f(n+d-1)+...+P_0(n)f(n)=0.
+		\label{rec_eq}
+		\end{equation}
+		Et par abus de notation nous dirons qu'une suite est P-récursive, en considérant les suites comme des fonctions $f:\mathbb{N} \rightarrow \mathbb{C}.$
+	\end{definition}  
+
+	L'équation \eqref{rec_eq} donne une expression de $f(n+d)$ en fonction de $f(n+d-1), ...,f(n)$ (si $P_d(n)$ n'est pas nul). On peut, connaissant $f(0),...,f(d-1)$ calculer rapidement les valeurs $f(n) \, , n \geq d$  à partir d'algorithmes utilisant le scindage binaire introduit dans la thèse de Marc Mezzarobba \cite[chap.6]{Mezzarobba2011}.
+	
+	\vspace{7mm}
+	
+	On introduit ici la notion d'opérateur différentiel et séquentiel. On peut considérer l'équation différentielle \eqref{diff_eq} satisfaite par $y$ comme l'application d'un opérateur sur cette fonction. On écrira l'opérateur de différentiation $\frac{\partial}{\partial z}$ vérifiant $\frac{\partial}{\partial z}\cdot y(z)=y'(z)$ et l'opérateur de multiplication par $z$, $z$ vérifiant aussi $z \cdot y(z)=zy(z)$. Finalement, notre opérateur différentiel est un polynôme en $z$ et $\frac{\partial}{\partial z}$, donc un polynôme à deux variables, on l'écrira $\mathcal{D}\big(z,\frac{\partial}{\partial z}\big)$ ou $\mathcal{D}(x,Dx)$, selon si $y$ est une fonction D-finie de $\mathbb{C} \rightarrow\mathbb{C}$ ou de $\mathbb{R}\rightarrow\mathbb{R}$. Par exemple, l'opérateur différentiel correspondant à l'équation \eqref{diff_eq} est
+	\[\mathcal{D}\Big(z,\frac{\partial}{\partial z}\Big)=a_r(z)\frac{\partial}{\partial z}^r+a_{r-1}(z)\frac{\partial}{\partial z}^{r-1}+...+a_0(z).\]
+	De la même manière on peut considérer l'équation de récurrence \eqref{rec_eq} comme l'application d'un opérateur sur les fonctions $f:\mathbb{N}\rightarrow \mathbb{C}$. On introduit l'opérateur $S_n$ vérifiant $S_n\cdot f(n)=f(n+1)$ et l'opérateur de multiplication par $n$ vérifiant $n \cdot f(n)=nf(n)$. On a une fois encore un polynôme à deux variables, on l'écrira $\mathcal{R}(n,S_n)$. Et donc l'opérateur de récurrence correspondant à l'équation \eqref{rec_eq} est 
+	\[\mathcal{R}(n,S_n)=P_d(n)S_n^d+P_{d-1}(n)S_n^{d-1}+...+P_0(n).\]
+	Pour terminer, on introduit l'opérateur $\theta$, tel que $\theta \cdot y(z)= z y'(z)$. En remarquant que l'on ne change pas les solutions de l'équation différentielle \eqref{diff_eq} en la multipliant par $z^{\nu}$, l'espace des solutions de \eqref{diff_eq} est le même que l'espace des solutions de
+	\[z^{\nu}\big(a_{r}(z)y^{(r)}(z)+a_{n-1}(z)y^{(n-1)}(z)+...+a_{0}(z)y(z)\big)=0, \hspace{3mm} a_{k}\in \mathbb{C}[z].\]
+	Pour un $\nu$ convenable, on peut réécrire cette équation avec l'opérateur $\theta$
+	\[p_r(z)\theta^r(y(z))+p_{r-1}(z)\theta^{r-1}(y(z))+...+p_0(z)y(z),\]
+	autrement dit,
+	\[z^{\nu}\mathcal{D}\big(z,\frac{\partial}{\partial z}\big)=\overset{\sim}{\mathcal{D}}\big(z,\frac{\partial}{\partial z}\big).\]
+	L'opérateur $\theta$ a un intérêt algorithmique, plus que théorique. 
+	
+	\begin{remarque}
+		Il y a un lien entre les opérateurs $\theta$, $\frac{\partial }{\partial z}$ et $S_n$. Pour une fonction $F(z)=\sum_{n\geq 0}f(n)z^n$, on a
+		\[\mathcal{D}\big(z,\frac{\partial}{\partial z}\big)\cdot F \sim \mathcal{D}(S_n^{-1},(n+1)S_n) \cdot f,\]
+		\[\mathcal{D}(z,\theta\big)\cdot F\sim\mathcal{D}(S_n^{-1},n)\cdot f,\]
+		où le symbole $\sim$ signifie que l'opérateur de récurrence est vrai à partir d'un certain rang $n_0 \in \mathbb{N}$.
+	\end{remarque}
+	
+	Une formalisation plus rigoureuse des opérateurs est faite dans la section 3 de la thèse de Marc Mezzarobba \cite{Mezzarobba2011}.
+	
+	\subsection{Propriétés des fonctions D-finies}
+	\begin{theorem}
+		Soit $y$ une fonction de classe $\mathcal{C}^{\infty}$, $y$ est D-finie si et seulement si l'espace vectoriel engendré par $(y^{(n)})_{n \in \mathbb{N}}$ est de dimension finie sur le corps $\mathbb{C}(z)$.
+	\end{theorem}
+	C'est d'ailleurs sous cette deuxième caractérisation qu'ont été introduites les fonctions D-finies signifiant ``differentiably-finite". Ce point n'est que pour la culture, car ce théorème ne sera pas utilisé dans la suite.
+	\begin{theorem}
+		Soient $f:\mathbb{N}\rightarrow \mathbb{C}$ et $g:\mathbb{N}\rightarrow \mathbb{C}$ des fonctions telles que pour un certain $n_0 \in \mathbb{N}$, $f(n)=g(n) \hspace{3mm} \forall n\geq n_0$, alors si $f$ est P-récursive alors g l'est aussi.   
+		\label{rec_rest}
+	\end{theorem}
+   \vspace{3mm}
+	\begin{proof}[Preuve]
+		Soient $f$ et $g$ des fonctions telles que $f(n)=g(n)$, $\forall n$, $n\geq n_0$. Soit l'equation de récurrence de $f$,
+		\[P_d(n)f(n+d)+P_{d-1}(n)f(n+d-1)+...+P_0(n)f(n)=0\]
+		alors g vérifie l'équation de récurrence
+		\[\Pi_{n_0}(n)\Big(P_d(n)g(n+d)+P_{d-1}(n)g(n+d-1)+...+P_0(n)g(n)\Big)=0,\]
+		où $\Pi_{n_0}(n)=\prod_{k=0}^{n_0-1}(n-k)$.
+	\end{proof}
+	
+	L'intérêt de ce théorème apparaîtra par la suite. Nous devons d'abord introduire le lien entre récurrence polynomiale et équation différentielle polynomiale, qui est une conséquence de la remarque (1).
+	Voici le théorème le plus utile sur les fonctions D-finies.
+	
+	\begin{theorem}
+		Soit $F$ une série formelle s'écrivant $\sum_{n \geq 0} f(n)z^n$ on a l'équivalence
+		
+		(i) $F$ est une série D-finie.
+		
+		(ii) La suite $(f(n))_{n\in \mathbb{N}}$ est P-récursive.
+		
+		\label{diff_req}
+		
+	\end{theorem}
+	
+	
+	 La démonstration de ce théorème se trouve dans l'article de Stanley \cite{stanley1980differentiably}. Mais nous allons donner une esquisse de démonstration qui utilise les opérateurs introduits dans le paragraphe précédent.
+	 
+	 \begin{proof}[Preuve] (Esquisse)
+	 	En écrivant $F(z)=\sum_{n \geq 0} f(n)z^n$ on observe que
+	 	\[\mathcal{D}\big(z,\frac{\partial}{\partial z}\big)\cdot (F)=0\]
+	 	implique que  
+	 	\[\Pi_{n_0}(n)\mathcal{D}(S_n^{-1},(n+1)S_n)\cdot (f) =0,\]
+	 	 où $\Pi_{n_0}(n)=\prod_{k=0}^{n_0}(n-k)$, la multiplication par $\Pi_{n_0}(n)$ permet de s'affranchir de la récurrence sur les coefficients négatifs, alors $n_0$ est la différence entre le degré maximal en $S_n$ et le degré minimale en $S_n$ de l'opérateur $\mathcal{D}(S_n^{-1},nS_n)$. Si l'on compose suffisamment de fois par $S_n$ l'égalité ci dessus, on aura bien que $(u_n)_{n \in \mathbb{N}}$, $u_n=f(n)$ est une suite P-récursive.
+	 \end{proof}
+
+	Maintenant, nous savons à partir du théorème \ref{diff_req} qu'il y a une correspondance entre les équations différentielles linéaires à coefficients polynomiaux et les suites P-récursive. L'esquisse de la démonstration est une méthode pour passer d'une formulation à l'autre. Le théorème \ref{rec_rest} permet d'assurer que le reste d'une série D-finie à l'ordre $k$ est encore une série D-finie.
+	
+	\subsection{Structure des fonctions D-finies}
+	
+	On a déjà introduit quelques opérateurs sur les séries D-finies. Mais on va ici s'intéresser à la structure de $\mathbb{D}$.
+	\begin{proposition}
+		$\mathbb{D}$ est une sous algèbre de $\mathbb{C}$.
+	\end{proposition}
+	Autrement dit, $(\mathbb{D},+,\cdot)$ est un espace vectoriel sur $\mathbb{C}$ et $\mathbb{D}$ est stable par multiplication interne.
+	\begin{proposition}
+		Les fonctions algébriques sont D-finies. 
+	\end{proposition}
+	La classe des fonctions D-finies représente une quantité importante des équations différentielles auxquelles sont confrontés les physiciens et mathématiciens. Ainsi, le \textit{Handbook of Mathematical Functions} \cite{abramowitz1948handbook}, référence importante en physique, chimie et
+	mathématiques appliquées, comporte environ 60\% de fonctions solutions d’équations différentielles linéaires. Une partie des fonctions spéciales sont aussi D-finies.
+	\begin{proposition}
+		Si $f=\sum_{k \geq 0}u_kz^k$ et $g=\sum_{k \geq 0}v_kz^k$ sont des séries D-finies, alors le produit d'Hadamard $f \odot g=\sum_{k \geq 0}u_kv_kz^k$ est encore une série D-finie.
+	\end{proposition}
+	L'inverse d'une fonction D-finie n'est pas nécessairement D-finie. Un exemple simple est la fonction cosinus, cosinus est D-finie, mais son inverse ne l'est pas.
+	On peut s'en convaincre en observant que la fonction tangente n'est pas D-finie, et en écrivant sa dérivée $1+ \frac{\sin^2}{\cos^2}$.
+	Une discussion plus complète est faite dans le livre \textit{Algorithmes efficaces en calcul formel} \cite{aecf-2017-livre}.
+	
+	\noindent\textbf{}
+	\subsection{Théorème de Perron-Kreuser}
+	Ce théorème est très éclairant, et montre le lien entre l'équation de récurrence et la forme des solutions. Il permet aussi de comprendre l'apparition des singularités. Cependant, il n'est pas essentiel à la compréhension du rapport. Un lecteur pressé pourra aller directement au chapitre suivant.
+	
+	Le théorème de Perron-Kreuser  porte sur le comportement asymptotique des suites P-récursive. Nous allons voir qu'il permet d'introduire la notion de  singularité et de savoir quels types d'équations différentielles seront admissibles par notre algorithme. 
+	
+	Nous retrouvons ce théorème dans la section 3.4 de la thèse de Marc Mezzarobba \cite{Mezzarobba2011}.
+	On considère la suite P-récursive $u_n$ caractérisée par
+	\begin{equation}
+		b_{s}(n)u_{n+s}+b_{s-1}(n)u_{n+s-1}+...+b_{s'}(n)u_{n+s'}=0.
+		\label{rec_equ}
+	\end{equation} 
+	Supposons que les coefficients $b_{n}(n)$ de l'équation \eqref{rec_equ} (où $s'$ peut être négatif) ont un comportement asymptotique de la forme
+	\[\forall k, \hspace{2mm} b_{k}(n) \sim c_{k}n^{d_{k}} \hspace{2mm} \text{quand } n \rightarrow \infty,\]
+	avec $c_{k} \in E$ et $d_{k} \in \mathbb{Z}$. Supposons de plus que $u_{n}$ est une solution telle que  
+	\[\frac{u_{n+1}}{u_{n}}\sim \lambda n^{\kappa} \hspace{2mm} \text{quand }n \rightarrow \infty.\]
+	
+	\noindent En réécrivant l'équation séquentielle avec ses coefficients asymptotiques $n \rightarrow \infty$, on a
+	\[u_{n+s'}\Big(c_{s}\lambda^{s} n^{d_{s}+s\kappa}+c_{s-1}\lambda^{s-1} n^{d_{s-1}+(s-1)\kappa}+...+c_{s'}\lambda^{s'} n^{d_{s'}+s'\kappa}\Big).\]
+	Cette expression doit s'annuler d'après l'équation \eqref{rec_equ}, il est alors nécessaire que les termes asymptotiquement dominants se compensent, et donc que l'exposant $d_{k}+k\kappa$ le plus grand, soit atteint au moins deux fois. Alors $-\kappa$ doit être parmi les pentes du \textit{polygone de Newton} de l'équation.
+	
+	\begin{definition} Le polygone de Newton est l'enveloppe convexe supérieure des points $(k, d_{k}) \in \mathbb{N}^{2}$, si $E=[A,B]$ désigne une arête du polygone de Newton, on note $\kappa(E)$ l'opposé de sa pente, et on définit l'équation caractéristique associée à E (ou à $\kappa(E))$ par
+		\[\chi_{E}(\lambda)=\sum_{(k,d_{k}) \in E} c_{k}\lambda^{k-t},\]
+		où $(t,d_{t})=A$, l'extrémité gauche du segment E.
+	\end{definition}
+	
+	Remarquons que la somme des degrés des différentes équations caractéristiques est égale à l'ordre de l'équation de récurrence. On peut retrouver la démonstration du point (a) de ce théorème dans un article d'Henri Poincaré \cite{hp1885aj}. La démonstration générale utilise le théorème de Perron sur les suites matricielles.
+	\begin{theorem} (Perron-Kreuser)
+		Pour toute arête E du polygone de Newton de la récurrence \eqref{rec_equ} notons $\lambda_{E_{1}},\lambda_{E_{2}},...$ les racines de $\chi(E)$ comptées avec leur multiplicité.
+		
+		(a) Supposons que pour toute arête E, les modules $|\lambda_{E_{i}}|$ des racines de $\chi(E)$ sont deux à deux
+		
+		distincts. Alors toute solution non ultimement nulle de \eqref{rec_equ} satisfait
+		\[\frac{u_{n+1}}{u_{n}}\sim \lambda_{E_{i}}n^{\kappa(E)} \hspace{2mm} \text{quand } n \rightarrow \infty\]
+		
+		Pour une certaine arête E et un certain i.
+		
+		(b) Si en outre \eqref{rec_equ} est réversible (que $b_0$ ne s'annule pas sur $\mathbb{N}$) , elle admet une base de solution 
+		\[(u_{n}^{[E_{i}]})_{E_{i}\leq i \leq \deg \chi_{E}}\]
+		
+		telle que 
+		\[\frac{u_{n+1}^{[E_{i}]}}{u_{n}^{[E_{i}]}}\sim \lambda_{E_{i}} n^{\kappa(E)} \hspace{2mm} \text{quand } n \rightarrow \infty.\]
+		
+		(c) Dans le cas où il existe E et $i \neq j$ tels que $|\lambda_{E_{i}}|=|\lambda_{E_{j}}|$ les analogues des deux assertions
+		
+		précédentes subsistent mais avec la conclusion plus faible
+		\[\limsup_{n \rightarrow \infty } \big|\frac{u_{n}^{E_{i}}}{n!^{\kappa(E)}}\big|^{\frac{1}{n}}=|\lambda_{E_{i}}|.\]
+		\label{Per_Kreu}
+	\end{theorem}
+	\noindent Le point (a) du théorème \ref{Per_Kreu} s'appelle aussi \textit{théorème de Poincaré} \cite{hp1885aj}. 
+	
+	\subsubsection{Distance aux singularités}
+	\label{subsubsingularité}
+	\begin{definition}
+		On appelle singularité de $f$ une fonction D-finie un point de $\mathbb{C}$ où la fonction est mal définie.
+	\end{definition}
+	
+	Rappelons la formule de Cauchy-Hadamard, pour $f(z)=\sum_{n\geq0}u_kz^k$ son rayon de convergence $R$ satisfait l'équation
+	\begin{equation}
+		\limsup_{n\rightarrow \infty}|a_n|^{\frac{1}{n}}=\frac{1}{R}.
+		\label{Cauchy_Hadam}
+	\end{equation}
+	
+	À partir de la formule de Cauchy-Hadamard, on peut étudier les singularités de la fonction $f$ dont les coefficients satisfont l'équation de récurrence \eqref{rec_equ}.  
+	\vspace{3mm}
+	
+	\noindent\textbf{Cas 1} $(\kappa>0)$:\\
+	C'est à dire que dans l'équation \eqref{rec_equ} le degré du polynôme $b_s$ est strictement inférieur à un des degrés des polynômes $\deg(b_i)$, $0\leq i<s$, alors le rayon de convergence est nul puisque toutes les arêtes $E$ du polygone de Newton ont une pente positive. On est sur une singularité de $f$.
+	\vspace{3mm}
+
+	\noindent\textbf{Cas 2} $(\kappa<0)$:\\
+	C'est à dire que le degré du polynôme $b_s$ est strictement supérieur aux degrés des polynômes $\deg(b_i)$, $0 \leq i<s$, le rayon de convergence est $+\infty$ pour une partie au moins des solutions.
+	\vspace{3mm}
+	
+	\noindent\textbf{Cas 3} $(\kappa=0)$:\\
+ 	La plupart du temps le coefficient $\kappa$ de l'arête de droite sera nul, alors la distance à la singularité la plus proche est supérieure au minimum des inverses des racines de l'équation caractéristique du segment $E$ tel que $\kappa(E)=0$.
+ 	\vspace{3mm}
+	
+	L'article de Marc Mezzarobba et Bruno Salvy \cite{MezzarobbaSalvy2010} et la thèse de Marc Mezzarobba \cite{Mezzarobba2011} donnent une discussion beaucoup plus complète du lien entre les opérateurs et les singularités. L'article \cite{MezzarobbaSalvy2010} permet notamment de trouver une majoration des coefficients de la suite P-récursive $u_n$. Voici le théorème qu'il démontre.
+	
+	\begin{theorem}Soit $(u_{n})\in \mathbb{Q}^{\mathbb{N}}$ une suite P-récursive solution de la récurrence homogène \eqref{rec_equ}, avec $b_s(n) \neq 0$ et $b_0(n) \neq 0$ pour $n \in \mathbb{N}$. Étant donnée la récurrence \eqref{rec_equ} et les conditions initiales $u_{0},...,u_{s-1}$, il est possible de décrire un réel positif A, un rationnel $\kappa$, un nombre algébrique $\alpha$  et une fonction $\phi$ telle que
+	\[\forall n\in \mathbb{N}, \hspace{6mm}|u_{n}| \leq A n!^{\kappa}\alpha^{n}\phi(n)\]
+	Avec $\phi(n)=e^{o(n)}$. Pour choix générique des conditions initiales, les paramètres $\kappa$ et $\alpha$ sont optimaux. La fonction $\phi$ est donnée par une formule explicite.
+	\label{Th_maj}
+	\end{theorem}
+	
+	
+	
+	\section{Séries majorantes des fonctions D-finies}
+	\label{sec:serie-maj}
+	Cette partie a pour objectif d'introduire la notion de série majorante et d'introduire la méthode utilisée pour obtenir ces séries.
+	
+	\subsection{Les séries majorantes}
+	Nous avons vu que l'on pouvait calculer le développement en série de Taylor d'une fonction D-finie à partir de son équation de récurrence. Cependant l'ordinateur est incapable de calculer tous les coefficients de la série, on cherche donc à majorer la différence entre la fonction réelle et la fonction calculée par l'ordinateur. Il faut donc pouvoir majorer le reste de la série, un outil souvent utilisé est \textit{une série majorante}. L'obtention de cette série peut se faire à partir de \textit{l'équation majorante}. C'est ce qu'on appelle aussi, la méthode de Cauchy-Kovalevskaya \cite{van2001fast}.
+	
+	\begin{definition} Une série formelle v $\in \mathbb{R}_{+}[[z]]$ est appelée série majorante de $ u \in \mathbb{R}[[z]]$ si v domine u coefficient par coefficient, $\forall n$ $ |u_{n}|\leq v_{n}$, on note $u \unlhd v$.
+	\end{definition}
+	
+	\begin{proposition}(Équation majorante) Soient $u,u^{[1]},u^{[2]}\in \mathbb{R}[[x]]$, et $v,v^{[1]},v^{[2]} \in \mathbb{R}_{+}[[x]]$ tels que $u\leq v,u^{[1]}\leq v^{[1]}$ et $u^{[2]}\leq v^{[2]}$ alors
+		
+		(a) Le rayon de convergence de $v$ est inférieur à celui de $u$;
+		
+		(b) Si $\zeta$ appartient au disque de convergence de $v$, alors $|u(\zeta)|\leq v(|\zeta|)$;
+		
+		(c) On a les majorations
+		\[u' \unlhd v'; \hspace{6mm} u^{[1]}+u^{[2]}\unlhd v^{[1]}+v^{[2]}; \hspace{6mm}u^{[1]}u^{[2]}\unlhd v^{[1]}v^{[2]}; \]
+		
+		(e) Si $v^{[1]}(0)=0$ alors $ u^{[2]} \circ u^{[1]} \unlhd v^{[2]}\circ v^{[1]}$.
+	\end{proposition}
+
+	\noindent La démonstration de ces propriétés se trouve dans l'article \cite{hille1997ordinary}.
+	
+	\vspace{4mm}
+	
+	
+	Numériquement, il est intéressant de travailler avec les séries majorantes sur les restes des séries. En récupérant une série majorante sur le reste à l'ordre $k$. Soit $f$ un série D-finie telle que 
+	\[f(z)=\sum_{i=0}^{k}u_iz^i+\sum_{i \geq k+1}u_iz^i,\]
+	en appelant $M$ une série majorante du reste à l'ordre $k$, on a alors
+	\[|f(z)-\sum_{i=0}^{k}u_iz^i| \leq \sum_{k\geq k+1}|u_k||z|^k \leq M(|z|).\]
+	Nous pouvons donc avoir une majoration de l'incertitude sur la fonction théorique.
+	
+	\subsection{Séries majorantes sur le reste de fonctions D-finies}
+	
+	Plusieurs méthodes d'obtention de séries majorantes ont été étudiées. En effet, des séries majorantes beaucoup plus précises peuvent être trouvées, notamment celles de la forme du théorème \ref{Th_maj} de l'article \cite{MezzarobbaSalvy2010}. Les séries majorantes de la forme
+	\begin{equation}
+		\frac{A}{(1-\alpha z)^\lambda}
+		\label{maj_1}
+	\end{equation}
+	ont été étudiées par Joris van der Hoeven  \cite{van2001fast}. Une méthode simple d'obtention d'un majorant de la forme \eqref{maj_1} est expliquée dans le rapport de stage de Thomas Grégoire \cite{gregoire2012certified}. Nous n'expliquerons ici que la méthode de majoration de Marc Mezzarobba proposée dans l'article HAL \cite{Mezzarobba2019} pour la bibliothèque Ore\_algebra de sage.
+	
+	\vspace{4mm}
+	
+	Toutes les méthodes (explorées pendant ce stage) pour trouver des séries majorantes reposent sur le théorème de \textit{l'équation majorante}.
+	
+	\begin{theorem}(Équation majorante)
+		Soient $u$ et $v$ deux fonctions analytiques solutions des équations différentielles
+		\[u^{(r)}=a^{[r-1]}u^{(r-1)}+...+a^{[0]}u,\]
+		\[v^{(r)}=b^{[r-1]}v^{(r-1)}+...+b^{[0]}v,\]
+		pour des fonctions méromorphes $(a^{[i]})_{i=0}^{r-1}$ et $(b^{[i]})_{i=0}^{r-1}$ satisfaisant 
+		\[a^{[i]} \unlhd b^{[i]}, \hspace{4mm} i=0...r-1,\]
+		si de plus, aucune de ces fonctions a une singularité en 0 et
+		\[|u^{(i)}(0)|<v^{(i)}(0),\hspace{4mm} i=0...r-1,\] 
+		alors $u\unlhd v$.
+	\end{theorem}
+	\noindent La démonstration de ce théorème se trouve dans le chapitre 2 du livre de Carl Einar Hille \cite{hille1997ordinary}.
+	
+	La méthode d'obtention est alors de  trouver une équation majorante, puis de la résoudre avec des conditions initiales majorant les conditions initiales de la série qu'on veut majorer. C'est pour cela qu'il est pratique d'utiliser des séries majorantes de la forme \eqref{maj_1} qui sont des solutions d'équations différentielles d'ordre 1.
+	
+	\subsubsection{Restes et résidus}
+	Nous voulons avoir une série majorante du reste de l'équation différentielle, intéressons nous à l'équation différentielle que satisfait ce reste.\\
+	On considère l'équation différentielle
+	\begin{equation}
+	P(z,\theta) \cdot u(z)=\big[\theta^{r}p_r(z)+\theta^{r-1}p_{r-1}(z)+...+p_0(z)\big]\cdot u(z)=0.
+	\label{Eqdiff}
+	\end{equation}
+	Les polynômes $p_0,p_1,...,p_r$ peuvent être considérés premiers entre eux sans perte de généralité. Soit
+	\[\overset{\sim}{u}(z)=\sum_{n=0}^{N-1}u_n z^n\hspace{2mm}\text{avec}\hspace{2mm}u(z)-\overset{\sim}{u}(z)=R_u^{N}(z)\] 
+	alors, 
+	\[  P(z,\theta) \cdot [u(z)-\overset{\sim}{u}(z)]=P(z,\theta)\cdot \overset{\sim}{u}(z)=q(z),\]
+	où $q(z)$ est de la forme $q_Nz^N+...+q_{N+s}z^{N+s}$ et $s= \deg_{z}P(z,\theta)$. La raison pour laquelle ce polynôme commence à $N$ vient de l'observation que 
+	$P(z,\theta)\cdot R_u^{N}$ est de degré minimale supérieur à $N$. Et qu'il soit de degré $N+s$ de ce que $P(z,\theta)\cdot\overset{\sim}{u}(z)$ est de degré $N+s$.
+	\subsubsection{L'équation majorante}
+	On pose
+	\[y(z)=p_r(z)(u(z)-\overset{\sim}{u}(z)).\]
+	Supposons que $p_r(0) \neq 0$, c'est à dire qu'on soit sur un point régulier (pas sur une singularité), on a alors 
+	\[\mathcal{L}(z,\theta)\cdot y(z)=\Big[\theta^{r}+\frac{\theta^{r-1}p_{r-1}(z)+...+p_0(z)}{p_r(z)}\Big]\cdot y(z)=q(z).\]
+	On réécrit $\mathcal{L}(z,\theta)$ en développant $p_r^{-1}$ en série entière et en réarrangeant les termes
+	\[\mathcal{L}(z,\theta)=\sum_{j\geq 0} Q_{j}(\theta)z^j.\]
+	Comme $p_r(0)\neq 0$, la série entière est à coefficients positifs, donc le polynôme $Q_0$ est de degré $r$, et pour $j \geq 1$, le degré des polynômes est inférieur à $r-1$.
+	En repassant l'équation sous forme séquentielle, on a 
+	\[L(S_n^{-1},n)\cdot (y_n)_{n \in \mathbb{Z}}=\sum Q_j(n)S_n^{-j} \cdot  (y_n)_{n \in \mathbb{Z}} =(q_n)_{n \in \mathbb{Z}},\]
+	alors
+	\begin{equation}
+		y_n=\frac{q_n-\sum_{j\geq1}Q_j(n)y_{n-j}}{Q_0(n)}= \frac{1}{n}\Big[\frac{nq_n}{Q_0(n)}-\sum_{j\geq1}\frac{nQ_j(n)y_{n-j}}{Q_0(n)}\Big].
+		\label{y_n}
+	\end{equation}
+	Avec ce qui a été dit précédemment, les coefficients $nq_n/Q_0(n)$ et $nQ_j(n)/Q_0(n)$ sont bornés.
+	Supposons qu'on ait $\hat{q}_n$ et $\hat{a}_n$ bornées aussi telles que
+	\begin{equation}
+	|nq_n/Q_0(n)|\leq \hat{q}_n,  \hspace{4mm}\forall n\geq n_0,
+	\label{maj1}
+	\end{equation}
+	\begin{equation}
+	|nQ_j(n)/Q_0(n)|\leq \hat{a}_n,\hspace{3mm}  \forall n\geq n_0, \hspace{2mm} j\geq 1,
+	\label{maj2}
+	\end{equation}
+	avec $\hat{a}_j=O(\alpha^j)$ pour un certain $\alpha$ quand $j \rightarrow \infty$. On peut alors déduire de \eqref{y_n}
+	\begin{equation}
+	y_n\leq|\hat{y}_n|=\frac{1}{n}\Big(\hat{q}_n+\sum_{j\geq1}\hat{a}_{n}\hat{y}_{n-j}\Big).
+	\label{majrec}
+	\end{equation}
+	Dans ce cas, si 
+	\begin{equation}
+	|y_n|\leq \hat{y}_n \hspace{3mm} \forall n, \hspace{2mm} n<n_0,
+	\label{maj3}
+	\end{equation}
+	$\hat{y}_n$ est une série majorante de $y_n$. En traduisant l'équation \eqref{majrec} en équation différentielle, on obtient
+	\begin{equation}
+	[\theta-\hat{a}(z)] \hat{y}(z) = \hat{q}(z) \hspace{3mm} \text{où} \hspace{3mm} \hat{a}(z)=\sum_{j \geq 1} \hat{a}_iz^j,
+	\label{majEqdiff}
+	\end{equation}
+	$\hat{a}$ est bien définie car $\hat{a}_j=O(\alpha^j)$, $j \rightarrow \infty$. Cette équation différentielle est \textit{l'équation de majorante} associée à l'équation différentielle \eqref{Eqdiff}.\\
+	On peut écrire une solution générale de l'équation différentielle \eqref{majEqdiff} 
+	\begin{equation}
+	\hat{y}(z)=h(z)\Big(c+\int_{0}^{z}\frac{w^{-1}\hat{q}(w)}{h(w)}\, \mathrm{d}w\Big), \hspace{4mm} h(z)=\exp\Big(\int_{0}^{z}w^{-1}\hat{a}(w)\, \mathrm{d}w\Big),
+	\end{equation}
+	où c est un nombre complexe. Il faut maintenant choisir les paramètres $\hat{a}$, $\hat{q}$ et c afin que les inégalités \eqref{maj1},\eqref{maj2},\eqref{maj3} soient respectées. On aura alors une série majorante de $R_u^{N}$. La méthode de recherche de ces paramètres est dans \cite{Mezzarobba2019}.
+	
+	\begin{proposition}
+		Pour une équation différentielle de la forme \eqref{majEqdiff}, il existe une équation majorante d'ordre 1 de cette équation.
+		\label{Majord1}  
+	\end{proposition}
+	\begin{proof}[Preuve]
+		
+	\end{proof}
+	
+	
+	
+	\section{Les outils pour rechercher des zéros}
+	\label{sec:outils}
+	Remarquons que l'on peut différencier les zéros par leur multiplicité, c'est ce que nous ferons dans cette section.
+	
+	\begin{definition}
+		Soit $f$ une fonction analytique en $\zeta$ et $\zeta$ un zéro de $f$. On appelle ordre ou multiplicité du zéro $\zeta$ l'unique entier $m \in \mathbb{N}$ tel que 
+		\begin{equation}
+		\begin{array}{ccc}
+		\forall k<n, \hspace{4mm} f^{(k)}(\zeta)=0,\\
+		f^{(m)}(\zeta)\neq 0.
+		\end{array}
+		\end{equation}
+		\label{multiplicité}
+	\end{definition}
+	
+	Dans cette section, nous allons répondre aux trois questions de l'introduction. Dans la première sous-section, nous répondrons à la question: Comment savoir si l'on a trouvé tous les zéros de la fonction sur l'intervalle? Il montrera une méthode permettant d'exclure des zones qui ne contiennent pas de zéros.
+	
+	La  deuxième sous-section aura pour objectif de répondre à la question: Comment certifier un zéro? On introduira un théorème permettant de compter les zéros sur une partie de $\mathbb{C}$, dans notre cas ce sera un segment. La forme renvoyée pour nos zéros sera aussi sous forme de segment, elle répondra en partie à la question: Quel résultat renvoyer? Pour obtenir ces théorèmes nous nous sommes inspirés de la théorie alpha de Smale présentée dans le livre de Dedieu \cite{dedieu2006points}.
+	
+	Ce qui a été fait dans les parties précédentes aura son importance ici. Plus particulièrement, les propriétés des séries majorantes seront utilisées dans nos théorèmes.
+	
+	\begin{remarque}
+		Lorsque nous dirons qu'un fonction $f$ est analytique en $\zeta$ cela signifiera que la fonction est analytique sur un voisinage de $\zeta$.
+	\end{remarque}
+
+	\subsection{La méthode de bissection-exclusion}
+	\label{subsec:bissectop}
+	L'objectif de cette méthode est de certifier qu'il n'y a pas de zéro dans un intervalle.
+	Cette méthode n'est pas nouvelle, elle a premièrement été introduite dans un article de Weyl en 1924 \cite{weyl1924randbemerkungen}, Henrici et Gargantini ont étudié sa complexité pour le cas polynomial dans un article de 1969 \cite{henrici1969uniformly}. Et finalement J.C. Yakoubsohn l'a étudiée dans le cas des fonctions analytiques en 2005 \cite{DBLP:journals/jc/Yakoubsohn05}.
+	
+	\begin{definition}Soit $f$ une fonction analytique et non nulle en $x$, alors pour $t$ tel que $|t|$ soit inférieur au rayon de convergence de la série
+		\[f(x+t)=\sum_{k\geq0} \frac{f^{(k)}(x)}{k!}t^{k}.\] 
+		On définit \[M(f,x)(t)=|f(x)|-\sum_{k\geq1}\Big|\frac{f^{(k)}(x)}{k!}\Big|t^{k}.\]
+		\label{M}
+	\end{definition}
+	\vspace{3mm}
+	\begin{proposition}
+		Soit $f$ une fonction analytique, alors $M(f,x)$ vérifie 
+		\[\forall t \in \mathbb{R}, \hspace{3mm} M(f,x)(|t|) \leq |f(x+t)|.\]
+		\label{ineq_M}
+	\end{proposition}
+	\begin{proof} [Preuve]
+		C'est une conséquence directe des propriétés des séries majorantes.
+	\end{proof}
+	\begin{definition}
+		On définit la fonction $m:\mathcal{D}\times \mathbb{C}\rightarrow \mathbb{R}_+$ comme l'unique point $m(x)$ sur $\mathbb{R}_+$ tel que $M(f,x)(m(x))=0$.
+		Il existe et est unique si $|f(x)|>0$ et que $f$ n'est pas constante sur $\mathbb{R}$.
+		\label{m}
+	\end{definition} 
+	\vspace{3mm}
+	\begin{proposition}
+		La fonction $f$ ne s'annule pas sur l'intervalle $]x-m(x),x+m(x)[$.
+		\label{exc_prop}
+	\end{proposition}
+	\begin{proof}[Preuve]
+		Pour tout $t$ dans l'intervalle $]-m(x),+m(x)[$, 
+		\[f(x+t)\geq M(f,x)(|t|)>M(f,x)(m(x))=0.\]
+	\end{proof}
+	La partie négative de $M(f,x)$ peut être remplacée par une série majorante $M^1(f,x)$ quelconque et encore respecter ces propriétés. C'est ce que nous ferons concrètement sur ordinateur.\\
+	\begin{remarque}
+		Plus généralement les fonctions de la forme
+		\begin{equation}
+		M(f,x)(t)=\big|f(x)+tf'(x)+...+t^{n}f^{(n)}(x)\big|-M^{n+1}(f,x)(t),
+		\label{bis_maj}
+		\end{equation}
+		où $M^{n}(f,x)$ est la série  majorante du reste à l'ordre $n+1$ en $x$, peuvent aussi avoir leur intérêt. Bien qu'elles ne respectent pas forcément la propriété de stricte décroissance, si les $n$ premiers coefficients de la séries sont strictement positifs, alors on peut quand même assurer que la fonction a un unique zéro sur $\mathbb{R}_+$ et la proposition \ref{exc_prop} a une équivalence.
+	\end{remarque}
+	Dans la suite on parlera de $M(f,x)$ comme elle a été introduite dans la définition \eqref{M}. 
+	
+	\subsubsection{Convergence de la méthode dans le cas général}
+	Soit $f$ une fonction analytique sur un compact connexe $D$, dans notre cas une fonction D-finie.
+	
+	Commençons par rappeler brièvement les résultats obtenus dans l'article de J.-C. Yakoubsohn \cite{DBLP:journals/jc/Yakoubsohn05}. 
+	D'abord, il est démontré que la fonction $m$ de la définition \eqref{m} vérifie la propriété importante qu'il existe un réel $a$ tel que 
+	$a d(x,Z)<m(x)$ pour $x \in D$, où $d(x,Z)$ est la distance de $x$ au zéro le plus proche. Le $a$ dépend du compact connexe sur lequel on travaille. 
+	C'est cette propriété qui lui permet d'établir des résultats sur la convergence de l'algorithme et sur sa complexité.\\
+	Cependant ce résultat est sur la fonction théorique $M(f,x)$, comme nous l'avons dit précédemment, il n'est pas possible de manipuler la fonction théorique 
+	sur un ordinateur. Après une recherche infructueuse, nous n'avons pas réussi à établir de lien entre la distance $d(x,Z)$ et $\overset{\sim}{m}(x)$ où $\overset{\sim}{m}(x)$ est le point d'annulation de la fonction $\overset{\sim}{M}: t \rightarrow |f(x)|-M^1(f,x)(t)$, avec $M^{1}(f,x)$ une série majorante issue de la méthode de majoration de l'article \cite{Mezzarobba2019}.  
+	Les résultats de l'article de Yakoubsohn de 2005, n'ont pas pu être adaptés à notre algorithme de bissection-exclusion. Cependant, nous verrons une proposition beaucoup plus faible qui a le mérite d'assurer la convergence de l'algorithme de bissection-exclusion.
+	
+	\begin{proposition}
+		Soit $[a,b]$ un intervalle ne contenant aucune singularité de $f$. Quelles que soient les fonctions majorantes $M^k(f,x)$ du reste de $f$ à l'ordre $k$, il existe $A_k$ et $\alpha_k$ des réels strictement positifs tels que 
+		\[M^k(f,x)(t) \leq \frac{t^kA_k}{1-\alpha_k t} \hspace{5mm} \forall t \in \mathbb{R}_+,\hspace{1mm} \forall x \in [a,b].\] 
+		\label{Maj_maj}
+	\end{proposition}
+	\begin{proof}[Preuve]
+		Une façon intuitive de le comprendre est de voir le lien entre $\alpha$ et $d([a,b],S)^{-1}$, l'inverse de la distance de l'intervalle $[a,b]$ à la singularité la plus proche. Soit $\mathcal{D}(x,Dx)$ l'opérateur définissant notre espace de solutions.\\
+		Soit $f_i$ une solution de $\mathcal{D}(x,Dx)\cdot f_i=0$ pour les conditions initiales $f(0)=\delta_{i0},...,f^{(r-1)}(0)=\delta_{ir},$ où $\delta$ est le symbole de Kronecker. On peut avoir une série majorante $M_i$ d'une série majorante obtenue par la méthode de majoration de la partie 2.2 d'après la proposition \ref{Majord1}, on la notera $\overset{\sim}{M}(f_i,0)$. Avec
+		\[\overset{\sim}{M}(f_i,0) \unlhd  M_i:t\rightarrow\frac{A_i}{(1-\alpha_i t)^{\lambda_i}},\]
+		où $\lambda_i$, $A_i$ et $\alpha_i$ sont des réels strictement positifs. 
+		En définissant $f_x: t\rightarrow f(x+t)$, pour tout $x$, $f_x$ solution de $\mathcal{D}(x,Dx)\cdot f_x=0$ avec pour conditions initiales $f_x(0),...f_x^{(r)}(0)$, on a 
+		\[\overset{\sim}{M}(f_x,0) \unlhd \sum_{i=0}^{r} |f_x^{(i)}(0)| M_i\]
+		par linéarité de l'équation différentielle.
+		Comme $f$ est analytique sur $[a,b]$, $g: x\rightarrow\frac{f^{(i)}(x)}{i!}$ est continue sur le compact $[a,b]$. On pose
+		\[s_i=\sup_{x \in [a,b]} \Big|\frac{f^{(i)}(x)}{i!}\Big|.\]
+		Pour tout $x$ in $[a,b]$,
+		\[\overset{\sim}{M}(f_x,0) \unlhd \sum_{i=0}^{r}s_iM_i.\]
+		En réécrivant  $\sum_{k=0}^{r}s_iM_i$ avec leurs expression,
+		\[\sum_{k=0}^{r}s_iM_i(t)=\sum_{k=0}^{r}\frac{A_is_i}{(1-\alpha_i t)^{\lambda_i}}\]
+		et en posant $\lambda=\max_{i=0}^{r}\lambda_i$, $A=r\max_{i=0}^{r}A_is_i$ et $\alpha=\max_{i=0}^{r}\alpha_i$, on a 
+		\[\overset{\sim}{M}(f_x,0)(t) \unlhd t \rightarrow\frac{A}{(1-\alpha t)^{\lambda}} \hspace{4mm} \forall x \in [a,b], \hspace{2mm} t>0.\]
+		On veut majorer 
+		\[h(t)=\frac{A}{(1-\alpha t)^{\lambda}}\]
+		par une fraction rationnelle de la forme
+		\[g(t)=\frac{A'}{1-\alpha' t}.\]
+		Tous les coefficients de ces deux série sont strictement positifs, pour avoir une fois encore une série majorante il suffit que $\frac{h^{k}(0)}{g^k(0)}\leq 1$, $\forall k\geq0$. On écrit 
+		\[\frac{h^{k}(t)}{g^k(t)}=\frac{A}{A'}\Big(\frac{\alpha'}{\alpha}\Big)^k\frac{(1-\alpha' t)^k}{(1-\alpha t)^{\lambda+k}}\frac{\lambda^{\uparrow k-1}}{k-1!}\]
+		où $\lambda^{\uparrow k}=\prod_{i=0}^{k-1}(\lambda+i)$, en posant $\alpha'=\alpha/2$. On n'a plus qu'à se préoccuper de $t<\alpha/2$. On peut alors majorer l'expression par 
+		\[\frac{h^{k}(t)}{g^k(t)}\leq \frac{A}{A'}\frac{2^{\lceil\lambda\rceil-1}}{2^k}\frac{\lambda^{\uparrow k-1}}{k-1!}.\] 
+		On remarque que \[\frac{\lambda^{\uparrow k-1}}{k-1!}\leq \binom{\lceil \lambda \rceil +k-1}{k-1} \leq \frac{\big(\lceil \lambda \rceil +k-1\big)^{\lceil \lambda \rceil}}{\lceil \lambda \rceil!},\]
+		donc
+		\[\frac{h^{k}(t)}{g^k(t)}\leq \frac{A}{A'} \frac{\big(\lceil \lambda \rceil +k-1\big)^{\lceil \lambda \rceil}}{2^{k+1-\lceil \lambda \rceil}\lceil \lambda \rceil!} \rightarrow_{k \rightarrow \infty}0\]
+		Il existe un $n_0 \in \mathbb{N}$ tel que $\forall k\geq n_0$, $\frac{A}{A'} \frac{\big(\lceil \lambda \rceil +k-1\big)^{\lceil \lambda \rceil}}{2^{k+1-\lceil \lambda \rceil}\lceil \lambda \rceil!}<1$, en choisissant 
+		\[A'=\max_{k=0}^{n_0}A\frac{2^{\lambda-1}}{2^k}\frac{\lambda^{\uparrow k-1}}{k-1!},\]
+		on a l'inégalité souhaitée, à savoir:
+		\[\overset{\sim}{M}(,f,x)(t) \unlhd \mathcal{M}:t\rightarrow \frac{A'}{(1-\alpha' t)} \hspace{4mm} \forall x \in [a,b].\]
+		Finalement il suffit d'appliquer ce raisonnement en remplaçant $f(0),...,f^{(r-1)}(0)$ par $f^{(k)}(0),...,f^{(r+k-1)}(0)$  et l'opérateur de récurrence 
+		$P_d(n+k)S_n^{(n+d)}+...+p_0(n+k)=0,$ on obtient finalement
+		\[M^k(f,x)(t) \unlhd \mathcal{M}:t\rightarrow\frac{t^kA'}{(1-\alpha' t)} \hspace{4mm} \forall x \in [a,b], \hspace{2mm} \forall k\geq0.\]
+	\end{proof}
+	
+	\begin{proposition}
+		Soit $f$ une fonction analytique sur un intervalle $[a,b]$, alors pour tout $x$ dans cet intervalle, il existe $A$ et $\alpha$ des réels strictement positifs tels que le pas $m(x)$ vérifie
+		\[\frac{|f(x)|}{A+|f(x)|\alpha}\leq m(x).\]
+		\label{minor}
+	\end{proposition}
+	
+	\begin{proof}[Preuve]
+		D'après la proposition \ref{Maj_maj} on sait qu'il existe $A$ et $\alpha$ deux réels strictement supérieurs à zéro tels que 
+		\[M^1(f,x)\unlhd \frac{tA}{1-\alpha t}.\]
+		En écrivant 
+		\[|f(x)|-\frac{tA}{1-\alpha t}=0,\]
+		on obtient l'égalité
+		\[t=\frac{|f(x)|}{A+|f(x)|\alpha}.\]
+		Comme 
+		\[|f(x)|- M(f,x)(t)\geq |f(x)|-\frac{tA}{1-\alpha t} \hspace{3mm} \forall x \in [a,b], \forall t \in \mathbb{R}_+,\]
+		on conclut que 
+		\[m(x)\geq \frac{|f(x)|}{A+|f(x)|\alpha}.\]
+	\end{proof}
+	
+	\noindent On suppose que $f(a) \neq 0$, et l'on définit la suite $u$:
+	
+	\begin{equation}
+	u_n
+	\left\lbrace
+	\begin{array}{l}
+	u_0=a\\
+	u_{n+1}=u_n+m(u_n)
+	\end{array}\right.
+	\end{equation}
+	Supposons qu'il existe un zéro supérieur à $a$ on appelle $\zeta_a=\min\{\zeta \in ]a,+\infty[, f(\zeta)=0\}$. Supposons de plus que la fonction $f$ est analytique sur $[a, \zeta_a]$.
+	\begin{proposition}
+		La suite $u_n$ converge vers $\zeta_a$.
+	\end{proposition}
+	\begin{proof}[Preuve]
+		La suite $(u_n)$ est croissante car $m$ est une fonction positive, majorée par $\zeta_a$ par définition de $m$ \eqref{m}, donc elle converge.\\
+		Quel que soit $\epsilon>0$ la fonction est non nulle sur le segment $[a, \zeta-\epsilon]$. D'après la proposition \ref{minor} pour $x \in [a,\zeta_a]$, $m(x)\geq \frac{|f(x)|}{A+|f(x)|\alpha}$,
+		alors en posant 
+		\[p=\min_{x \in [a,\zeta_a-\epsilon]}\frac{|f(x)|}{A+|f(x)|\alpha}\]
+		On a $p>0$, et en on définit la suite $v$ 
+		\begin{equation}
+		v_n
+		\left\lbrace
+		\begin{array}{l}
+		v_0=a\\
+		v_{n+1}=u_n+p\\
+		\end{array}\right.
+		\end{equation}
+		La suite $v$ est arithmétique, de raison $p>0$ donc elle diverge. \\
+		D'après la proposition \ref{minor} $ \forall n \in \mathbb{N}$ tels que $u_n \in [a,\zeta_a-\epsilon]$, $v_n\leq u_n$. Donc quelque soit $\epsilon>0$ il existe un réel $n$ tel que que $u_n> \zeta_a-\epsilon$, mais par construction  $u_n<\zeta_a$, alors $\forall \epsilon>0$,  $\exists n_0>0$ tel que $\forall n\geq n_0$  $|u_n-\zeta|<\epsilon$.
+	\end{proof}
+	C'est pour définir un pas minimal $p$ que nous avons établi la proposition \ref{Maj_maj}.
+	
+	\subsubsection{Comportement local proche d'un zéro}
+	On s'intéresse ici au comportement local, proche d'un zéro de cette fonction.
+	On va pour cette partie introduire la définition des coefficients $\gamma$ et $\beta$ de Smale.
+	
+	\begin{definition}
+		Soit $f$ une fonction analytique en $x$ telle que $f'(x)\neq0$, on peut définir les coefficients 
+		\[\gamma(f,x)=\sup_{k \geq 2}\Big|f'(x)^{-1}\frac{f^{(k)}(x)}{k!}\Big|^{\frac{1}{k-1}};\]
+		\[\beta(f,x)=|f'(x)^{-1}f(x)|.\]
+	\end{definition}
+	Le coefficient $\beta$ correspond au pas d'itération de l'algorithme de Newton. 
+	Et derrière une formule de $\gamma$ plutôt compliquée se cache l'idée de majorer le reste du développement en série entière de f à l'ordre 2 par une fraction rationnelle. Ces coefficients ont été introduits dans la théorie alpha de Smale \cite{dedieu2006points}.
+	On peut écrire 
+	\[|f(x+t)|\leq |f(x)|+|f'(x)|t\Big(1+\sum_{k\geq2}|f'(x)|^{-1}\Big| \frac{f^{(k)}(x)}{k!}\Big||t|^k\Big),\]
+	On remarque de plus que 
+	\[|f'(x)|^{-1}\Big|\frac{f^{(k)}(x)}{k!}\Big||t|^k \leq \gamma(f,x)^{k-1}|t|^k.\]
+	On a alors la majoration suivante
+	\[|f(x+t)|\leq |f(x)|+|t||f'(x)|\Big(1+\frac{\gamma(f,x) |t|}{1-\gamma(f,x) |t|}\Big),\]
+	\[|f(x+t)|\leq |f(x)|+\frac{|f'(x)||t|}{1-\gamma(f,x) |t|}.\]
+	\begin{proposition}
+		Soient f une fonction analytique telle que $f'(x)\neq 0$, et $m(x)$ tel que $M(f,x)(m(x))=0$, alors
+		\[\beta(f,x) \geq m(x)\geq\frac{\beta(f,x)}{\beta(f,x)\gamma(f,x)+1}.\]
+	\end{proposition}
+	\begin{proof}[Preuve]
+		
+		Pour commencer, on veut  
+		\[M(f,x)(t)=|f(x)|-\sum_{k\geq1}|\frac{f^{(k)}(x)}{k!}|t^{k}=0.\]
+		On le réécrit en utilisant $\gamma(f,x)=\sup_{k \geq 2}|f'(x)^{-1}\frac{f^{(k)}(x)}{k!}|^{\frac{1}{k-1}}$, et en multipliant par $|f'(x)|^{-1}$ on obtient l'inégalité
+		\[|f'(x)|^{-1}M(f,x)(t)\geq \beta(f,x)-t-t\sum_{k\geq2}\gamma(f,x)^{k-1}t^{k-1},\]
+		qui peut encore se réécrire
+		\[\beta(f,x)-t-\frac{t^2\gamma(f,x)}{1-\gamma(f,x) t}.\]
+		On cherche le point de $\mathbb{R}_+$ tel que cette fonction s'annule et l'on aura une minoration de $m(x)$. En multipliant par $(1-\gamma(f,x) t)$ puis en réarrangeant,
+		\[t=\frac{\beta(f,x)}{1+\gamma(f,x) \beta(f,x)}.\]
+		On a finalement,
+		\[m(x)\geq\frac{\beta(f,x)}{\gamma(f,x) \beta(f,x)+1}.\]
+	\end{proof}
+	Si la dérivée en $\zeta$ est non nulle la fonction $x\rightarrow \gamma(f,x)$ est continue sur un voisinage de $\zeta$, on remarque que la convergence vers le zéro est quadratique lorsqu'on se rapproche du zéro (voir la théorie de Kantorovitch \cite{dedieu2006points} sur la convergence de la méthode de Newton).
+	
+	\subsection{Localisation des zéros via la méthode de Rouché}
+	
+	L'objectif de cette section est de déterminer une méthode pour certifier et compter les zéros sur un intervalle. 
+	
+	\begin{definition}
+		On appelle courbe de Jordan l'image d'une fonction $\gamma:[0,1]\rightarrow \mathbb{C}$ telle que 
+		
+		(i) $\gamma(0)=\gamma(1)$;
+		
+		(ii) $\forall 0<s\leq t<1$ et $\gamma(t)=\gamma(s)$ entrainent $s=t$.
+	\end{definition}
+	
+	\begin{theorem}(Rouché) Donnons nous un domaine borné $D \subset \mathbb{C}$ de courbe de Jordan $S$ et deux fonctions analytiques $f$ et $g$ définies sur un voisinage ouvert de $D$ et à valeurs dans $\mathbb{C}$. Si pour tout $z \in S$ 
+	\[|f(z)|>|g(z)|,\]
+	alors $f+g$ admet autant de zéros (comptés avec multiplicités) que $f$ dans $D$.
+	\label{Rouché}
+	\end{theorem}
+	La démonstration de ce théorème se trouve dans le livre d'analyse complexe \cite{serov2015complex}.
+	\begin{definition}
+		On appelle une boule de centre $c$ et de rayon $r>0$, l'ensemble des nombres complexes $z$ tels vérifiant $|z-c|<r$. Formellement on a   
+		\[B(c,r)=\{z \in \mathbb{C} |z-c|<r\}.\]
+	\end{definition}
+	
+	Pour une lecture plus agréable nous introduirons des notations pour parler d'une série majorante sur le reste à l'ordre $k$ d'une série $f$ analytique en $x$ .
+	
+	\begin{definition} Soit $f$ une fonction analytique en $x$, alors on peut écrire $f(x+t)=\sum_{k \geq 0} \frac{f^{(k)}(x)}{k!}t^{k}$, Le reste de la série à l'ordre $k$ est  
+		\[R^{k}(f,x)(t)=\sum_{i \geq k} \frac{f^{(i)}(x)}{i!}t^{i}\]
+		et une série majorante $M^k(f,x)$ de ce reste
+		\[M^k(f,x) \unrhd R^k(f,x).\]
+	\end{definition}
+	\begin{definition}
+		On appelle une grappe de $m$ zéros une boule de rayon $r>0$, $B(x,r)$, telle qu'il y ait $m$ zéros dans cette boule.
+	\end{definition}
+	
+	\subsubsection{Les zéros répulsifs}
+	
+	\begin{definition}
+		Soit $f$ une fonction analytique en $\zeta$, $\zeta$ un zéro de $f$, on appelle $\mathcal{Z}$ l'ensemble des zéros de $f$ sur $\mathbb{C}$, on définit alors
+		 \[Sep(f,\zeta)= d(\zeta, \mathcal{Z}\setminus\{\zeta\}).\]
+	\end{definition}
+	\begin{definition} Soit $f:\mathbb{R}\rightarrow\mathbb{R}$ une fonction continue, croissante sur $\mathbb{R}_+$. On définit la fonction \[S:(\mathbb{R} \rightarrow \mathbb{R}) \longrightarrow \mathbb{R}_+,\] 
+	telle que
+		\begin{equation}
+		S(f)=
+		\left\lbrace
+		\begin{array}{ccc}
+		0  & \mbox{si} & f(0) \geq 1\\
+		f^{-1}(1)\cap \mathbb{R}_{+} & \mbox{sinon}.\\
+		\end{array}\right.
+		\end{equation}
+	\end{definition}
+	\begin{definition}
+		On appelle série majorante idéale d'une série $f(z)=\sum_{k\geq0}u_kz^k$, la série $\sum_{k\geq0}|u_k|z^k$.
+		\label{maj_ideal}
+	\end{definition}
+	\begin{definition}
+		Soit l'application $S_{f}^{m}(\zeta) : \mathbb{D}\times \mathbb{N}^* \times \mathbb{C} \rightarrow \mathbb{R}_+$, vérifiant
+		\[\mathbb{S}_{f}^{m}(\zeta)=S\Big(\Big|\frac{f^{(m)}}{m!}(\zeta)\Big|^{-1}\frac{M^{m+1}(f,\zeta)(t)}{t^{m}}\Big).\]
+		Avec $\mathbb{D}$ l'anneau des fonctions D-finies, $\mathbb{N}^{*}$ les entiers strictement positifs et $M^{m+1}(f,\zeta)$ la série majorante idéale du reste de la série à l'ordre $m+1$.
+	\end{definition}
+	\vspace{7mm}
+	\noindent On peut en effet appliquer $S$ aux fonctions $t \rightarrow \Big|\frac{f^{(m)}}{m!}(\zeta)\Big|^{-1}\frac{M^{m+1}(f,\zeta)(t)}{t^{m}}$ car $M^{m+1}(f,x_0)$ est de la forme
+	\[M^{m+1}(f,x_0)(t)=\sum_{k \geq m+1} m_k t^k,\]
+	avec $m_k >0$ pour au moins un $k$ dans $\mathbb{N}^{*}+m$, alors
+	\[\Big|\frac{f^{(m)}}{m!}(\zeta)\Big|^{-1}\frac{M^{m+1}(f,\zeta)(t)}{t^{m}}=\Big|\frac{f^{(m)}}{m!}(\zeta)\Big|^{-1}\sum_{k \geq 1} m_{k+m} t^k\]
+	est une fonction croissante de $t$ sur $\mathbb{R}_+$ et nulle en 0.
+	\vspace{7mm}
+	
+	\begin{theorem}
+		Soit $f$ une fonction analytique, $\zeta$ une racine de multiplicité $m$ de $f$, alors
+		\[Sep(f,\zeta) \geq \mathbb{S}_{f}^{m}(\zeta).\]
+	\end{theorem}
+	\begin{proof}[Preuve]
+		Soit $\zeta$ un zéro de multiplicité $m$.
+		Pour $z \in \mathbb{C}$, $|z|\neq 0$ plus petit que le rayon de convergence de la série, on écrit à partir du développement en série de Taylor
+		\[f(\zeta +z)=\sum_{k\geq 0}\frac{f^{(k)}(\zeta)}{k!}z^k,\]
+		or $f^{(k)}(\zeta)=0, \hspace{4mm} k<m$, alors
+		\[f(\zeta +z)=0+z^m\Big(\frac{f^{(m)}(\zeta)}{m!}+\frac{R^{m+1}(f,\zeta)(z)}{z^m}\Big),\]
+		on voit que cette expression s'annule seulement si 
+		\[\frac{f^{(m)}(\zeta)}{m!}+\frac{R^{m+1}(f,\zeta)(z)}{z^m}=0.\]
+		Alors,
+		\[\Big|\frac{f^{(m)}(\zeta)}{m!}\Big|-\Big|\frac{R^{m+1}(f,\zeta)(z)}{z^m}\Big|\leq 0,\]
+		et en remplaçant $R^{m+1}(f,\zeta)$ par sa série majorante
+		\[\Big|\frac{f^{(m)}(\zeta)}{m!}\Big|-\frac{M^{m+1}(f,\zeta)(|z|)}{|z|^m}\leq 0.\]
+		Finalement, $f$ ne s'annule pas tant que 
+		\[\Big|\frac{f^{(m)}(\zeta)}{m!}\Big|-\frac{M^{m+1}(f,\zeta)(|z|)}{|z|^m}> 0.\]
+		On a donc la conclusion
+		\[Sep(f,\zeta) \geq S\Big(\Big|\frac{f^{(m)}(\zeta)}{m!}\Big|^{-1}\frac{M^{m+1}(f,\zeta)(t)}{t^{m}}\Big).\]
+	\end{proof}
+	D'après cette propriété, soit un zéro est d'ordre fini alors il est isolé, soit c'est un zéro d'ordre infini et la fonction est nulle.
+	
+	\subsubsection{Le théorème de Rouché pour localiser des grappes de zéros}
+	
+	\noindent Nous allons introduire un théorème permettant de certifier le nombre de zéros dans une boule.
+	
+	\begin{theorem}
+		Soit $f:\mathbb{C} \rightarrow \mathbb{C}$ une fonction analytique en $x_0$,  telle que $f^{(m)}(x_0)\neq 0$. Alors, s'il existe un réel $r>0$ vérifiant
+		\[\sum_{k=0}^{m-1}\Big|\frac{f^{(k)}(x_0)}{k!}\Big|r^k+M^{m+1}(f,x_0)(r)<\Big|\frac{f^{(m)}}{m!}(x_0)\Big|r^{m},\]
+		il y a $m$ zéros comptés avec multiplicité de $f$ dans $B(x_0,r)$, la boule ouverte centrée en $x_0$ de rayon $r$.
+		\label{inclusion}
+	\end{theorem}
+	\begin{proof}[Preuve]
+		Définissons \[g(x)=f(x)-\sum_{k=0}^{m-1}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k,\]
+		$x_0$ est un zéro de multiplicité $m$ pour $g$ et $R^{m}(g,x_0)=R^{m}(f,x_0)$. D'après le théorème précèdent, $x_0$ est le seul zéro de $g$ dans la boule
+		$B(x_0,\mathbb{S}_{f}^{m}(x_0))$, et il est de multiplicité $m$.\\
+		La série de Taylor de $g$ est convergente, elle est donnée par
+		\[g(x)=\frac{f^{(m)}(x_0)}{m!}(x-x_0)^m+ \sum_{k \geq m+1}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\]
+		Nous allons prouver que s'il existe $r$ vérifiant $0<r<\mathbb{S}_{f}^{m}(x_0)$, tel pour tout $x$ respectant, $|x-x_0|=r$
+		\[\Big|f(x)-g(x)\Big|=\Big|\sum_{k=0}^{m-1}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\Big|<|g(x)|.\]
+		Par le théorème de Rouché $f$ et $g$ auront le même nombre de zéros dans la boule $B(x_0,r)$.
+		
+		\vspace{3mm}
+		
+		\noindent Remarquons que 
+		\[\big|f(x)-g(x)\big|\leq \sum_{k=0}^{m-1}\Big|\frac{f^{(k)}(x_0)}{k!}\Big||x-x_0|^k,\]
+		et que 
+		\[\frac{f^{(m)}(x_0)}{m!}(x-x_0)^{m}=g(x)-\sum_{k \geq m+1}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k.\]
+		On a donc,
+		\[\Big|\frac{f^{(m)}(x_0)}{m!}(x_0)\Big||x-x_0|^{m} \leq |g(x)|+M^{m+1}(f,x_0)(|x-x_0|) .\]
+		C'est à dire que l'hypothèse du théorème de Rouché est satisfaite si pour tout $x$ vérifiant $|x-x_0|=r$
+		\[\Big|\sum_{k=0}^{m-1}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k\Big|<\Big|\frac{f^{(m)}(x_0)}{m!}(x_0)\Big||x-x_0|^{m}-M^{m+1}(f,x_0)(|x-x_0|).\] 
+		Donc finalement, si
+		\begin{equation}
+	     	\sum_{k=0}^{m-1}\Big|\frac{f^{(k)}(x_0)}{k!}\Big|r^k+M^{m+1}(f,x_0)(r)<\Big|\frac{f^{(m)}}{m!}(x_0)\Big|r^{m},
+	       	\label{inclusion_ine}
+		\end{equation}
+		alors l'hypothèse du théorème de Rouché est satisfaite.\\
+		
+		Pour achever la preuve, il faut montrer que l'inégalité \eqref{inclusion_ine} implique $r<\mathbb{S}_{f}^{m}(x_0)$.
+		En divisant par $\Big|\frac{f^{(m)}}{m!}(x_0)\Big|r^{m}$. On a l'inégalité 
+		\[\Big|\frac{f^{(m)}}{m!}(x_0)\Big|^{-1}\frac{\sum_{i=0}^{m-1}\Big|\frac{f^{(i)}(x_0)}{i!}\Big|r^i}{r^m}+\Big|\frac{f^{(m)}}{m!}(x_0)\Big|^{-1}\frac{M^{m+1}(f,x_0)(r)}{r^m}<1\]
+		Ce qui implique
+		\[\Big|\frac{f^{(m)}}{m!}(x_0)\Big|^{-1}\frac{M^{m+1}(f,x_0)(r)}{r^m}<1.\]
+		Comme \[g:r\rightarrow \frac{M^{m+1}(f,x_0)(r)}{r^m}\] est une fonction strictement croissante sur $\mathbb{R}_+$, on a $r<\mathbb{S}_{f}^{m}(x_0)$.
+	\end{proof}
+
+		
+
+	\subsection{Localisation des zéros dans le cas réel}
+	\noindent Ramenons la recherche de zéros au cas réel, nous pouvons considérer les fonctions D-finies $f:\mathbb{R}\rightarrow\mathbb{R}$ comme des fonctions de $\mathbb{C}\rightarrow\mathbb{C}$ et donc encore pouvoir appliquer les théorèmes précédents, cependant seuls les zéros réels de la fonctions $f$ nous intéressent, il nous faut donc des résultats sur les segments et pas sur des boules de $\mathbb{C}$.
+	\begin{theorem}
+		Soit $f$ une fonction analytique dont tous les coefficients sont réels, si $f$ satisfait la propriété du théorème \ref{inclusion} pour un $m$ donné, alors la parité de $m$, le nombre de zéros dans la boule $B(x_0,r)$ décrite par le théorème \ref{inclusion} est la même que celle du nombre de zéros dans l'intervalle, $[x_0-r,x_0+r]$.
+	\end{theorem}
+	
+	\begin{proof}[Preuve]
+		Nous commencerons par montrer le résultat suivant. Si $f$ est une fonction analytique à coefficients réels, soit $\zeta=\rho e^{i\theta}$ un zéro de $f$, alors $\bar{\zeta}$ est un zéro de $f$.\\
+		On écrit
+		\[f(\zeta)=f(\rho e^{i\theta})=\sum_{n\geq 0} u_n \rho^ne^{i\theta n}=\sum_{n\geq 0} u_n \rho^n(\cos(\theta n)+i\sin(\theta n))= S_c+ i S_s=0.\]
+		Comme $(1,i)$ est une base de $\mathbb{C}$, on sait que $S_c=S_s=0$. Alors, $S_c-iS_s=0=f(\rho e^{-i\theta})=f(\bar{\zeta})$.
+		Donc $\bar{\zeta}$ est aussi un zéro de $f$. Le nombre de racines à partie imaginaire non nulle dans $B(x_0,r)$ $m_i$ est paire, ce qui implique que le nombre de racines réelles $m_r$ est de même parité que $m$ puisque $m=m_i+m_r$.
+	\end{proof}
+	
+	Ce théorème est surtout utile pour $m=1$, on peut alors assurer que la fonction a une unique racine sur le segment $[x_0-r,x_0+r]$. Pour $m>1$ et $m$ impaire, on peut seulement assurer qu'il y a au moins une racine réelle sur le segment $[x_0-r,x_0+r]$.
+	
+	\subsubsection{Cas des zéros de multiplicité 1}
+	
+	Nous avons vu, qu'il est impossible avec les outils que nous avons établis dans les deux paragraphes précédents de certifier un zéro de multiplicité supérieure à 1. On est capable de localiser des grappes de zéros, mais pas de différencier une grappe de $m$ zéros d'un zéro de multiplicité $m$. Notre algorithme renverra donc uniquement des zéros certifiés de multiplicité 1. La certification des zéros de multiplicité supérieure à 1 est étudiée par M. Giusti et J.-C. Yakoubsohn \cite{giusti2019approximation}. 
+	
+	\vspace{4mm}
+	
+	Maintenant, nous allons montrer une proposition qui sera bien utile dans notre algorithme.
+	Commençons par étudier la fonction 
+	\[g(r)=|f'(x_0)|r-|f(0)|-M^{2}(f,x_0)(r).\]
+	Pour $r$ tel que $g(r)>0$, la propriété du théorème \ref{inclusion} qui est satisfaite. La dérivée de la fonction $g$ n'est rien d'autre que 
+	$M(f',x_0)$ définie dans la définition \ref{M}.
+	
+	\begin{definition}
+		On appelle $m_1(x)$ le réel tel que $M(f',x)(m_1(x))=0$ 
+		\label{m_1}
+	\end{definition}
+	
+	\begin{proposition}
+		Soit $f$ une fonction analytique, $x_0$, $r_0$ et  $x_1$, $r_1$, tels que $f$, $x_i$, $r_i$ vérifie l'hypothèse du théorème \ref{inclusion} pour le cas $m=1$ et $r_i<m^1(x_i)$, les segments $[x_i-r_i,x_i+r_i]$, $i \in \{0,1\}$ contiennent un unique zéro de $f$.\\
+		Si de plus, $[x_0-r_0,x_0+r_0] \cap [x_1-r_1,x_1+r_1] \neq \emptyset$ alors $[x_0-r_0,x_0+r_0] \cup [x_1-r_1,x_1+r_1]$ contient un unique zéro et ce zéro est inclus dans l'intervalle $[x_0-r_0,x_0+r_0] \cap [x_1-r_1,x_1+r_1]$. Et $f$ est strictement monotone sur l'intervalle $[x_0-r_0,x_0+r_0] \cap [x_1-r_1,x_1+r_1]$.
+		\label{intersect}
+	\end{proposition}
+
+	\begin{proof}[Preuve]
+		Si $f$, $x_i$, $r_i$, vérifient l'hypothèse du théorème \ref{inclusion}, alors  $[x_i-r_i,x_i+r_i]$ contient un unique zéro de $f$.
+		De plus, nous allons montrer que la fonction est strictement monotone sur l'intervalle $[x_i-r_i,x_i+r_i]$. Comme $r_i<m_1(x_i)$, on a 
+		\[|f'(x_i)|-M^1(f',x_1)(r_1)>0,\]
+		la fonction $|f'|$ est strictement positive sur les intervalles $[x_i-r_i,x_i+r_i] i \in \{0,1\}$.
+		Comme $f'$  est de signe constant sur $[x_0-r_0,x_0+r_0]$ et $[x_1-r_1,x_1+r_1]$, $f'$ est de signe constant sur $[x_0-r_0,x_0+r_0] \cap [x_1-r_1,x_1+r_1]$ et donc finalement sur $[x_0-r_0,x_0+r_0] \cup [x_1-r_1,x_1+r_1]$. Alors la fonction $f$ est bijective sur l'intervalle $[x_0-r_0,x_0+r_0] \cup [x_1-r_1,x_1+r_1]$ et donc admet un unique zéro sur cet intervalle. Mais comme ce zéro doit aussi appartenir aux deux intervalles, il appartient à leur intersection.
+	\end{proof}
+	Cette proposition est importante, car elle assure qu'il existe des intervalles contenant des zéros certifiés de multiplicité 1 et vérifiant que la fonction est strictement monotone. Un algorithme de dichotomie classique, permettra de se rapprocher du zéro de cet intervalle à une précision donnée, pour toute précision donnée. Ce seront les intervalles satisfaisant cette propriété que notre algorithme renverra.
+	
+	
+	
+
+	\section{Algorithmes}
+	\label{sec:algorithme}
+	\subsection{Les entrées acceptées par l'algorithme}
+	
+	
+	Nous pouvons remarquer que les singularités dont nous avons parlé dans la  section \ref{subsubsingularité}  sont des singularités qui indiquent une divergence de la fonction, mais il y a plusieurs types  de singularités. Certaines singularités viennent de l'équation de récurrence \eqref{rec_equ}, par exemple lorsque $b_s(n)$ s'annule, le coefficient $u_{n+s}$ ne peut plus s'exprimer en fonctions des coefficients $u_{n+s-1},...,u_n$ de plus cela impose une autre relation sur ces coefficients, faisant chuter la dimension de l'espace des solutions initiales. On appelle cela une singularité de tête de l'équation différentielle. 
+	
+	\begin{remarque}
+		Soit $a_r$ le polynôme de \eqref{diff_eq}, si $a_r$ ne s'annule pas sur l'intervalle $[a,b]$, on peut remarquer alors que le coefficient dominant de l'équation de récurrence \eqref{rec_equ} $b_s$ vérifie
+		\[b_s(n)=a\prod_{i=0}^{r}(n+i),\]
+		donc il ne s'annule pas sur $\mathbb{N}\setminus\{0\}$, de plus il est de degré au moins supérieur aux polynômes $b_i$, $i \in [0,s-1]$. D'après les conclusions de \ref{subsubsingularité}, la fonction $f$ solution de l'équation différentielle n'admet pas de singularité sur l'intervalle.
+	\end{remarque}
+	
+	Nous avons donc une condition suffisante pour que la fonction $f$ n'admette pas de singularité sur l'intervalle $[a,b]$, il suffit que le polynôme de tête $a_r$ de l'équation différentielle \eqref{diff_eq} ne s'annule sur $[a,b]$. Cependant cette condition n'est pas nécessaire, l'algorithme pourra s'exécuter pour des opérateurs différentiels ne satisfaisant pas cette propriété.
+	
+	
+	\subsection{Principe de l'algorithme}
+	
+	Notre algorithme prendra en entrée un intervalle $[a,b]$ contenant $0$, un opérateur différentiel $\mathcal{L}(x,Dx)$, des conditions initiales en $0$ et un pas d'itération $n$. Si la fonction $f$ solution, n'admet pas de singularité sur $[a,b]$ l'algorithme renverra un couple comportant une liste d'intervalles contenant un unique zéro $\mathcal{D}$ tel que la fonction soit strictement monotone sur l'intervalle et une liste d'intervalles encore indéterminés $\mathcal{I}$ mais qu'on sait de taille inférieure à $10^{-4n}$.
+	
+	Cet algorithme fonctionnera récursivement, il s'exécutera en 2 étapes. La première étape permettra de déterminer les intervalles inclus dans $[a,b]$ ne contenant aucun zéros, la deuxième certifiera les zéros simples dans les intervalles restant. Si un intervalle a été exclu par l'algorithme de bissection-exclusion ou a été certifié, alors on le considérera comme déterminé. On rappellera l'algorithme sur la liste des intervalles encore indéterminés. L'algorithme s'arrêtera après $n$ appels récursifs, il est en effet important de limiter le nombre d'appels de notre algorithme. Comme notre algorithme certifie seulement les zéros de multiplicité 1, et se rappelle sur les intervalles encore indéterminés, il pourrait y avoir une boucle infinie.
+	Une méthode algorithmique aura été développée, permettant à l'utilisateur de connaître le nombre de zéros dans des boules contenant les intervalles restant. 
+	
+	\begin{proposition}
+		Soit $f$ une fonctions analytique non nulle sur un ouvert connexe $\Omega$, soit $K \subset \Omega$ un compact de $\mathbb{C}$, $f$ a un nombre fini de zéros sur $K$.
+		\label{zero_lim}
+	\end{proposition}
+	\begin{proof}[Preuve]
+		Raisonnons par l'absurde et supposons le nombre de zéros infini sur $K$, on en récupère une sous partie dénombrable $D$, appelons $\phi:\mathbb{N}\rightarrow D$ l'application bijective entre ces deux ensembles, alors la suite $(\phi(n))_{n\in\mathbb{N}}$ est une suite dans un compact, d'après le théorème de Bolzano-Weierstrass, il existe une suite extraite qui converge et la limite de cette suite extraite est encore dans le compact, notons $\zeta$ cette limite, quelque soit $\epsilon>0, \exists n \in \mathbb{N}$ tel que $d(\phi(n),\zeta)<\epsilon$, alors $\zeta$ n'est pas un zéro isolé, ce qui est absurde.
+	\end{proof}
+
+	Dans toute cette section on considèrera une opérateur différentiel linéaire $\mathcal{L}(x,Dx)$ tel que $\deg_{Dx}(\mathcal{L})=r+1$ (introduit dans la sous-section \autoref{subsec:P-recursives}), des conditions initiales $u_0,u_1,...,u_r$ et $f$ la solution théorique de l'équation différentielle $f$ vérifiant $\mathcal{L}(x,Dx)\cdot f=0$ avec $f(0)=u_0,f^{(1)}(0)=u_1,...,\frac{f^{(r-1)}(0)}{(r-1)!}=u_r$. Nous allons écrire les algorithmes permettant de trouver et de certifier les zéros simples de $f$. Le segment sur lequel on travaillera sera  noté $[a,b]$, avec $-\infty<a<b<+\infty$. On appellera $\mathcal{Z}_{[a,b]}$ l'ensemble des zéros appartenant à $[a,b]$, On sait que le cardinal de $\mathcal{Z}_{[a,b]}$ est fini d'après la proposition \ref{zero_lim}. Dans la suite, les réels $\epsilon$ seront strictement supérieurs à zéro.
+	
+	\vspace{7mm}
+	\noindent Notre algorithme est entièrement codé en sage, et utilise la bibliothèque ore\_algebra.analytic.bounds pour avoir des séries majorantes. le lecteur pourra le retrouver sur\\
+	\url{https://github.com/MathisDeronzier/Certified-zeros-of-D-finite-functions/blob/master/Bissection_exclusion_methode.sage}
+
+	\begin{algorithm}
+		\caption{\_Majorant\_}
+		\begin{algorithmic}[1]
+			\REQUIRE Un opérateur différentiel $\mathcal{L}(x,Dx)$. Des conditions initiales $[f(0),f^{(1)}(0),...,\frac{f^{(r-1)}(0)}{(r-1)!}]$. Un réel $x$. Une précision $\epsilon>0$. Deux entiers $n$ et $k$. 
+			\ENSURE  La liste des coefficients $[f(x),f^{(1)}(x),...,\frac{f^{(n-1)}(x)}{(n-1)!}]$. Une liste d'imprécision $[\epsilon_0,...,\epsilon_{n-1}]$ sur les coefficients et une série majorante $\overset{\sim}{M^n}(f,x)$ sur le reste de la série $f$ développée en $x$ à l'ordre $n$.
+			\STATE $[f(x),f^{(1)}(x),...,\frac{f^{(r-1)}(x)}{(r-1)!}]$, $[\epsilon_0,...,\epsilon_{r}]$ la translation des coefficients et l'imprécision sur les coefficients vérifiant $\epsilon_i<\epsilon$, $i \in [0,r]$.
+			\FOR {$i$ allant de $0$ à $r$}
+			\STATE Calculer la série majorante $M^{n+k}(f_i,x)$ où $f_i$ est une solution pour les conditions initiales $[\delta_{i0},...,\delta_{ir}]$, où $\delta$ est le symbole de Kronecker.
+			\ENDFOR 
+			\STATE Calculer le développement de la série $f$ en $x$ à l'ordre $n+k-1$.
+			\RETURN$[f(x),...,\frac{f^{(n-1)}(x)}{(n-1)!}]$, $[\epsilon_0,....,\epsilon_{n-1}]$, $M_{\epsilon}:t \rightarrow \Big(\sum_{k=n}^{n+k-1}\Big(\Big|\frac{f^{(k)}(x)}{k!}\Big|+\epsilon_k\Big)t^k\Big)+\sum_{i=0}^{r}\Big(\Big|\frac{f^{(i)}(i)}{k!}\Big|+\epsilon_i\Big) M^{n+k}(f_i,x)$
+		\end{algorithmic}
+	\label{Majorant}
+	\end{algorithm}
+	\begin{proposition}
+		Pour $k$=0, et en appelant $\overset{\sim}{M^n}(f,x)$ la série majorante renvoyée par \_Majorant\_, il existe $A_n$ et $\alpha_n$ deux réels strictement positifs tels que
+		\[\overset{\sim}{M^n}(f,x)(t)\leq \frac{t^n A_n}{1-\alpha_n t}, \hspace{4mm} \forall 0<t, \hspace{3mm} \forall x\in [a,b].\]
+		\label{Maj_maj1}
+	\end{proposition}
+	\begin{proof}[Preuve](Esquisse)
+		C'est une reprise de la preuve de la proposition \ref{Maj_maj}, avec les conditions initiales $|f(x)|+\epsilon_0,...,\Big|\frac{f^{(r-1)}(x)}{(r-1)!}\Big|+\epsilon_r$.
+	\end{proof}
+		
+	
+	\subsection{Algorithme de bissection-exclusion}
+	Pour l'algorithme \_bissection-exclusion\_, nous utiliserons la fonction \_M1\_.
+	\begin{algorithm}
+		\caption{\_M1\_}
+		\begin{algorithmic}[1]
+			\REQUIRE Un opérateur différentiel $\mathcal{L}(x,Dx)$. Des conditions initiales $[f(0),f^{(1)}(0),...,\frac{f^{(r-1)}(0)}{(r-1)!}]$. Un réel $x$. Un réel $\epsilon$.	
+			\ENSURE  $[f(x)]$,$[\epsilon']$ une imprécision telle que  $10^{4}\epsilon'<|f(x)|-\epsilon'$ et $M^{1}(f,x)$.  Si on n'a pas trouvé $\epsilon'$, $\epsilon'\geq 10^{-40}\epsilon$ satisfaisant cette inégalité, l' algorithme renverra $[0],[10^{-40}\epsilon],0$.
+			\STATE compteur$:=0$
+			\STATE Calculer $f(x)$ à la précision $\epsilon$.
+			\WHILE {compteur $<5$ et que $10^{4}\epsilon\geq|f(x)|-\epsilon$ }
+			\STATE $\epsilon$:=$10^{-8}\epsilon$
+			\STATE Calculer $f(x)$ à la précision $\epsilon$.
+			\STATE compteur:=compteur +1
+			\ENDWHILE
+			\IF {compteur=5}
+			\RETURN $[0],[\epsilon],0$ 
+			\ELSE
+			\RETURN \_Majorant\_($\mathcal{L}(x,Dx),[f(0),f^{(1)}(0),...,\frac{f^{(r-1)}(0)}{(r-1)!}],x,\epsilon,1,10$)
+			\ENDIF
+		\end{algorithmic}
+	\end{algorithm}
+	
+	
+	\begin{definition}
+		
+	\end{definition}
+	Soient $[f(x),...,\frac{f^{(r-1)}(0)}{(r-1)!}]$, $[\epsilon_0]$, $M^{k+1}(f,x)$=\_Majorant\_($\mathcal{L}(x,Dx)$, $[f(0),f^{(1)}(0),...,\frac{f^{(r-1)}(0)}{(r-1)!}]$, $x$, $\epsilon$,$1$, $k$).
+	On définira \[\overset{\sim}{M}_{\epsilon}(f,x)=|f(x)|-\epsilon-\overset{\sim}{M}^{1}(f,x),\] avec
+	\[\overset{\sim}{M} ^{1}(f,x): t \rightarrow \sum_{i=1}^{k}\Big(\Big|\frac{f^{(i)}(x)}{i!}\Big|+\epsilon_i\Big)t^i+M^{k+1}(f,x)(t).\]
+	
+	\begin{proposition}
+		$\overset{\sim}{M}_{\epsilon}(f,x)(\overset{\sim}{m}(x))=0$ alors $\overset{\sim}{m}(x)<m(x)$ où $m$ est la fonction de l'équation \eqref{m}.
+		\label{minor_m}
+	\end{proposition}
+	\begin{proof}[Preuve]
+		$\overset{\sim}{M}^{1}(f,x)+\epsilon$ reste une série majorante du reste à l'ordre 1 de la série $f$, d'où la conclusion.
+	\end{proof}
+	\begin{proposition}
+		Le pas $\overset{\sim}{m}(x)$ satisfaisant $\overset{\sim}{M}^1(f,x)(\overset{\sim}{m}(x))=0$ est encore minoré et il existe $A$ et $\alpha$ des réels strictement positifs tels que  
+		\[(1-10^{-4})\frac{|f(x)|}{A+\alpha|f(x)|}\leq \overset{\sim}{m}(x).\]
+		\label{minor1}
+	\end{proposition}
+	\begin{proof}[Preuve]
+		Pour tout $x \in [a,b]$ traités par l'algorithme, $|f(x)|-\epsilon> (1-10^{-4})|f(x)|$, de plus à partir de la proposition \ref{Maj_maj1} il existe deux réels $A$ et $\alpha$ strictement positifs tels que 
+		\[|f(x)|-\epsilon-\overset{\sim}{M}^{1}(f,x)(t)>(1-10^{-4})|f(x)|-\frac{A}{1-\alpha t},\]
+		donc 
+		\[(1-10^{-4})\frac{|f(x)|}{A+\alpha|f(x)|}\leq \overset{\sim}{m}(x).\]
+	\end{proof}
+	
+	\newpage
+	\begin{remarque}
+		L'opération + sur des liste est une opération de concaténation.
+	\end{remarque}	
+	\begin{algorithm}
+	\caption{\_bissection-exclusion\_}
+	\begin{algorithmic}[1]
+		\REQUIRE Un opérateur différentiel $\mathcal{L}(x,Dx)$. Des conditions initiales $ini=[f(0),f^{(1)}(0),...,\frac{f^{(r-1)}(0)}{(r-1)!}]$. Un segment $[a,b]$. Une précision $\epsilon$.
+		\ENSURE Une liste $\mathcal{L}$ de segments disjoints de taille inférieure à $\epsilon$ inclus dans $[a,b]$ telle que $[a,b] \setminus\mathcal{L}$ ne contient aucun zéro de $f$.
+		\IF {$b-a<\epsilon$}
+		\RETURN $[[a,b]]$
+		\ENDIF
+		\STATE $m$:=$\frac{a+b}{2}$
+		\STATE $d$:=$\frac{b-a}{2}$
+		\STATE $[f(m)],[\epsilon'],M^1(f,x)=\_M1\_(\mathcal(x,Dx),ini,m,\epsilon)$
+		\IF {$f(x)=0$}
+		\RETURN\_bissection-exclusion\_($\mathcal{L}(x,Dx),ini,[a,m-\frac{\epsilon}{3}],\epsilon$) + \_bissection-exclusion\_($\mathcal{L}(x,Dx),ini,[m-\frac{\epsilon}{3},m+\frac{\epsilon}{3}],\epsilon$) + \_bissection-exclusion\_($\mathcal{L}(x,Dx),ini,[m+\frac{\epsilon}{3},b],\epsilon$)
+		\ENDIF
+		\STATE$M_{\epsilon'}(f,x):t\rightarrow |f(m)|-\epsilon'-M^1(f,x)(t)$
+		\WHILE{$M_{\epsilon'}(d)\leq0$}
+		\STATE $d:=\frac{d}{2}$
+		\ENDWHILE
+		\IF {$d=\frac{b-a}{2}$}
+		\RETURN $[]$
+		\ELSE
+		\RETURN\_bissection-exclusion\_($\mathcal{L}(x,Dx),ini,[a,m-d],\epsilon$) + \_bissection-exclusion\_($\mathcal{L}(x,Dx),ini,[m+d,b],\epsilon$)
+		\ENDIF
+	\end{algorithmic}
+	\end{algorithm}
+	\begin{definition}
+		On appelle ordre de rappel d'un algorithme récursif, le nombre de rappels de l'algorithme à lui-même. Et ordre de rappel maximal, le maximum des ordres de rappel.
+	\end{definition}
+
+	\begin{proposition}
+		On appelle $\mathcal{I}_\epsilon([a,b])=$\_bissection-exclusion\_$(\mathcal{L}(x,Dx),ini,[a,b],\epsilon)$.
+		L'algorithme \_bissection-exclusion\_ vérifie les propriétés suivantes\\
+		
+		(i) Tous segments de $\mathcal{I}_{\epsilon}([a,b])$ est de taille inférieure à $\epsilon$;\\
+		
+		(ii) L'ensemble $[a,b]\setminus \mathcal{I}_{\epsilon}([a,b])$ ne contient aucun zéro de $f$;\\
+		
+		(iii) Quelque soit $\epsilon>0$, il existe $\epsilon'>0$ tel que $\mathcal{I}_{\epsilon'}([a,b])$, vérifie
+		\[\forall x \in \bigcup_{s \in \mathcal{I}_{\epsilon'}([a,b])} s, \hspace{4mm} d(x,\mathcal{Z}_{[a,b]})<\epsilon.\]
+		\label{bissection_eps}
+	\end{proposition}
+	
+	\begin{proof}[Preuve] 
+	
+		(i) La condition d'arrêt de \_bissection-exclusion\_ implique que la taille de l'intervalle renvoyé soit inférieur à $\epsilon$. Si l'algorithme termine, alors les intervalles renvoyés par l'algorithme vérifient (i). Soit $n$ un ordre de rappel de l'algorithme. À l'ordre de rappel $n$, la taille de l'intervalle pris par l'algorithme est inférieur à $\frac{b-a}{2^n}$, donc les ordres de rappel de l'algorithme sont majorés par $\lceil \frac{\log (b-a)\epsilon^{-1}}{\log 2}\rceil$. Donc l'algorithme termine toujours et (i) est vérifié.\\
+		
+		(ii) On appelle $c=\frac{a+b}{2}$. Nous allons montrer que pour tout $n \in \mathbb{N}$ tel que $\frac{b-a}{2^n}<\epsilon<\frac{b-a}{2^{n-1}}$, $[a,b] \setminus \mathcal{I}_{\epsilon}([a,b])$ ne contient aucun zéro.\\
+		\vspace{4mm}
+		
+		\textbf{Initialisation:} On commence avec $\frac{b-a}{2}<\epsilon < b-a$ \_bissection-exclusion\_$(\mathcal{L}(x,Dx),ini,[a,b],\epsilon)$. Déjà, l'ordre maximal de rappel est 2. Il suffit de montrer que $[c-d,c+d]$ ne contient pas de zéro, où $d$ calculé dans le premier appel de \_bissection-exclusion\_ tel que $d<\overset{\sim}{m}(c)$. D'après la proposition \ref{minor_m}, on a aussi $d<m(x)$, ce qui montre le résultat. \\
+		\textbf{Induction:} (ii) est vrai pour $\frac{b-a}{2^n}<\epsilon$, montrons que c'est encore vrai pour $\frac{b-a}{2^{n+1}}<\epsilon < \frac{b-a}{2^n}$
+		l'algorithme calcule $d$ tel que $d<\overset{\sim}{m}(\frac{a+b}{2})$. D'après la proposition \ref{minor_m}, on a aussi $d<m(x)$ alors $[c-d,c+d]$ ne contient aucun zéro, puis il renvoie 
+		\_bissection-exclusion\_$(\mathcal{L}(x,Dx),ini,[a,c-d],\epsilon)+$\_bissection-exclusion\_$(\mathcal{L}(x,Dx),ini,[c+d,b],\epsilon)$.
+		Donc $(\frac{a+b}{2}-d)-a=b-(\frac{a+b}{2}+d)=\frac{b-a}{2}-d$ et donc $\epsilon>\frac{\frac{b-a}{2}-d}{2^n}$, on peut appliquer l'hypothèse d'induction.
+		On a finalement 
+		\[[a,b]\setminus \mathcal{I}_{\epsilon}([a,b])=[a,c-d]\setminus \mathcal{I}_{\epsilon}([a,c-d])\cup [c-d,c+d] \cup \mathcal{I}_\epsilon([c+d,b])\]
+		Comme aucune de ces ensembles ne contient de zéro, leur union ne contient pas de zéro.\\
+		\noindent\textbf{Conclusion:} La proposition est initialisée et héréditaire donc vrai pour tout $n$ donc pour tout $\epsilon<b-a$.\\
+		\vspace{4mm}
+		
+		(iii) D'après la proposition \ref{minor1}, on a $\forall x \in [a,b]$, $(1-10^{-4})\frac{|f(x)|}{A+\alpha|f(x)|} \leq \overset{\sim}{m}(x)$. 
+		On rappelle que l'ensemble $\mathcal{Z}_{[a,b]}$ est l'ensemble des zéro de $f$ sur $[a,b]$, on pose 
+		\[\mathcal{Z}_{[a,b]}^{\epsilon}=\bigcup_{\zeta \in \mathcal{Z}_{[a,b]}}[\zeta-\frac{\epsilon}{2},\zeta+\frac{\epsilon}{2}].\]
+		En supposant que $[a,b]\setminus \mathcal{Z}_{[a,b]}^{\epsilon} \neq \emptyset$, on pose finalement,
+		\[p=\inf_{x\in[a,b]\setminus \mathcal{Z}_{[a,b]}^{\epsilon}} \frac{(1-10^{-4})}{2}\frac{|f(x)|}{A+\alpha|f(x)|},\]
+		on sait que $p>0$ par définition de $\mathcal{Z}_{[a,b]}^{\epsilon}$, la division par 2 vient de la façon d'obtenir $d$ dans l'algorithme \_bissection-exclusion\_ tel que $d<\overset{\sim}{m}(x)$. On sait finalement que sur l'ensemble $[a,b]\setminus \mathcal{Z}_{[a,b]}^{\epsilon}$ le pas sera toujours supérieur à $p$, alors en prenant $\epsilon'=\min(\frac{\epsilon}{4},p)$
+		soit $[c,d]$ un segment vérifiant $2\epsilon'>d-c\geq\epsilon'$, qui sera forcément atteint à l'avant dernier rappel de l'algorithme à lui-même.
+		
+		\vspace{1mm}
+		
+		\noindent\textbf{Cas 1:} $\mathcal{Z}_{[a,b]}^{\epsilon} \cap [c,d] \neq \emptyset$, on a donc
+		\[d(\mathcal{Z}_{[a,b]}^{\epsilon},x)\leq\frac{\epsilon}{2}+d-c\leq\epsilon \hspace{4mm} \forall x \in [c,d].\]
+		
+		\vspace{1mm}
+		
+		\noindent\textbf{Cas 2:}  $\mathcal{Z}_{[a,b]}^{\epsilon} \cap [c,d] = \emptyset$, on a donc \_bissection-exclusion\_($\mathcal{L}(x,Dx)$,ini,$[c,d]$,$\epsilon'$)=[].
+		
+	\end{proof}
+	\subsection{Certification des zéros}
+	On cherchera des coefficients $f(x),...,\frac{f^{(m)}(x)}{m!}$ et des imprécisions sur ces coefficients $\epsilon_1,\epsilon_2,...,\epsilon_m$ tels que 
+	\begin{equation}
+		10^{4}\epsilon_i<\Big|\frac{f^{(i)}(x)}{m!}\Big|-\epsilon_i \hspace{5mm}\forall i \in [1,m].
+		\label{*}
+	\end{equation}
+	Nous utiliserons l' algorithme \_M2\_.
+	\begin{algorithm}
+		\caption{\_M2\_}
+		\begin{algorithmic}[1]
+			\REQUIRE Un opérateur différentiel $\mathcal{L}(x,Dx)$. Des conditions initiales $[f(0),...,\frac{f^{(r-1)}(0)}{(r-1)!}]$. Un réel $x$. Un réel $\epsilon$. Deux entiers $m< r-1$ et $k$.
+			\ENSURE  $[f(x),...,\frac{f^{(m)}(x)}{(m)!}]$, $[\epsilon_0,...,\epsilon_{m}]$ et  $M^{m+1}(x)$  tels que $f(x),...,\frac{f^{(m)}(x)}{m!}$ et $\epsilon_0,...,\epsilon_m$ vérifient \eqref{*}. $\big[f(x),...,\frac{f^{(m-1)}(x)}{(m-1)!},0\big]$, $[\epsilon_1,...,\epsilon_{m}]$, $M^{m+1}(f,x)$ si les $10^{-40}\epsilon$ ne vérifient pas \eqref{*}.
+			\STATE compteur$:=0$
+			\STATE $[f(x),...,\frac{f^{(r-1)}(x)}{(r-1)!}]$,$[\epsilon_0,...,\epsilon_{r-1}]$:= translation des conditions initiale à la précision $\epsilon$
+			\WHILE {compteur $<5$ et que  $f(x),...,\frac{f^{(m)}(x)}{m!}$, et $\epsilon_1,\epsilon_2,...,\epsilon_m$  ne vérifient pas \eqref{*}}
+			\STATE $\epsilon$:=$10^{-8}\epsilon$
+			\STATE  $[f(x),...,\frac{f^{(r-1)}(x)}{(r-1)!}]$,$[\epsilon_0,...,\epsilon_{r-1}]$:= translation des conditions initiale à la précision $\epsilon$
+			\ENDWHILE
+			\STATE $\big[f(x),...,\frac{f^{(m-1)}(x)}{(m-1)!},0\big]$, $[\epsilon_0,...,\epsilon_{m}]$, $M^{m+1}(f,x)$=\_Majorant\_($\mathcal{L}(x,Dx),[f(0),...,\frac{f^{(r-1)}(0)}{(r-1)!}],x,\epsilon,m,k$)
+			\IF {compteur=5}
+			\RETURN $\big[f(x),...,\frac{f^{(m-1)}(x)}{(m-1)!},0\big]$, $[\epsilon_0,...,\epsilon_{m}]$, $M^{m+1}(f,x)$
+			\ELSE
+			\RETURN $[f(x),...,\frac{f^{(m)}(x)}{m!}]$, $[\epsilon_0,...,\epsilon_{m}]$, $M^{m+1}(x)$
+			\ENDIF
+		\end{algorithmic}
+	\label{algo_eps}
+	\end{algorithm}
+	
+	\begin{proposition}
+		Soit $f$ une fonction analytique en $x_0$, s'il existe un $r>0$ tel que 
+		\begin{equation}
+			\sum_{i=0, i \neq m}^{m+k}\Big(\Big|\frac{f^{(i)}(x_0)}{i!}\Big|+\epsilon_i\Big)r^i+M^{m+k}(f,x_0)(r)<\Big(\Big|\frac{f^{(m)}}{m!}(x_0)\Big|-\epsilon_m\Big)r^{m},
+		\label{inclu_eps}
+		\end{equation}
+		alors l'hypothèse du théorème \ref{inclusion} est satisfaite.
+		\label{condition_eps}
+	\end{proposition}
+	\begin{proof}[Preuve]
+		Il est facile de se convaincre que l'inégalité \eqref{inclu_eps} implique
+		\[\sum_{i=0}^{m-1}\Big|\frac{f^{(i)}(x_0)}{i!}\Big|r^i+M^{m+1}(f,x_0)(r)<\Big|\frac{f^{(m)}}{m!}(x_0)\Big|r^{m}.\]
+	\end{proof}
+	
+	\begin{remarque}
+		Pour l'algorithme \_certification-zéros\_ nous devons trouver un $r$ vérifiant la propriété de la proposition \eqref{condition_eps}, rappelons nous que l'algorithme sert à vérifier s'il y a des zéros dans des intervalles indéterminés de taille $\tau$. À partir de l'équation \eqref{inclu_eps}, on pose \[\eta=\max_{i \in [1,m-1]}\Big|\frac{f^{(i)}(x_0)}{i!}\Big|+\epsilon_i,\]
+		en supposant $\eta \ll \Big|\frac{f^{(m)}}{m!}(x_0)\Big|-\epsilon_m$ et $\eta \ll 1$.
+		On cherche un ordre de grandeur des $r$ vérifiant  \eqref{inclu_eps}, on néglige la série majorante sur le reste à l'ordre 2 de la série $f$ et l'on obtient
+		\[\eta \sum_{i=0}^{m-1}r^i\approx \Big|\frac{f^{(m)}}{m!}(x_0)\Big|r^m.\]
+		Qui se réécrit
+		\[\Big|\frac{f^{(m)}}{m!}(x_0)\Big|^{-1}\eta \approx\frac{r^m-r^{m+1}}{1-r}.\]
+		L'ordre de grandeur vérifié par $r$ est finalement, $\Big(\Big|\frac{f^{(m)}}{m!}(x_0)\Big|^{-1}\eta\Big)^{\frac{1}{m}}$. 
+	\end{remarque}
+
+	\begin{algorithm}
+		\caption{\_dichotomie-zéro\_}
+		\begin{algorithmic}[1]
+			\REQUIRE Une fonction $f$ strictement monotone, $t_n$ et $s_n$ deux réels tels que $f(s_{n})>0$ et $f(t_{n})<0$.
+			\ENSURE $t_{n=+1}$ et $s_{n+1}$ tels que  $f(s_{n+1})>0$ et $f(t_{n+1})=<0$ et $d(s_{n+1},t_{n+1})=d(s_{n},t_{n})/2$.
+			\STATE $m=\frac{s_n+t_n}{2}$
+			\IF {$f(m)>0$}
+			\RETURN m,t 
+			\ELSE
+			\RETURN s,m
+			\ENDIF
+		\end{algorithmic}
+		\label{dichotomie-zero}
+	\end{algorithm}
+	Cet algorithme est simplement une étape de dichotomie.
+		
+	\begin{algorithm}
+		\caption{\_certification-zéros\_}
+		\begin{algorithmic}[1]
+			\REQUIRE Un opérateur différentiel $\mathcal{L}(x,Dx)$. Des conditions initiales ini=$[f(0),...,\frac{f^{(r-1)}(0)}{(r-1)!}]$. Un réel $x$. Un réel $\epsilon$. Deux entiers $m$ et $k$.
+			\ENSURE Un couple de réels $[c,s]$ tels que $a$ et $s$ vérifient la propriété de la proposition \ref{condition_eps}. Le réel $a$ est le plus grand réel trouvé et $s$ le plus petit. Si $m=1$, $s$ est inférieur à $m^1(x)$ introduit dans la définition \ref{intersect}. $[0,0]$ si l'algorithme n'a pas trouvé de réels satisfaisant la condition \eqref{condition_eps}.
+			\STATE $[f_0(x),...,\frac{f^{(m)}(x)}{(m)!}]$,$[\epsilon_0,...,\epsilon_{m}], M^{m+1}(f,x)$:=M2($\mathcal{L}(x,Dx),ini,x,\epsilon,m,k$)
+			\STATE 
+			$T:\mathbb{R}_+\rightarrow \mathbb{R}$\\
+			\hspace{7mm}$t\rightarrow \Big(\Big|\frac{f^{(m)}}{m!}(x)\Big|\Big)-\epsilon_m\Big)t^m-\sum_{i=0}^{m-1}\Big(\Big|\frac{f^{i}(x)}{i!}\Big|+\epsilon_i\Big)t^i-M^{m+1}(f,x)(t)$
+			\IF {$\frac{f^{(m)}(x)}{m!}=0$}
+			\RETURN $[0,0]$
+			\ENDIF
+			\STATE $\eta$:=$\max\Big\{\Big|\frac{f^{(i)}(x)}{i!}\Big|+\epsilon_i,\hspace{2mm}i \in [1,m-1]\Big\}$
+			\STATE $r$:=$\Big(\Big|\frac{f^{(m)}}{m!}(x)\Big|^{-1}\eta\Big)^{\frac{1}{m}}$
+			\STATE arrêt-condition:=$\min(5\epsilon,r)$
+			\STATE $c$:=$512\times \max(r,\epsilon)$
+			\WHILE {$T(c)<0$ et $\text{arrêt-condition}<a$}
+			\STATE $c$:=$\frac{a}{2}$
+			\ENDWHILE
+			\IF {$c> \text{arrêt-condition}$}
+			\WHILE {$T(\frac{s}{2})>0$}
+			\STATE $s$:=$\frac{s}{2}$
+			\ENDWHILE
+			\IF {$m=1$ et $T'(s)\geq0$}
+			\STATE $t:=\frac{s}{2}$
+			\WHILE {$T(t)<0$}
+			\STATE $t,s$=\_dichotomie-zéro\_($T',t,s$)
+			\ENDWHILE
+			\RETURN $[c,s]$
+			\ELSE
+			\RETURN $[c,s]$
+			\ENDIF
+			\ELSE
+			\RETURN $[0,0]$
+			\ENDIF
+		\end{algorithmic}
+		\label{certification}
+	\end{algorithm}
+
+	\begin{proposition}
+		Si la fonction \_certification-zéro\_$(\mathcal{L}(x,Dx),[f(0),...,\frac{f^{(r-1)}(0)}{(r-1)!}],x_0,\epsilon,1,0)$ renvoie $[c,s]$ non nuls, alors $f$ est strictement monotone sur l'intervalle $[x_0-s,x_0+s]$.
+	\end{proposition}
+	\begin{proof}[Preuve]
+		S'il existe un réel $c$ satisfaisant la condition \eqref{condition_eps}, on a 
+		\[0<(1-10^{-4})|f'(x_0)|c-\big(|f(x_0)|+\epsilon_0\big)-M^2(f,x)(c),\]
+		Soit $r_0$ le point où la fonction $g:t \rightarrow (1-10^{-4})|f'(x_0)|t-\big(|f(x_0)|+\epsilon_0\big)-M^2(f,x_0)(t)$ atteint son maximum. On sait qu'il est unique car la fonction est concave. On remarque aussi que $g'(t)<(1-10^{-4})|f'(x_0)|-M^1(f',x_0)$, donc la fonction est strictement monotone sur $[x_0-r_0,x_0+r_0]$ d'après la proposition \ref{intersect}. Il existe un $s\leq r_0$ vérifiant \eqref{condition_eps} donc tel que $s<m^1(s)$.
+	\end{proof}
+	\begin{proposition}
+		Soit $\zeta$ un zéro simple de $f$, alors il existe un $\epsilon>0$ tel que quel que soit $x$ vérifiant $d(x,\zeta)<\epsilon$, la fonction \_certification-zéro\_$(\mathcal{L}(x,Dx),[f(0),f_{1}(1),...,\frac{f^{(r-1)}(0)}{(r-1)!}],x,\epsilon,1,k>1)$ renvoie un couple $[c,s]$ non nul. 
+		\label{certification_eps}
+	\end{proposition}
+	\begin{proof}[Preuve]
+		 Appelons $\eta=10^{-4}$, on réécrit la fonction,
+		 \begin{equation}
+		 	g: t \rightarrow (1-\eta)|f'(x_0)|t-(1+\eta)|f(x_0)|-M^2(f,x)(t),
+		 	\label{**}
+		 \end{equation}
+		On veut trouver un $\epsilon>0$ tel que $\forall x_0$, $|x_0-\zeta|<\epsilon$, il existe un $t>0$ tel que $g(t)>0$.
+		D'après la proposition \ref{Maj_maj1} on sait que sur $[a,b]$ on a
+		\[M^2(f,x)(t)<\frac{t^2A}{1-\alpha t}, \hspace{4mm} \forall x \in [a,b], \hspace{3mm} \forall t>0,\]
+		alors $g(t)>0$ est induit de l'inégalité
+		\[(1-\eta)|f'(x_0)|t-(1+\eta)|f(x_0)|-\frac{t^2 A}{1-\alpha t}>0.\]
+		Comme $f$ est analytique, $f$ et $f'$ sont uniformément continues, il existe un $\epsilon>0$ tel que pour tout $x_0$ vérifiant $|\zeta-x_0|<\epsilon$, $|f'(\zeta)-f'(x_0)|<\eta|f'(x_0)|$, et $|f(x_0)|<\min\Big(\frac{\big((1-2\eta)|f'(\zeta)|\big)^2}{(1+\eta)18A},\frac{(1-2\eta)|f'(\zeta)|}{(1+\eta)6\alpha} \Big)$, donc pour $x_0$ dans le voisinage $B(\zeta,\epsilon)$, l'inégalité
+		\[(1-\eta)|f'(x_0)|t-(1+\eta)|f'(x_0)|-\frac{t^2 A}{1-\alpha t}>0\]
+		 est induite par l'inégalité
+		\[(1-2\eta)|f'(\zeta)|t-|f(x_0)|-\frac{t^2 A}{1-\alpha t}>0.\]
+		Pour $t=3\frac{(1+\eta)|f(x_0)|}{(1-2\eta)|f'(x_0)|},$ on a 
+		\[|f(x_0)|\Big(2-(1+\eta)|f(x_0)|\Big(\frac{3}{(1-2\eta)|f'(x_0)|}\Big)^{2}\frac{A}{\frac{1}{2}}\Big)>0\]
+		d'après les conditions que vérifie $\epsilon$. 
+	\end{proof}
+	
+	\begin{algorithm}
+		\caption{\_disjoint\_}
+		\begin{algorithmic}[1]
+			\REQUIRE Une liste non vide $\mathcal{L}$ de segments vérifiant la condition de la propriété \eqref{intersect} et triés par ordre de moyenne croissante.
+			\ENSURE Une liste de segments disjoints vérifiant la condition de la propriété \eqref{intersect}.
+			\STATE disjoint:=[]
+			\STATE $n$:=la taille de $\mathcal{L}$
+			\STATE segment= $\mathcal{L}[0]$
+			\STATE i=1
+			\WHILE {$i<n$}
+			\STATE intersection:=segment$\cap \mathcal{L}[i]$
+			\IF {intersection=$\emptyset$}
+			\STATE ajouter segment à la liste disjoint
+			\STATE segment:=$\mathcal{L}[i]$
+			\STATE i:=i+1
+			\ELSE 
+			\STATE segment:=intersection
+			\STATE i:=i+1
+			\ENDIF
+			\ENDWHILE
+			\STATE ajouter segment à la liste disjoint
+			\RETURN disjoint
+		\end{algorithmic}
+	\end{algorithm}	
+	\begin{proposition}
+		La liste de segments renvoyée par l'algorithme \_disjoint\_ est une liste de segments deux à deux disjoints sur lesquels la fonctions $f$ est strictement monotone et contient un unique zéro. 
+	\end{proposition}
+	\begin{proof}[Preuve]
+		C'est une conséquence de la proposition \ref{intersect}.
+	\end{proof}
+	\begin{algorithm}
+		\caption{\_Rectification-indéterminés\_}
+		\begin{algorithmic}[1]
+			\REQUIRE Une liste de segments indéterminés $\mathcal{I}$. Une liste $\mathcal{D}$ de segments contenant un unique zéro.
+			\ENSURE Une liste de segments composée des segments de $\mathcal{I}$ tels qu'ils ne soient inclus dans aucun segment de $\mathcal{D}$.
+			\RETURN La liste des segments de $\mathcal{I}$ inclus dans aucun segment de $\mathcal{D}$.
+		\end{algorithmic}
+	\end{algorithm}
+	Cet algorithme sert à enlever les intervalles renvoyés par \_bissection-exclusion\_ qui sont inclus dans les intervalles construits à partir des résultats de \_certification-zéros\_.
+	\newpage
+
+	\subsection{Algorithme final}
+	
+	\begin{algorithm}
+		\caption{\_Concaténation\_}
+		\begin{algorithmic}[1]
+			\REQUIRE Deux couples de listes de segments $(\mathcal{D}_0,\mathcal{I}_0)$ et $(\mathcal{D}_1,\mathcal{I}_1)$.
+			\ENSURE Un couple de liste de segments $(\mathcal{D},\mathcal{I})$ avec $\mathcal{D}=\mathcal{D}_0 \cup \mathcal{D}_1$ et $\mathcal{I}=\mathcal{I}_0 \cup \mathcal{I}_1$
+			\RETURN $(\mathcal{D}_0 \cup \mathcal{D}_1$, $\mathcal{I}_0\cup \mathcal{I}_1$)
+		\end{algorithmic}
+	\end{algorithm}
+
+	\begin{algorithm}
+		\caption{\_Recherche-zéros\_}
+		\begin{algorithmic}[1]
+			\REQUIRE Un opérateur différentiel $\mathcal{L}(x,Dx)$. Des conditions initiales ini=$[f(0),f^{(1)}(0),...,\frac{f^{(r-1)}(0)}{r-1!}]$. Un segment $[a,b]$ tel que $f$ n'ait pas de singularité sur $[a,b]$. Un entier $n$. Un entier $l$ initialisé à zéro dont l'utilisateur ne se souciera pas. 
+			\ENSURE Un couple de listes $(\mathcal{D},\mathcal{I})$. $\mathcal{D}$ une liste de segments tels que la fonction $f$ contienne un unique zéro sur l'intervalle et qu'elle soit monotone sur cet intervalle. $\mathcal{I}$ une liste de segments encore indéterminés de taille inférieure à $(b-a)10^{-4n}$.
+			\IF {$l=n$}
+			\RETURN $([],[[a,b]])$
+			\ENDIF
+			\STATE $k:=10$
+			\STATE $\epsilon=\min(10^{-4}(b-a),10^{-1})$
+			\STATE $\mathcal{I}$:=\_bissection-exclusion\_($\mathcal{L}(x,Dx)$,ini,$[a,b]$,$\epsilon$)
+			\STATE n:= la taille de la liste $\mathcal{I}$ 
+			\STATE $\mathcal{D}_a,\mathcal{D}_s:=[],[]$
+			\FOR {$[c,d] \in \mathcal{I}$}
+			\STATE $[a,s]$=:\_certification-zéros\_($\mathcal{L}(x,Dx)$,ini,d,$\epsilon$,1,$k$)
+			\IF {$r_0>0$}
+			\STATE ajouter $[d-a,d+a]$ à $\mathcal{D}_a$ et $[d-s,d+a]$ à $\mathcal{D}_s$
+			\ENDIF 
+			\ENDFOR
+			\STATE $\mathcal{I}:=$\_Rectification-indéterminés\_($\mathcal{D}_a,\mathcal{I})$
+			\STATE $\mathcal{D}$=\_disjoint\_($\mathcal{D}_s)$
+			\IF {$\mathcal{I}=\emptyset$}
+			\RETURN $(\mathcal{D},\mathcal{I})$
+			\ELSE
+			\STATE $\mathcal{R}:=(\mathcal{D},[])$
+			\FOR {$[c,d] \in \mathcal{I}$}
+			\STATE $\mathcal{R}$:=\_concaténation\_($\mathcal{R}$,\_Recherche-zéro\_($\mathcal{L}(x,Dx),$ini$,[c,d],n,l+1$)
+			\ENDFOR
+			\ENDIF
+			\RETURN $\mathcal{R}$
+		\end{algorithmic}
+	\end{algorithm}
+	
+	\begin{proposition}
+		Si la fonction $f$ n'admet que des zéro simples sur l'intervalle $[a,b]$, pour un $n$ suffisamment grand  \_Recherche-zéro\_($\mathcal{L}(x,Dx),ini,[a,b],n$) renvoie un couple la forme $(\mathcal{D},\mathcal{I})$, où la fonction $f$ est strictement monotone et s'annule une unique fois sur les intervalles de $\mathcal{D}$ et tous les zéros simples de l'intervalles sont inclus dans les segments de $\mathcal{D}$. 
+	\end{proposition}
+	
+	\begin{proof}[Preuve]
+		L'ensemble des zéros sur $[a,b]$ est de cardinal fini $m$ d'après la proposition \eqref{zero_lim}, on appelle $\zeta_1,\zeta_2,...,\zeta_m$ les zéros simples de l'intervalle et $\epsilon_1, \epsilon_2,...,\epsilon_m$ les réels tels que\\ \_certification-zéros\_$(\mathcal{L}(x,Dx),[f(0),...,\frac{f^{(r-1)}(0)}{(r-1)!}],x,\epsilon',1,0) =[c,s] \neq [0,0]$, si $|x-\zeta_i|<\epsilon_i$, leur existence est prouvée par la proposition \ref{certification_eps}, si $\epsilon'$ est suffisamment petit, or pour chaque rappelle de la fonction \_Recherche-zéros\_,  $\epsilon'$ dépend de la taille de l'intervalle $[c,d] \subset [a,b]$ qui est de taille inférieur à $10^{-n}(b-a)$ à l'ordre de rappel $n$. 
+		En choisissant $\epsilon=\min_{i=0}^{m} \epsilon_i$, il existe $\epsilon'$ tel que si $[c,d]\subset [a,b]$, alors  \_bissection-exclusion\_($\mathcal{L}(x,Dx),[f(0),...,\frac{f^{(r-1)}(0)}{(r-1)!}],[c,d],\epsilon'$) renvoie une liste d'intervalles $\mathcal{I}_{[c,d]}$ vérifiant\\
+		$d(x,\mathcal{Z}_{[c,d]})<\epsilon$ pour tout $x$ dans les intervalles renvoyés d'après la proposition \ref{bissection_eps}. Finalement, en choisissant $n\geq \big\lceil\frac{\log(b-a)\epsilon'^{-1}}{4\log 10}\big\rceil$, le résultat de la proposition est satisfait.
+	\end{proof}
+	
+	
+	\newpage
+	\bibliography{mabib}
+	\bibliographystyle{IEEEtran}
+\end{document}
