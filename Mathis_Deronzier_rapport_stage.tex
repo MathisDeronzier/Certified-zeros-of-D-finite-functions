@@ -73,6 +73,7 @@
 	\renewcommand {\algorithmicelse } {\textbf{Sinon} }
 	\renewcommand {\algorithmicreturn } {\textbf{Renvoyer} }
 	\newtheorem{theorem}{Théorème}[section] 
+	\newtheorem{conjecture}{Conjecture}
 	\newtheorem{proposition}{Proposition}
 	\newtheorem{corollaire}{Corollaire}
 	\newtheorem{definition}{Définition}
@@ -305,7 +306,7 @@
 	\subsubsection{Distance aux singularités}
 	\label{subsubsingularité}
 	\begin{definition}
-		On appelle singularité de $f$ une fonction D-finie un point de $\mathbb{C}$ où la fonction est mal définie.
+		On appelle singularité de $f$ une fonction D-finie un point de $\mathbb{C}$ où la fonction n’y admet pas de prolongement analytique.
 	\end{definition}
 	
 	Rappelons la formule de Cauchy-Hadamard, pour $f(z)=\sum_{n\geq0}u_kz^k$ son rayon de convergence $R$ satisfait l'équation
@@ -373,7 +374,7 @@
 	Nous pouvons donc avoir une majoration de l'incertitude sur la fonction théorique.
 	
 	\subsection{Séries majorantes sur le reste de fonctions D-finies}
-	
+	\label{subsec:séries maj}
 	Plusieurs méthodes d'obtention de séries majorantes ont été étudiées. En effet, des séries majorantes beaucoup plus précises peuvent être trouvées, notamment celles de la forme du théorème \ref{Th_maj} de l'article \cite{MezzarobbaSalvy2010}. Les séries majorantes de la forme
 	\begin{equation}
 		\frac{A}{(1-\alpha z)^\lambda}
@@ -459,13 +460,6 @@
 	\end{equation}
 	où c est un nombre complexe. Il faut maintenant choisir les paramètres $\hat{a}$, $\hat{q}$ et c afin que les inégalités \eqref{maj1},\eqref{maj2},\eqref{maj3} soient respectées. On aura alors une série majorante de $R_u^{N}$. La méthode de recherche de ces paramètres est dans \cite{Mezzarobba2019}.
 	
-	\begin{proposition}
-		Pour une équation différentielle de la forme \eqref{majEqdiff}, il existe une équation majorante d'ordre 1 de cette équation.
-		\label{Majord1}  
-	\end{proposition}
-	\begin{proof}[Preuve]
-		
-	\end{proof}
 	
 	
 	
@@ -549,56 +543,24 @@
 	sur un ordinateur. Après une recherche infructueuse, nous n'avons pas réussi à établir de lien entre la distance $d(x,Z)$ et $\overset{\sim}{m}(x)$ où $\overset{\sim}{m}(x)$ est le point d'annulation de la fonction $\overset{\sim}{M}: t \rightarrow |f(x)|-M^1(f,x)(t)$, avec $M^{1}(f,x)$ une série majorante issue de la méthode de majoration de l'article \cite{Mezzarobba2019}.  
 	Les résultats de l'article de Yakoubsohn de 2005, n'ont pas pu être adaptés à notre algorithme de bissection-exclusion. Cependant, nous verrons une proposition beaucoup plus faible qui a le mérite d'assurer la convergence de l'algorithme de bissection-exclusion.
 	
-	\begin{proposition}
+	\begin{conjecture}
 		Soit $[a,b]$ un intervalle ne contenant aucune singularité de $f$. Quelles que soient les fonctions majorantes $M^k(f,x)$ du reste de $f$ à l'ordre $k$, il existe $A_k$ et $\alpha_k$ des réels strictement positifs tels que 
 		\[M^k(f,x)(t) \leq \frac{t^kA_k}{1-\alpha_k t} \hspace{5mm} \forall t \in \mathbb{R}_+,\hspace{1mm} \forall x \in [a,b].\] 
 		\label{Maj_maj}
-	\end{proposition}
+	\end{conjecture}
 	\begin{proof}[Preuve]
-		Une façon intuitive de le comprendre est de voir le lien entre $\alpha$ et $d([a,b],S)^{-1}$, l'inverse de la distance de l'intervalle $[a,b]$ à la singularité la plus proche. Soit $\mathcal{D}(x,Dx)$ l'opérateur définissant notre espace de solutions.\\
-		Soit $f_i$ une solution de $\mathcal{D}(x,Dx)\cdot f_i=0$ pour les conditions initiales $f(0)=\delta_{i0},...,f^{(r-1)}(0)=\delta_{ir},$ où $\delta$ est le symbole de Kronecker. On peut avoir une série majorante $M_i$ d'une série majorante obtenue par la méthode de majoration de la partie 2.2 d'après la proposition \ref{Majord1}, on la notera $\overset{\sim}{M}(f_i,0)$. Avec
-		\[\overset{\sim}{M}(f_i,0) \unlhd  M_i:t\rightarrow\frac{A_i}{(1-\alpha_i t)^{\lambda_i}},\]
-		où $\lambda_i$, $A_i$ et $\alpha_i$ sont des réels strictement positifs. 
-		En définissant $f_x: t\rightarrow f(x+t)$, pour tout $x$, $f_x$ solution de $\mathcal{D}(x,Dx)\cdot f_x=0$ avec pour conditions initiales $f_x(0),...f_x^{(r)}(0)$, on a 
-		\[\overset{\sim}{M}(f_x,0) \unlhd \sum_{i=0}^{r} |f_x^{(i)}(0)| M_i\]
-		par linéarité de l'équation différentielle.
-		Comme $f$ est analytique sur $[a,b]$, $g: x\rightarrow\frac{f^{(i)}(x)}{i!}$ est continue sur le compact $[a,b]$. On pose
-		\[s_i=\sup_{x \in [a,b]} \Big|\frac{f^{(i)}(x)}{i!}\Big|.\]
-		Pour tout $x$ in $[a,b]$,
-		\[\overset{\sim}{M}(f_x,0) \unlhd \sum_{i=0}^{r}s_iM_i.\]
-		En réécrivant  $\sum_{k=0}^{r}s_iM_i$ avec leurs expression,
-		\[\sum_{k=0}^{r}s_iM_i(t)=\sum_{k=0}^{r}\frac{A_is_i}{(1-\alpha_i t)^{\lambda_i}}\]
-		et en posant $\lambda=\max_{i=0}^{r}\lambda_i$, $A=r\max_{i=0}^{r}A_is_i$ et $\alpha=\max_{i=0}^{r}\alpha_i$, on a 
-		\[\overset{\sim}{M}(f_x,0)(t) \unlhd t \rightarrow\frac{A}{(1-\alpha t)^{\lambda}} \hspace{4mm} \forall x \in [a,b], \hspace{2mm} t>0.\]
-		On veut majorer 
-		\[h(t)=\frac{A}{(1-\alpha t)^{\lambda}}\]
-		par une fraction rationnelle de la forme
-		\[g(t)=\frac{A'}{1-\alpha' t}.\]
-		Tous les coefficients de ces deux série sont strictement positifs, pour avoir une fois encore une série majorante il suffit que $\frac{h^{k}(0)}{g^k(0)}\leq 1$, $\forall k\geq0$. On écrit 
-		\[\frac{h^{k}(t)}{g^k(t)}=\frac{A}{A'}\Big(\frac{\alpha'}{\alpha}\Big)^k\frac{(1-\alpha' t)^k}{(1-\alpha t)^{\lambda+k}}\frac{\lambda^{\uparrow k-1}}{k-1!}\]
-		où $\lambda^{\uparrow k}=\prod_{i=0}^{k-1}(\lambda+i)$, en posant $\alpha'=\alpha/2$. On n'a plus qu'à se préoccuper de $t<\alpha/2$. On peut alors majorer l'expression par 
-		\[\frac{h^{k}(t)}{g^k(t)}\leq \frac{A}{A'}\frac{2^{\lceil\lambda\rceil-1}}{2^k}\frac{\lambda^{\uparrow k-1}}{k-1!}.\] 
-		On remarque que \[\frac{\lambda^{\uparrow k-1}}{k-1!}\leq \binom{\lceil \lambda \rceil +k-1}{k-1} \leq \frac{\big(\lceil \lambda \rceil +k-1\big)^{\lceil \lambda \rceil}}{\lceil \lambda \rceil!},\]
-		donc
-		\[\frac{h^{k}(t)}{g^k(t)}\leq \frac{A}{A'} \frac{\big(\lceil \lambda \rceil +k-1\big)^{\lceil \lambda \rceil}}{2^{k+1-\lceil \lambda \rceil}\lceil \lambda \rceil!} \rightarrow_{k \rightarrow \infty}0\]
-		Il existe un $n_0 \in \mathbb{N}$ tel que $\forall k\geq n_0$, $\frac{A}{A'} \frac{\big(\lceil \lambda \rceil +k-1\big)^{\lceil \lambda \rceil}}{2^{k+1-\lceil \lambda \rceil}\lceil \lambda \rceil!}<1$, en choisissant 
-		\[A'=\max_{k=0}^{n_0}A\frac{2^{\lambda-1}}{2^k}\frac{\lambda^{\uparrow k-1}}{k-1!},\]
-		on a l'inégalité souhaitée, à savoir:
-		\[\overset{\sim}{M}(,f,x)(t) \unlhd \mathcal{M}:t\rightarrow \frac{A'}{(1-\alpha' t)} \hspace{4mm} \forall x \in [a,b].\]
-		Finalement il suffit d'appliquer ce raisonnement en remplaçant $f(0),...,f^{(r-1)}(0)$ par $f^{(k)}(0),...,f^{(r+k-1)}(0)$  et l'opérateur de récurrence 
-		$P_d(n+k)S_n^{(n+d)}+...+p_0(n+k)=0,$ on obtient finalement
-		\[M^k(f,x)(t) \unlhd \mathcal{M}:t\rightarrow\frac{t^kA'}{(1-\alpha' t)} \hspace{4mm} \forall x \in [a,b], \hspace{2mm} \forall k\geq0.\]
+		Une façon intuitive de le comprendre est de voir le lien entre $\alpha$ et $d([a,b],S)^{-1}$, l'inverse de la distance de l'intervalle $[a,b]$ à la singularité la plus proche. 
 	\end{proof}
 	
 	\begin{proposition}
-		Soit $f$ une fonction analytique sur un intervalle $[a,b]$, alors pour tout $x$ dans cet intervalle, il existe $A$ et $\alpha$ des réels strictement positifs tels que le pas $m(x)$ vérifie
+		Soit $f$ une fonction analytique sur un intervalle $[a,b]$, alors pour tout $x$ dans cet intervalle, il existe $A$ et $\alpha$ des réels strictement positifs tels que le pas $m(x)$ de la définition \ref{m} vérifie
 		\[\frac{|f(x)|}{A+|f(x)|\alpha}\leq m(x).\]
 		\label{minor}
 	\end{proposition}
 	
 	\begin{proof}[Preuve]
-		D'après la proposition \ref{Maj_maj} on sait qu'il existe $A$ et $\alpha$ deux réels strictement supérieurs à zéro tels que 
-		\[M^1(f,x)\unlhd \frac{tA}{1-\alpha t}.\]
+		D'après la conjecture \ref{Maj_maj} on sait qu'il existe $A$ et $\alpha$ deux réels strictement supérieurs à zéro tels que 
+		\[M^1(f,x)\unlhd \frac{tA}{1-\alpha t} \hspace{3mm} \forall x \in [a,b].\]
 		En écrivant 
 		\[|f(x)|-\frac{tA}{1-\alpha t}=0,\]
 		on obtient l'égalité
@@ -652,7 +614,7 @@
 		\[\beta(f,x)=|f'(x)^{-1}f(x)|.\]
 	\end{definition}
 	Le coefficient $\beta$ correspond au pas d'itération de l'algorithme de Newton. 
-	Et derrière une formule de $\gamma$ plutôt compliquée se cache l'idée de majorer le reste du développement en série entière de f à l'ordre 2 par une fraction rationnelle. Ces coefficients ont été introduits dans la théorie alpha de Smale \cite{dedieu2006points}.
+	Et derrière une formule de $\gamma$ plutôt compliquée se cache l'idée de majorer le reste du développement en série entière de $f$ à l'ordre 2 par une fraction rationnelle. Ces coefficients ont été introduits dans la théorie alpha de Smale \cite{dedieu2006points}.
 	On peut écrire 
 	\[|f(x+t)|\leq |f(x)|+|f'(x)|t\Big(1+\sum_{k\geq2}|f'(x)|^{-1}\Big| \frac{f^{(k)}(x)}{k!}\Big||t|^k\Big),\]
 	On remarque de plus que 
@@ -736,8 +698,8 @@
 	\end{definition}
 	\begin{definition}
 		Soit l'application $S_{f}^{m}(\zeta) : \mathbb{D}\times \mathbb{N}^* \times \mathbb{C} \rightarrow \mathbb{R}_+$, vérifiant
-		\[\mathbb{S}_{f}^{m}(\zeta)=S\Big(\Big|\frac{f^{(m)}}{m!}(\zeta)\Big|^{-1}\frac{M^{m+1}(f,\zeta)(t)}{t^{m}}\Big).\]
-		Avec $\mathbb{D}$ l'anneau des fonctions D-finies, $\mathbb{N}^{*}$ les entiers strictement positifs et $M^{m+1}(f,\zeta)$ la série majorante idéale du reste de la série à l'ordre $m+1$.
+		\[\mathbb{S}_{f}^{m}(\zeta)=S\Big(\Big|\frac{f^{(m)}}{m!}(\zeta)\Big|^{-1}\frac{M^{m+1}(f,\zeta)(t)}{t^{m}}\Big),\]
+		avec $\mathbb{D}$ l'algèbre des fonctions D-finies, $\mathbb{N}^{*}$ les entiers strictement positifs et $M^{m+1}(f,\zeta)$ la série majorante idéale du reste de la série à l'ordre $m+1$.
 	\end{definition}
 	\vspace{7mm}
 	\noindent On peut en effet appliquer $S$ aux fonctions $t \rightarrow \Big|\frac{f^{(m)}}{m!}(\zeta)\Big|^{-1}\frac{M^{m+1}(f,\zeta)(t)}{t^{m}}$ car $M^{m+1}(f,x_0)$ est de la forme

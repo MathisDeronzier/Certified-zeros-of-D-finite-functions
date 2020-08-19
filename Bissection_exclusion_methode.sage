@@ -1,4 +1,3 @@
-
 # coding: utf-8
 from ore_algebra import DifferentialOperators
 from sage.rings.rational_field import QQ
@@ -80,6 +79,32 @@ def recc_order(dop):
             mineq=min(mineq,exp[i]-coeff[i].degree())
     return maxeq-mineq
 
+
+
+def translate_pol(pol,t):
+#Require a polynom pol and a real t
+#return Pol(x+t)
+    P=0
+    x=QQ['x'].gen()
+    deg=pol.degree()
+    if deg==0:
+        return pol
+    else:
+        for i in range (deg+1):
+            P+=pol[i]*(x+t)^i
+        return P
+
+def translate_dop(dop,t):
+#Require a differential_operator dop and a real t
+#Return dop(x+t)
+    Rx.<x> = QQ['x']
+    A.<Dx> = OreAlgebra(Rx, 'Dx')
+    coeff=dop.coefficients()
+    exp=dop.exponents()
+    dop2=0
+    for i in range(len(coeff)):
+        dop2+=translate_pol(coeff[i],t)*(Dx^exp[i])
+    return dop2
 
 ############################Work over RBF#######################################
 def maj_rb(r_b):
@@ -197,13 +222,15 @@ _Majorant_(1,10,dop,[1,0],3,1e-10)
  [2.44659058386122e-20 +/- 2.23e-35])*exp(int([0.1000000008815815 +/- 2.00e-17]*x)))
 """
 
-def _Majorant_(n,k,dop,ini,order,seq_rec_order,x):
+def _Majorant_(n,k,dop1,ini,order,seq_rec_order,a):
     if x==0: #check if ini in QQ^order
+        dop=dop1
         PSS_ini=power_serie_sol(dop,ini,order,n+k)
         M_nk_ini=majorant_rest(dop,seq_rec_order,n+k,PSS_ini)
         left_ini,right_ini=truncation(PSS_ini,n,n+k)
         return left_ini,abs_pol(right_ini,n+k),0,M_nk_ini,0
     else: #If ini are in RBF
+        dop=translate_dop(dop1,a)
         new_ini,new_eps=separation(ini)
         PSS_new_ini=power_serie_sol(dop,new_ini,order,n+k)
         PSS_new_eps=power_serie_sol(dop,new_eps,order,n+k)
@@ -314,7 +341,8 @@ def certified_zero(dop,ini,order,seq_rec_order,x,prec):
     new_ini=translate_ini(dop,ini,order,x,eps)
     #The following section is to fixe epsilon
     if Fixe_eps(new_ini,dop,ini,order,1,x,eps):
-        left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps=_Majorant_(2,10,dop,new_ini,order,seq_rec_order,x)
+        dop1=translate_dop(dop,x)
+        left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps=_Majorant_(2,10,dop1,new_ini,order,seq_rec_order,x)
         left_eps,right_eps=truncation(PSS_new_eps,2,PSS_new_eps.degree())
         f0=sign(left_ini[0])*left_ini[0]+left_eps[0]
         f1=sign(left_ini[1])*left_ini[1]-left_eps[1]
@@ -455,12 +483,14 @@ def included(segment1,segment2):
         return (segment1[1]<=segment2[1])and(segment2[0]<=segment1[0])
 
 
-def plot_D_finite_function(dop,ini,f,eps,a,b):
-#Function qui plotting f and M(f,x) in the interval [a,b]
-    x=(a+b)/2
-    left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps=_Majorant_(1,k,dop,ini,x,eps)
-    def M(t):
-        return evaluate(left_ini,right_ini,PSS_new_eps,M_1k_ini,M_1k_eps,t,1,x)
-    P1=plot(M(t),(t,a,b))
-    P2=plot(f(t),(t,a,b))
-    show(p1+p2)
+def plot_function(dop,ini,name,color_fun,segment):
+    a=segment[0]
+    b=segment[1]
+    n=(b-a)*1e2//1
+    x=[b+k*1e-2 for k in range(n)]
+    y=[]
+    for k in range (n):
+        y.append(dop.numerical_solution(ini,[0,b+k*1e-2],1e-10).mid())
+    plt.plot(x,y,color=color_fun,label=name)
+    plt.legend()
+    plt.show()
